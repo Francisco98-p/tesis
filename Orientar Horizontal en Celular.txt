@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        @media screen and (max-width: 600px) {
+            /* Estilos para dispositivos con un ancho máximo de 600px (generalmente dispositivos móviles) */
+            body {
+                transform: rotate(90deg); /* Rotar la página en sentido horario */
+                transform-origin: left top; /* Punto de rotación en la esquina superior izquierda */
+                width: 100vh; /* Ancho basado en la altura de la pantalla */
+                height: 100vw; /* Altura basada en el ancho de la pantalla */
+                overflow-x: hidden; /* Evitar desplazamiento horizontal */
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenido de tu página -->
+</body>
+</html>
