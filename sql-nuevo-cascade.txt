@@ -1,0 +1,161 @@
+-- SCRIPT DE CORRECCIÓN PARA BASE DE DATOS BCFEXA
+-- =====================================================
+
+USE bcfexa;
+
+-- PASO 1: DESHABILITAR VERIFICACIONES TEMPORALMENTE
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- PASO 2: CORREGIR TIPOS DE DATOS
+-- ===============================
+
+-- Corregir CUIL en persona (debe ser VARCHAR o BIGINT)
+ALTER TABLE persona MODIFY COLUMN CUIL VARCHAR(15);
+
+-- Corregir tipo de dato inconsistente
+ALTER TABLE actividad MODIFY COLUMN RenovacionAutomatica TINYINT DEFAULT 0;
+
+-- PASO 3: INSERTAR REGISTROS FALTANTES PARA IDs = 0
+-- ==================================================
+
+-- Insertar registro con ID=0 en ubicacionarchivo
+INSERT IGNORE INTO ubicacionarchivo (Id, UbicacionOriginal, UbicacionCopia, UbicacionDigital) 
+VALUES (0, 'No definida', 'No definida', 'No definida');
+
+-- Insertar registro con ID=0 en informe  
+INSERT IGNORE INTO informe (Id, InformeUnidad, FechaInformeUnidad, InformeOrganizacion, FechaInformeOrganizacion, InformeComision, FechaInformeComision) 
+VALUES (0, 'Pendiente', NULL, 'Pendiente', NULL, 'Pendiente', NULL);
+
+-- Insertar registro con ID=0 en unidadejecutora
+INSERT IGNORE INTO unidadejecutora (Id, Unidad) 
+VALUES (0, 'No Asignada');
+
+-- PASO 4: AGREGAR FOREIGN KEYS CON CASCADE
+-- =======================================
+
+-- 1. actividad -> tipoactividad
+ALTER TABLE actividad 
+ADD CONSTRAINT fk_actividad_tipoactividad 
+FOREIGN KEY (TipoActividad_Id) REFERENCES tipoactividad(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 2. actividad -> ubicacionarchivo  
+ALTER TABLE actividad 
+ADD CONSTRAINT fk_actividad_ubicacionarchivo 
+FOREIGN KEY (UbicacionArchivo_Id) REFERENCES ubicacionarchivo(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 3. actividad -> informe
+ALTER TABLE actividad 
+ADD CONSTRAINT fk_actividad_informe 
+FOREIGN KEY (Informe_Id) REFERENCES informe(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 4. actividad -> monedadeinversion (organización)
+ALTER TABLE actividad 
+ADD CONSTRAINT fk_actividad_moneda_org 
+FOREIGN KEY (MonedaOrganizacion_Id) REFERENCES monedadeinversion(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 5. actividad -> monedadeinversion (unidad)
+ALTER TABLE actividad 
+ADD CONSTRAINT fk_actividad_moneda_unidad 
+FOREIGN KEY (MonedaUnidad_Id) REFERENCES monedadeinversion(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 6. detalleactividadorganizacion -> actividad
+ALTER TABLE detalleactividadorganizacion 
+ADD CONSTRAINT fk_detalle_act_org_actividad 
+FOREIGN KEY (Actividad_Id) REFERENCES actividad(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 7. detalleactividadorganizacion -> organizacion
+ALTER TABLE detalleactividadorganizacion 
+ADD CONSTRAINT fk_detalle_act_org_organizacion 
+FOREIGN KEY (Organizacion_Id) REFERENCES organizacion(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 8. detalleactividadunidad -> actividad
+ALTER TABLE detalleactividadunidad 
+ADD CONSTRAINT fk_detalle_act_unidad_actividad 
+FOREIGN KEY (Actividad_Id) REFERENCES actividad(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 9. detalleactividadunidad -> unidadejecutora
+ALTER TABLE detalleactividadunidad 
+ADD CONSTRAINT fk_detalle_act_unidad_unidadejecutora 
+FOREIGN KEY (UnidadEjecutora_Id) REFERENCES unidadejecutora(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 10. detallepersonaactividad -> actividad
+ALTER TABLE detallepersonaactividad 
+ADD CONSTRAINT fk_detalle_persona_actividad 
+FOREIGN KEY (Actividad_Id) REFERENCES actividad(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 11. detallepersonaactividad -> persona
+ALTER TABLE detallepersonaactividad 
+ADD CONSTRAINT fk_detalle_persona_persona 
+FOREIGN KEY (Persona_Id) REFERENCES persona(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 12. detallepersonaactividad -> rol
+ALTER TABLE detallepersonaactividad 
+ADD CONSTRAINT fk_detalle_persona_rol 
+FOREIGN KEY (Rol_Id) REFERENCES rol(Id) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- PASO 5: AGREGAR ÍNDICES PARA OPTIMIZAR CONSULTAS
+-- ================================================
+
+-- Índices en campos de búsqueda frecuente
+CREATE INDEX idx_actividad_nro_resolucion ON actividad(NroResolucion);
+CREATE INDEX idx_actividad_fecha_inicio ON actividad(Fecha_inicio);
+CREATE INDEX idx_actividad_fecha_final ON actividad(Fecha_final);
+CREATE INDEX idx_persona_nombre ON persona(Nombre);
+CREATE INDEX idx_organizacion_nombre ON organizacion(Nombre);
+
+-- PASO 6: INSERTAR DATOS FALTANTES EN ROL
+-- =======================================
+INSERT IGNORE INTO rol (Id, Nombre) VALUES 
+(3, 'Coordinador Técnico'),
+(4, 'Supervisor');
+
+-- PASO 7: VERIFICAR INTEGRIDAD DE DATOS
+-- =====================================
+
+-- Verificar que no hay registros huérfanos después de agregar FKs
+SELECT 'Verificando integridad...' as Status;
+
+-- Actividades sin tipo válido
+SELECT COUNT(*) as 'Actividades sin tipo válido' 
+FROM actividad a 
+LEFT JOIN tipoactividad t ON a.TipoActividad_Id = t.Id 
+WHERE t.Id IS NULL;
+
+-- Detalles con actividades inexistentes
+SELECT COUNT(*) as 'Detalles con actividades inexistentes'
+FROM detalleactividadorganizacion d
+LEFT JOIN actividad a ON d.Actividad_Id = a.Id
+WHERE a.Id IS NULL;
+
+-- PASO 8: REHABILITAR VERIFICACIONES
+-- ==================================
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- PASO 9: MOSTRAR ESTRUCTURA FINAL
+-- ================================
+SELECT 
+    TABLE_NAME as 'Tabla',
+    CONSTRAINT_NAME as 'Foreign Key',
+    COLUMN_NAME as 'Columna',
+    REFERENCED_TABLE_NAME as 'Tabla Referenciada',
+    REFERENCED_COLUMN_NAME as 'Columna Referenciada',
+    UPDATE_RULE as 'Regla UPDATE',
+    DELETE_RULE as 'Regla DELETE'
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+WHERE TABLE_SCHEMA = 'bcfexa' 
+    AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY TABLE_NAME;
+
+SELECT 'Base de datos corregida exitosamente!' as 'RESULTADO';

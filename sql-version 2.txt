@@ -1,6 +1,5 @@
 --
 -- SQL Script completo y corregido para la base de datos `bcfexa`
--- Con la adición de las tablas `tipo_informe` y `origen_informe`
 -- Se recomienda realizar una copia de seguridad de tu base de datos antes de ejecutar este script
 --
 
@@ -25,8 +24,6 @@ DROP TABLE IF EXISTS `detalleactividadunidad`;
 DROP TABLE IF EXISTS `actividad`;
 DROP TABLE IF EXISTS `ubicacionarchivo`;
 DROP TABLE IF EXISTS `informe`;
-DROP TABLE IF EXISTS `tipo_informe`;
-DROP TABLE IF EXISTS `origen_informe`;
 DROP TABLE IF EXISTS `persona`;
 DROP TABLE IF EXISTS `rol`;
 DROP TABLE IF EXISTS `tipoactividad`;
@@ -82,26 +79,6 @@ CREATE TABLE `ubicacionarchivo` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `unidadejecutora` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Unidad` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb3;
-
-CREATE TABLE `tipo_informe` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(45) DEFAULT NULL,
-  `Id_informe` int DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
-CREATE TABLE `origen_informe` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(45) DEFAULT NULL,
-  `Id_informe` int DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 CREATE TABLE `informe` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `InformeUnidad` varchar(45) DEFAULT NULL,
@@ -110,14 +87,14 @@ CREATE TABLE `informe` (
   `FechaInformeOrganizacion` date DEFAULT NULL,
   `InformeComision` varchar(45) DEFAULT NULL,
   `FechaInformeComision` date DEFAULT NULL,
-  `TipoInforme_Id` int DEFAULT NULL,
-  `OrigenInforme_Id` int DEFAULT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `fk_informe_tipo_informe_idx` (`TipoInforme_Id`),
-  KEY `fk_informe_origen_informe_idx` (`OrigenInforme_Id`),
-  CONSTRAINT `fk_informe_tipo_informe` FOREIGN KEY (`TipoInforme_Id`) REFERENCES `tipo_informe` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_informe_origen_informe` FOREIGN KEY (`OrigenInforme_Id`) REFERENCES `origen_informe` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `unidadejecutora` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Unidad` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `actividad` (
   `Id` int NOT NULL AUTO_INCREMENT,
