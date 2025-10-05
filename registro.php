@@ -43,6 +43,58 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 		.div-4 {
 			background-color: #fbceb1;
 		}
+
+		/* Estilos para Select2 */
+		.select2-container--default .select2-selection--single {
+			background-color: #DDFFFF !important;
+			border: 1px solid #ccc !important;
+			border-radius: 4px !important;
+			height: 34px !important;
+			line-height: 34px !important;
+		}
+
+		.select2-container--default .select2-selection--single .select2-selection__rendered {
+			color: #333 !important;
+			line-height: 32px !important;
+			padding-left: 12px !important;
+		}
+
+		.select2-container--default .select2-selection--single .select2-selection__arrow {
+			height: 32px !important;
+			right: 10px !important;
+		}
+
+		.select2-container {
+			width: 400px !important;
+		}
+
+		/* Estilos específicos para selects de unidad ejecutora */
+		.select2-container.unidad-select {
+			width: 400px !important;
+		}
+
+		.select2-container.unidad-select .select2-selection--single {
+			background-color: #faebd7 !important;
+		}
+
+		/* Estilos específicos para selects de personas */
+		.select2-container.persona-org-select .select2-selection--single {
+			background-color: #FFFFFF !important;
+		}
+
+		.select2-container.persona-unidad-select .select2-selection--single {
+			background-color: #faebd7 !important;
+		}
+
+		/* Estilos para el dropdown */
+		.select2-dropdown {
+			border: 1px solid #ccc !important;
+			border-radius: 4px !important;
+		}
+
+		.select2-container--default .select2-results__option--highlighted[aria-selected] {
+			background-color: #337ab7 !important;
+		}
 	</style>
 
 	<script type="text/javascript">
@@ -148,6 +200,17 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 	</script>
 
 	<?php include("head_alta_persona.php"); ?>
+
+	<!-- Select2 CSS -->
+	<link href='./buscador/assets/select2v410/css/select2.min.css' rel='stylesheet' type='text/css'>
+
+	<!-- jQuery (necesario para Select2) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<!-- Select2 JS -->
+	<script src='./buscador/assets/select2v410/js/select2.min.js'></script>
+	<!-- Librería español -->
+	<script src="./buscador/assets/select2v410/js/i18n/es.js"></script>
 
 </head>
 
@@ -303,25 +366,17 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 					<form name="form1" id="form1" class="form-horizontal row-fluid" action="registro.php" method="POST">
 
 
-						<div class="control-group">
-							<label class="control-label" id="actividad">Tipo de Actividad:</label>
-							<div class="div-1">
-
-								<select class="form-control" name="actividad" style="width:600px;background-color:#DDFFFF">
-									<option value="">Seleccione:</option>
-									<?php
-									include "conn.php";
-									$query = mysqli_query($conn, "SELECT * FROM tipoactividad");
-									var_dump(mysqli_num_rows($query));
-									if (mysqli_num_rows($query) == 0) {
-										echo "no sale nada";
-									} else {
-										while ($valores = mysqli_fetch_array($query)) {
-											echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-										}
-									}
-									?>
-								</select>
+						<div class="div-1">
+							<div class="control-group">
+								<label class="control-label">Tipo de Actividad:</label>
+								<div class="controls">
+									<div class="form-group mx-sm-3 mb-2">
+										<label for="actividad" class="sr-only">Tipo de Actividad:</label>
+										<select class="form-control" id="actividad" name="actividad" style="width:400px;background-color:#DDFFFF">
+											<option value="">Seleccione el tipo de actividad:</option>
+										</select>
+									</div>
+								</div>
 							</div>
 						</div>
 						<br />
@@ -360,64 +415,25 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 										<label for="organizacion" class="sr-only">Tipo de Organización:</label>
 
-										<select class="form-control" name="organizacion1" id="organizacion1" required style="width:400px;background-color:#DDFFFF"">
+										<select class="form-control" name="organizacion1" id="organizacion1" required style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione la organización que figura en la resolución:</option>
-											<?php
-											include "conn.php";
-											$query = mysqli_query($conn, "SELECT * FROM organizacion ORDER BY Nombre");
-
-											if (mysqli_num_rows($query) == 0) {
-												echo "no sale nada";
-											} else {
-												while ($valores = mysqli_fetch_array($query)) {
-													echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-												}
-											}
-											?>
-													
-												</select>
+										</select>
 												
 												
 												
 										
 										
-											<select class=" form-control" name="organizacion2" id="organizacion2" style="width:400px;background-color:#DDFFFF">
+										<select class="form-control" name="organizacion2" id="organizacion2" style="width:400px;background-color:#DDFFFF">
 											<option value="">&nbsp;&nbsp;&nbsp;Seleccione otra organización (si la hubiere):</option>
-											<?php
-											include "conn.php";
-											$query = mysqli_query($conn, "SELECT * FROM organizacion ORDER BY Nombre");
-											var_dump(mysqli_num_rows($query));
-											if (mysqli_num_rows($query) == 0) {
-												echo "no sale nada";
-											} else {
-												while ($valores = mysqli_fetch_array($query)) {
-													echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-												}
-											}
-											?>
-
 										</select>
 
 
 
 
 
-										<select class="form-control" name="organizacion3" id="organizacion3" style="width:400px;background-color:#DDFFFF"">
+										<select class="form-control" name="organizacion3" id="organizacion3" style="width:400px;background-color:#DDFFFF">
 											<option value="">&nbsp;&nbsp;&nbsp;Seleccione otra organización (si la hubiere):</option>
-											<?php
-											include "conn.php";
-											$query = mysqli_query($conn, "SELECT * FROM organizacion ORDER BY Nombre");
-
-											if (mysqli_num_rows($query) == 0) {
-												echo "no sale nada";
-											} else {
-												while ($valores = mysqli_fetch_array($query)) {
-													echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-												}
-											}
-											?>
-													
-												</select>
+										</select>
 												</div>
 														</div>
 											</div>
@@ -442,19 +458,6 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 													<select class="form-control" name="responsable_org1" id="responsable_org1" required style="width:400px">
 														<option value="">Seleccione el RRHH que figura en la resolución:</option>
-														<?php
-														include "conn.php";
-														$query = mysqli_query($conn, "SELECT * FROM persona ORDER BY Nombre");
-														var_dump(mysqli_num_rows($query));
-														if (mysqli_num_rows($query) == 0) {
-															echo "no sale nada";
-														} else {
-															while ($valores = mysqli_fetch_array($query)) {
-																echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-															}
-														}
-														?>
-
 													</select>
 
 
@@ -463,19 +466,6 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 													<select class="form-control" name="responsable_org2" id="responsable_org2" style="width:400px">
 														<option value="">&nbsp;&nbsp;&nbsp;Seleccione otro RRHH (si lo hubiere):</option>
-														<?php
-														include "conn.php";
-														$query = mysqli_query($conn, "SELECT * FROM persona ORDER BY Nombre");
-														var_dump(mysqli_num_rows($query));
-														if (mysqli_num_rows($query) == 0) {
-															echo "no sale nada";
-														} else {
-															while ($valores = mysqli_fetch_array($query)) {
-																echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-															}
-														}
-														?>
-
 													</select>
 
 
@@ -484,19 +474,6 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 													<select class="form-control" name="responsable_org3" id="responsable_org3" style="width:400px">
 														<option value="">&nbsp;&nbsp;&nbsp;Seleccione otro RRHH (si lo hubiere)</option>
-														<?php
-														include "conn.php";
-														$query = mysqli_query($conn, "SELECT * FROM persona ORDER BY Nombre");
-
-														if (mysqli_num_rows($query) == 0) {
-															echo "no sale nada";
-														} else {
-															while ($valores = mysqli_fetch_array($query)) {
-																echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-															}
-														}
-														?>
-
 													</select>
 												</div>
 											</div>
@@ -534,51 +511,15 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 											<label style="width:500px" for="UnidadEjectura" class="sr-only">Tipo de Unidad:</label>
 											<select class="form-control" id="unidad1" name="unidad1" style="width:400px;background-color:#faebd7">
 												<option value="">Seleccione la UNIDAD que figura en la resolución:</option>
-												<?php
-												include "conn.php";
-												$query = mysqli_query($conn, "SELECT * FROM unidadejecutora ORDER BY Unidad");
-												var_dump(mysqli_num_rows($query));
-												if (mysqli_num_rows($query) == 0) {
-													echo "no sale nada";
-												} else {
-													while ($valores = mysqli_fetch_array($query)) {
-														echo '<option value="' . $valores['Id'] . '">' . $valores['Unidad'] . '</option>';
-													}
-												}
-												?>
 											</select>
 
 											<label style="width:500px" for="UnidadEjectura" class="sr-only">Tipo de Unidad:</label>
-											<select class="form-control" id="unidad2" name="unidad2" style="width:400px;background-color:#faebd7"">
-											<option value="">Seleccione otra Unidad (si la hubiere):</option>
-											<?php
-											include "conn.php";
-											$query = mysqli_query($conn, "SELECT * FROM unidadejecutora  ORDER BY Unidad");
-											var_dump(mysqli_num_rows($query));
-											if (mysqli_num_rows($query) == 0) {
-												echo "no sale nada";
-											} else {
-												while ($valores = mysqli_fetch_array($query)) {
-													echo '<option value="' . $valores['Id'] . '">' . $valores['Unidad'] . '</option>';
-												}
-											}
-											?>
-												</select>
+											<select class="form-control" id="unidad2" name="unidad2" style="width:400px;background-color:#faebd7">
+												<option value="">Seleccione otra Unidad (si la hubiere):</option>
+											</select>
 												
-												<select class=" form-control" id="unidad3" name="unidad3" style="width:400px;background-color:#faebd7"">
-											<option value="">Seleccione otra Unidad (si la hubiere):</option>
-											<?php
-											include "conn.php";
-											$query = mysqli_query($conn, "SELECT * FROM unidadejecutora ORDER BY Unidad");
-											var_dump(mysqli_num_rows($query));
-											if (mysqli_num_rows($query) == 0) {
-												echo "no sale nada";
-											} else {
-												while ($valores = mysqli_fetch_array($query)) {
-													echo '<option value="' . $valores['Id'] . '">' . $valores['Unidad'] . '</option>';
-												}
-											}
-											?>
+												<select class="form-control" id="unidad3" name="unidad3" style="width:400px;background-color:#faebd7">
+													<option value="">Seleccione otra Unidad (si la hubiere):</option>
 												</select>
 												</div>
 														</div>
@@ -593,19 +534,6 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 														<select class="form-control" id="responsable_unidad1" name="responsable_unidad1" style="width:400px;background-color:#faebd7">
 															<option value="">Seleccione:</option>
-															<?php
-															include "conn.php";
-															$query = mysqli_query($conn, "SELECT * FROM persona  ORDER BY Nombre");
-															var_dump(mysqli_num_rows($query));
-															if (mysqli_num_rows($query) == 0) {
-																echo "no sale nada";
-															} else {
-																while ($valores = mysqli_fetch_array($query)) {
-																	echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-																}
-															}
-															?>
-
 														</select>
 
 
@@ -614,19 +542,6 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 														<select class="form-control" id="responsable_unidad2" name="responsable_unidad2" style="width:400px;background-color:#faebd7">
 															<option value="">Seleccione:</option>
-															<?php
-															include "conn.php";
-															$query = mysqli_query($conn, "SELECT * FROM persona ORDER BY Nombre");
-															var_dump(mysqli_num_rows($query));
-															if (mysqli_num_rows($query) == 0) {
-																echo "no sale nada";
-															} else {
-																while ($valores = mysqli_fetch_array($query)) {
-																	echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-																}
-															}
-															?>
-
 														</select>
 
 
@@ -635,19 +550,6 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 														<select class="form-control" id="responsable_unidad3" name="responsable_unidad3" style="width:400px;background-color:#faebd7">
 															<option value="">Seleccione:</option>
-															<?php
-															include "conn.php";
-															$query = mysqli_query($conn, "SELECT * FROM persona ORDER BY Nombre");
-															var_dump(mysqli_num_rows($query));
-															if (mysqli_num_rows($query) == 0) {
-																echo "no sale nada";
-															} else {
-																while ($valores = mysqli_fetch_array($query)) {
-																	echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
-																}
-															}
-															?>
-
 														</select>
 													</div>
 												</div>
@@ -816,6 +718,126 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 		</div>
 
 		<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+		<!-- Script para inicializar Select2 en todos los selectores relevantes -->
+		<script>
+		$(document).ready(function(){
+		   // Configuración común para Select2
+		   var select2Options = {
+			  allowClear: true,
+			  language: "es",
+			  cache: true
+		   };
+
+		   // Tipo de Actividad
+		   $("#actividad").select2($.extend({}, select2Options, {
+			  placeholder: "Buscar tipo de actividad...",
+			  ajax: {
+				url: "ajax-select2-tipo-actividad.php",
+				type: "post",
+				dataType: 'json',
+				delay: 250,
+				data: function (params) {
+				   return {
+					  searchTerm: params.term
+				   };
+				},
+				processResults: function (response) {
+				   return {
+					  results: response
+				   };
+				}
+			  }
+		   }));
+
+		   // Organizaciones
+		   $("#organizacion1, #organizacion2, #organizacion3").select2($.extend({}, select2Options, {
+			  placeholder: "Buscar organización...",
+			  ajax: {
+				url: "ajax-select2-organizacion.php",
+				type: "post",
+				dataType: 'json',
+				delay: 250,
+				data: function (params) {
+				   return {
+					  searchTerm: params.term
+				   };
+				},
+				processResults: function (response) {
+				   return {
+					  results: response
+				   };
+				}
+			  }
+		   }));
+
+		   // Personas/RRHH - Organización
+		   $("#responsable_org1, #responsable_org2, #responsable_org3").select2($.extend({}, select2Options, {
+			  placeholder: "Buscar persona...",
+			  containerCssClass: "persona-org-select",
+			  ajax: {
+				url: "ajax-select2-persona.php",
+				type: "post",
+				dataType: 'json',
+				delay: 250,
+				data: function (params) {
+				   return {
+					  searchTerm: params.term
+				   };
+				},
+				processResults: function (response) {
+				   return {
+					  results: response
+				   };
+				}
+			  }
+		   }));
+
+		   // Unidades Ejecutoras
+		   $("#unidad1, #unidad2, #unidad3").select2($.extend({}, select2Options, {
+			  placeholder: "Buscar unidad ejecutora...",
+			  containerCssClass: "unidad-select",
+			  ajax: {
+				url: "ajax-select2-unidad-ejecutora.php",
+				type: "post",
+				dataType: 'json',
+				delay: 250,
+				data: function (params) {
+				   return {
+					  searchTerm: params.term
+				   };
+				},
+				processResults: function (response) {
+				   return {
+					  results: response
+				   };
+				}
+			  }
+		   }));
+
+		   // Personas/RRHH - Unidad
+		   $("#responsable_unidad1, #responsable_unidad2, #responsable_unidad3").select2($.extend({}, select2Options, {
+			  placeholder: "Buscar persona...",
+			  containerCssClass: "persona-unidad-select",
+			  ajax: {
+				url: "ajax-select2-persona.php",
+				type: "post",
+				dataType: 'json',
+				delay: 250,
+				data: function (params) {
+				   return {
+					  searchTerm: params.term
+				   };
+				},
+				processResults: function (response) {
+				   return {
+					  results: response
+				   };
+				}
+			  }
+		   }));
+		});
+		</script>
 
 
 
