@@ -14,22 +14,262 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 	<?php include("head_alta_persona.php");?>
 
 	  <style type="text/css">
-	#campos_adicionales {
-	display:none;
-    }
-	
-    .div-1 {
-        background-color: #EBEBEB;
-    }
-    
-    .div-2 {
-    	background-color: #ABBAEA;
-    }
-    
-    .div-3 {
-    	background-color: #FBD603;
-    }
+		/* Variables CSS para consistencia */
+		:root {
+			--primary-color: #337ab7;
+			--primary-hover: #286090;
+			--success-color: #5cb85c;
+			--warning-color: #f0ad4e;
+			--info-color: #5bc0de;
+			--light-gray: #f8f9fa;
+			--border-color: #e1e8ed;
+			--shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			--border-radius: 6px;
+		}
 
+		body {
+			background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+			font-family: 'Open Sans', sans-serif;
+			color: #333;
+		}
+
+		.container {
+			background: white;
+			border-radius: var(--border-radius);
+			box-shadow: var(--shadow);
+			margin: 20px auto;
+			padding: 0;
+			overflow: hidden;
+		}
+
+		.content {
+			padding: 30px;
+		}
+
+		#campos_adicionales {
+			display: none;
+		}
+
+		/* Estilos modernos para las secciones */
+		.section-card {
+			background: white;
+			border-radius: var(--border-radius);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			margin-bottom: 25px;
+			padding: 25px;
+			border-left: 4px solid var(--primary-color);
+			transition: all 0.3s ease;
+		}
+
+		.section-card:hover {
+			box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+			transform: translateY(-2px);
+		}
+
+		.section-header {
+			display: flex;
+			align-items: center;
+			margin-bottom: 20px;
+			padding-bottom: 15px;
+			border-bottom: 2px solid #f0f0f0;
+		}
+
+		.section-icon {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 15px;
+			font-size: 18px;
+		}
+
+		.section-title {
+			font-size: 18px;
+			font-weight: 600;
+			color: #333;
+			margin: 0;
+		}
+
+		/* Colores específicos para cada sección */
+		.div-1, .div-2, .div-3 {
+			background: #f8f9fa;
+			padding: 20px;
+			border-radius: var(--border-radius);
+			margin-bottom: 20px;
+			border-left: 4px solid var(--primary-color);
+		}
+
+		/* Estilos para formularios */
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.control-group {
+			margin-bottom: 20px;
+		}
+
+		.control-label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: 600;
+			color: #555;
+			font-size: 14px;
+		}
+
+		.form-control {
+			width: 100%;
+			padding: 12px 15px;
+			border: 2px solid var(--border-color);
+			border-radius: var(--border-radius);
+			font-size: 14px;
+			transition: all 0.3s ease;
+			background: white;
+			box-sizing: border-box;
+		}
+
+		.form-control:focus {
+			outline: none;
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 3px rgba(51, 122, 183, 0.1);
+		}
+
+		.form-control.span8 {
+			width: 100%;
+			max-width: 600px;
+		}
+
+		select.form-control {
+			cursor: pointer;
+			width: 100% !important;
+			max-width: 100% !important;
+		}
+
+		/* Asegurar que los select tengan suficiente altura */
+		select.form-control {
+			height: auto !important;
+			min-height: 42px !important;
+			padding: 10px 15px !important;
+			white-space: normal !important;
+			line-height: 1.5 !important;
+		}
+
+		/* Asegurar que las opciones del select no se corten */
+		select.form-control option {
+			padding: 8px 12px;
+			white-space: normal;
+			word-wrap: break-word;
+		}
+
+		textarea.form-control {
+			min-height: 100px;
+			resize: vertical;
+		}
+
+		/* Estilos específicos para inputs con colores */
+		input[style*="background-color:#DDFFFF"],
+		select[style*="background-color:#DDFFFF"] {
+			background-color: #e7f3ff !important;
+			border-color: #5bc0de !important;
+		}
+
+		/* Estilos para los select con ancho específico */
+		select[style*="width:400px"],
+		select[style*="width:600px"] {
+			width: 100% !important;
+			max-width: none !important;
+		}
+
+		/* Botones modernos */
+		.btn {
+			display: inline-block;
+			padding: 12px 24px;
+			font-size: 14px;
+			font-weight: 600;
+			text-align: center;
+			border: none;
+			border-radius: var(--border-radius);
+			cursor: pointer;
+			transition: all 0.3s ease;
+			text-decoration: none;
+			margin: 5px;
+		}
+
+		.btn-primary {
+			background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+			color: white;
+		}
+
+		.btn-primary:hover {
+			background: linear-gradient(135deg, var(--primary-hover) 0%, #1f4e6b 100%);
+			transform: translateY(-2px);
+			box-shadow: 0 5px 15px rgba(51, 122, 183, 0.3);
+		}
+
+		.btn-danger {
+			background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
+			color: white;
+		}
+
+		.btn-danger:hover {
+			background: linear-gradient(135deg, #c9302c 0%, #ac2925 100%);
+			transform: translateY(-2px);
+			box-shadow: 0 5px 15px rgba(217, 83, 79, 0.3);
+		}
+
+		.btn-sm {
+			padding: 8px 16px;
+			font-size: 12px;
+		}
+
+		/* Header del formulario */
+		blockquote {
+			background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+			color: white;
+			padding: 25px 30px;
+			margin: -30px -30px 30px -30px;
+			border-left: none;
+			border-radius: var(--border-radius) var(--border-radius) 0 0;
+			font-size: 24px;
+			font-weight: 600;
+			text-align: center;
+		}
+
+		/* Footer */
+		.footer {
+			background: #f8f9fa;
+			padding: 20px;
+			text-align: center;
+			border-top: 1px solid var(--border-color);
+			margin-top: 30px;
+		}
+
+		/* Separadores */
+		hr {
+			border: none;
+			border-top: 2px solid #f0f0f0;
+			margin: 30px 0;
+		}
+
+		/* Espaciado entre secciones */
+		.control-group + .div-1,
+		.control-group + .div-2,
+		.control-group + .div-3 {
+			margin-top: 30px;
+		}
+
+		/* Navbar */
+		.navbar {
+			background: white;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		/* Botón volver arriba */
+		.top-button {
+			text-align: right;
+			padding: 10px;
+		}
 
     </style>
 	
@@ -120,9 +360,8 @@ function valida_envia(){
     <body>
        <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
-                            </div>
-            
-        </div><br />
+            </div>
+        </div>
 
             <div class="container">
                 <div class="row">
@@ -145,8 +384,7 @@ function valida_envia(){
 			?>
           
             <blockquote>
-			
-            Actualizar datos de la Actividad
+			Actualizar datos de la Actividad
             </blockquote>
                          <form name="form1" id="form1" class="form-horizontal row-fluid" action="update-edit.php" method="POST" >
 											
@@ -157,14 +395,11 @@ function valida_envia(){
 											</div>
 										</div>
 										
-										
-										
-										
-										
-											    <div class="control-group">
-												<label class="control-label" >Tipo de Actividad:</label>
+										<div class="div-3">
+											<div class="control-group">
+												<label class="control-label">Tipo de Actividad</label>
 												<div class="controls">
-											<select class="form-control" id="actividad" name="actividad" style="width:600px;background-color:#DDFFFF">
+													<select class="form-control" id="actividad" name="actividad" style="width:600px;background-color:#DDFFFF">
 											<?php
 											include "conn.php";
 											$query = mysqli_query($conn,"SELECT * FROM tipoactividad ORDER BY Nombre");
@@ -191,20 +426,19 @@ function valida_envia(){
 													
 												</select>
 												</div>
-												</div>
-												
+											</div>
 										
 										
-										 <div class="div-3">
-											<label class="control-label" >Número Convenio Marco</label>
+										<div class="control-group">
+											<label class="control-label">Número Convenio Marco</label>
 											<div class="controls">
 												<input   type="text" name="nro_convenio_marco" value="<?php echo $row['NroConvenioMarco']; ?>" id="nro_convenio_marco" 
 												placeholder="ingrese SOLO el número" class="form-control span8 tip">
 											</div>
 										</div>
 										
-										 <div class="div-3">
-											<label class="control-label" >Número de Expediente</label>
+										<div class="control-group">
+											<label class="control-label">Número de Expediente</label>
 											<div class="controls">
 												<input   type="text" name="nro_expediente" value="<?php echo $row['NroExpediente']; ?>" id="nro_expediente" 
 												placeholder="ingrese el número que inicia el trámite" class="form-control span8 tip">
@@ -212,8 +446,8 @@ function valida_envia(){
 										</div>
 										
 										
-										<div class="div-3">
-											<label class="control-label" >Resolución FCEFN</label>
+										<div class="control-group">
+											<label class="control-label">Resolución FCEFN</label>
 											<div class="controls">
 												<input type="text" name="nro_resolucion" onchange='add();' id="nro_resolucion" value="<?php echo $row['NroResolucion']; ?>"
 												placeholder="ingrese según patrón Rxx/aa" class="form-control span8 tip" required>
@@ -221,13 +455,13 @@ function valida_envia(){
 										
 										<br/>
 										</div>
-										
+										</div>
 																
 									
 										
 									  <div id="tipo_organizacion" class="div-1">
 									  	<div class="control-group">
-											<label class="control-label" >Organización:</label>
+											<label class="control-label">Organización</label>
 											<div class="controls">
 										    <div class="form-group mx-sm-3 mb-2">
 											
@@ -402,9 +636,9 @@ function valida_envia(){
 		
     <!-- Grupo de Select para RRHH1 de la Organización -->	
                                       		
-									  <div id="tipo_organizacion" class="">
+									  <div id="tipo_organizacion" class="div-1">
 									  	<div class="control-group">
-											<label class="control-label" >RRHH desiganado por la organización:</label>
+											<label class="control-label">👤 RRHH designado por la organización</label>
 											<div class="controls">
 										    <div class="form-group mx-sm-3 mb-2">
 											
@@ -569,7 +803,7 @@ function valida_envia(){
        <hr/>
 </div>
 										<div class="div-3">
-											<label class="control-label" >Resumen</label>
+											<label class="control-label">Resumen</label>
 										</div>										
 										<div class="controls">
 										    <!-- 
@@ -580,9 +814,10 @@ function valida_envia(){
 												<textarea name="resumen" id="resumen" class="form-control span8 tip" placeholder="Resumen" required /><?php echo $row['Resumen']; ?>
 												</textarea>
 											</div>
+										</div>
 										
 										<div class="control-group">
-											<label class="control-label" >Objetivo</label>
+											<label class="control-label">🎯Objetivo</label>
 											<div class="controls">
 												<!--
 												<input name="objetivo" id="objetivo" value="<?php echo $row['Objetivo']; ?> "class=" form-control span8 tip"   type="text" placeholder="objetivo" />
@@ -592,15 +827,14 @@ function valida_envia(){
 											</div>
 										</div>	   
 			
-			
 <!-- Grupo de Select para Unidad(es) ejecutora -->						
 					
 									
 										<br/>
-										
-									  <div id="tipo_organizacion" class="">
+										</div>
+									  <div id="tipo_organizacion" class="div-2">
 									  	<div class="control-group">
-											<label class="control-label" >Unidad Ejecutora:</label>
+											<label class="control-label">Unidad Ejecutora</label>
 											<div class="controls">
 										    <div class="form-group mx-sm-3 mb-2">
 											
@@ -774,9 +1008,9 @@ function valida_envia(){
     <!-- Grupo de Select para RRHH1 de la Unidad -->	
                                         <label for="organizacion" id="responsable_unidad1" class="sr-only">=====Tipo de Organización:</label>
 											
-									  <div id="tipo_organizacion" class="">
+									  <div id="tipo_organizacion" class="div-2">
 									  	<div class="div-2">
-											<label class="control-label" >RRHH desiganado por la Unidad Ejecutora:</label>
+											<label class="control-label">👤 RRHH designado por la Unidad Ejecutora</label>
 											<div class="controls">
 										    <div class="div-2">
 											
@@ -963,7 +1197,7 @@ function valida_envia(){
 </table>
 -->
 										<div class="control-group">
-											<label class="control-label" >Fecha de Inicio de la Actividad</label>
+											<label class="control-label">Fecha de Inicio de la Actividad</label>
 											<div class="controls" style="width:200px;">
 												<input name="fecha_inicio" id="fecha_inicio"  class="form-control span8 tip" 
 												value="<?php 
@@ -974,7 +1208,7 @@ function valida_envia(){
 											</div>
 												</br>		
 										
-											<label class="control-label" >Fecha de Fin de la Actividad</label>
+											<label class="control-label">Fecha de Fin de la Actividad</label>
 											<div class="controls" style="width:200px;">
 												<input name="fecha_fin" id="fecha_fin" class="form-control span8 tip" 
 												value="<?php echo $row['Fecha_final']; ?>"
@@ -993,7 +1227,7 @@ function valida_envia(){
 										</div>
 										
 											<div class="control-group">
-												<label class="control-label" >Renovación Automática:</label>
+												<label class="control-label">Renovación Automática</label>
 												<div class="controls">
 											<select class="form-control" id="renovacion_automatica" name="renovacion_automatica" style="width:600px;background-color:#DDFFFF">
 											<?php
@@ -1020,7 +1254,7 @@ function valida_envia(){
 										
 											
 										<div class="control-group">
-											<label class="control-label" >Tipo de Moneda Inversión Organización:</label>
+											<label class="control-label">Tipo de Moneda Inversión Organización</label>
 											<div class="controls">
 										    <div class="form-group mx-sm-3 mb-2">
 											<label for="MonedaInversion" id="moneda_organizacion" class="sr-only">Tipo de Moneda:</label>
@@ -1059,7 +1293,7 @@ function valida_envia(){
 											</div>
 										
                                          <div class="control-group">
-											<label class="control-label" >Monto de la inversión aportada por la Organización</label>
+											<label class="control-label">Monto de la inversión aportada por la Organización</label>
 											<div class="controls">
 												<input   type="text" pattern="[0-9]{1,9}" name="monto_inversion_organizacion" id="monto_inversion_organizacion" 
 												placeholder="ingrese SOLO el número" 
@@ -1069,7 +1303,7 @@ function valida_envia(){
 										 </div>
 										
 										<div class="control-group">
-											<label class="control-label" >Nota Aclaratoria Inversión de la Organización</label>
+											<label class="control-label">Nota Aclaratoria Inversión de la Organización</label>
 											<div class="controls">
 											 
 												<textarea name="nota_inversion_organizacion" id="nota_inversion_organizacion" 
@@ -1079,7 +1313,7 @@ function valida_envia(){
 
 																									
 										<div class="control-group">
-											<label class="control-label" >Tipo de Moneda Inversión FCEFN:</label>
+											<label class="control-label">Tipo de Moneda Inversión FCEFN</label>
 											<div class="controls">
 										    <div class="form-group mx-sm-3 mb-2">
 											<label for="MonedaUnidad" id="moneda_unidad" class="sr-only">Tipo de Moneda:</label>
@@ -1118,7 +1352,7 @@ function valida_envia(){
 											</div>
 										
                                          <div class="control-group">
-											<label class="control-label" >Monto de la inversión aportada por la FCEFN</label>
+											<label class="control-label">Monto de la inversión aportada por la FCEFN</label>
 											<div class="controls">
 												<input   type="text" name="monto_inversion_unidad" id="monto_inversion_unidad" 
 												placeholder="ingrese SOLO el número" 
@@ -1128,7 +1362,7 @@ function valida_envia(){
 										 </div>
 										
 										<div class="control-group">
-											<label class="control-label" >Nota Aclaratoria Inversión de la FCEFN</label>
+											<label class="control-label">Nota Aclaratoria Inversión de la FCEFN</label>
 											<div class="controls">
 												<textarea name="nota_inversion_unidad" id="nota_inversion_unidad" class=" form-control span8 tip"  rows="4" cols="150" placeholder="Nota" /><?php echo $row['NotaInversionUnidad'];?></textarea>
 											</div>
@@ -1136,9 +1370,9 @@ function valida_envia(){
 
 
 										<div class="control-group">
-											<div class="controls">
-												<input type="button" name="update" id="update" value="Actualizar" onclick="valida_envia()" class="btn btn-sm btn-primary"/>
-                                               <a href="index.php" class="btn btn-sm btn-danger">Cancelar</a>
+											<div class="controls" style="text-align: center; padding: 20px 0;">
+												<input type="button" name="update" id="update" value="💾 Actualizar" onclick="valida_envia()" class="btn btn-primary"/>
+                                               <a href="index.php" class="btn btn-danger">✖ Cancelar</a>
 											</div>
 										</div>
 									</form>
@@ -1150,10 +1384,10 @@ function valida_envia(){
             </div>
             <!--/.container-->
         
-        <!--/.wrapper--><br />
-        <div class="footer span-12">
+        <!--/.wrapper-->
+        <div class="footer">
             <div class="container">
-              <center> <b class="copyright"><a href="#"> BCFEXA IdeI</a> &copy; <?php echo date("Y")?> </b></center>
+              <center><b class="copyright">BCFEXA - IdeI &copy; <?php echo date("Y")?></b></center>
             </div>
         </div>
         

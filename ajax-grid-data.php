@@ -226,7 +226,9 @@ $organizaciones_leidas.='</ul>';
     $nestedData[] = '<td><center><a href="editar.php?id='.$row['Id'].'"  data-toggle="tooltip" title="Editar" class="btn btn-sm btn-info">
                  	<i class="menu-icon icon-pencil"></i> </a> <br> 
 					<a href="ver_detalle.php?id='.$row['Id'].'"  data-toggle="tooltip" title="Consultar" class="btn btn-sm btn-success">
-                 	<i class="menu-icon icon-search"></i> </a>
+                 	<i class="menu-icon icon-search"></i> </a> <br>
+					<a href="index.php?action=delete&id='.$row['Id'].'" onclick="return confirm(\'¿Está seguro de que desea eliminar esta actividad?\')" data-toggle="tooltip" title="Eliminar" class="btn btn-sm btn-danger">
+                 	<i class="menu-icon icon-trash"></i> </a>
 					</td>';
 					 
 				 

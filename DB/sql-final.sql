@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS `tipoactividad`;
 DROP TABLE IF EXISTS `monedadeinversion`;
 DROP TABLE IF EXISTS `organizacion`;
 DROP TABLE IF EXISTS `unidadejecutora`;
+DROP TABLE IF EXISTS `user_tbl`;
 
 --
 -- Recrear la estructura de la base de datos con correcciones
@@ -87,6 +88,13 @@ CREATE TABLE `unidadejecutora` (
   `Unidad` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `user_tbl` (
+  `userID` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `tipo_informe` (
   `Id` int NOT NULL AUTO_INCREMENT,
@@ -248,6 +256,10 @@ UNLOCK TABLES;
 
 LOCK TABLES `unidadejecutora` WRITE;
 INSERT INTO `unidadejecutora` VALUES (2,'Centro de Investigaciones de la Geósfera y Biosfera (CIGEOBIO))'),(3,'Centro Tecnológico Educativo'),(4,'Departamento de Biología '),(5,'Departamento de Física'),(6,'Departamento de Geología'),(7,'Departamento de Geofísica y Astronomía'),(8,'Departamento de Informática'),(9,'Gabinete de Ciencias Planetarias'),(10,'Gabinete de Estudios de Geocriología, Glaciología, Nivología y Cambio Climático'),(11,'Gabinete de Neotectónica y Geomorfología'),(12,'Gabinete de Investigación de Servicios Ecosistémicos de Zonas Áridas (GISEZA)'),(13,'IIAM'),(14,'Instituo Geofísico Sismológico \"Ing. Fernando S. Volponi\" (IGSV)'),(15,'Instituto de Ciencias Astronómicas de la Tierra y del Espacio (ICATE)'),(16,'Instituto de Geología \"Dr. Emiliano P. Aparicio\" (INGEO)'),(17,'Instituto de Informática'),(18,'Instituto y Museo de Ciencias Naturales'),(19,'Observatorio Astronómico \"Felix Aguilar\" (OAFA)'),(20,'Programa de Investigación Educación a Distancia - FCEFN'),(21,'Todas las unidades académicas'),(31,'Sin especificar'),(32,'Sin especificar');
+UNLOCK TABLES;
+
+LOCK TABLES `user_tbl` WRITE;
+INSERT INTO `user_tbl` VALUES (3,'admin','admin123)'),(4,'Micaela','Micaela2025'),(5,'Patricia','Patricia2025');
 UNLOCK TABLES;
 
 SET SQL_MODE=@OLD_SQL_MODE;

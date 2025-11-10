@@ -153,7 +153,7 @@ function valida_envia(){
 											    <div class="control-group">
 												<label class="control-label" >Tipo de Actividad:</label>
 												<div class="controls">
-												<input type="text" name="id" id="id"  placeholder="Tidak perlu di isi" class="form-control span8 tip" readonly="readonly"
+												<input type="text" name="tipo_actividad_nombre" id="tipo_actividad_nombre"  placeholder="Tidak perlu di isi" class="form-control span8 tip" readonly="readonly"
 		
 											<?php
 											include "conn.php";
@@ -221,7 +221,7 @@ function valida_envia(){
 										
 											<input type="text" class="form-control" 
 											name="organizacion1" id="organizacion1" 
-											required  readonly tabindex="-1" style="width:400px;background-color:#DDFFFF"" 
+											required  readonly tabindex="-1" style="width:400px;background-color:#DDFFFF" 
 											
 										<?php
 										
@@ -235,12 +235,13 @@ function valida_envia(){
 													echo "no sale nada";
 													$organizacion1_leida="antes del while dio 0 la busqeuda=".mysqli_num_rows($query);
 													
-												} else
+												} else {
 													$organizacion1_leida="antes del while";
 												   while ($valores = mysqli_fetch_array($query)) {
 													$organizacion1_leida= $valores['Organizacion_Id'];
 													echo $organizacion1_leida;
 												   }
+												}
 																				
 											$query = mysqli_query($conn,"SELECT  * FROM organizacion ORDER BY Nombre");
 											
@@ -260,7 +261,7 @@ function valida_envia(){
 														}
 													
 													  }
-												}											
+												}						
 												   ?>
 													
 																									
@@ -323,7 +324,7 @@ function valida_envia(){
 											<input type="hidden" name="organizacion2_leida" id="organizacion2_leida" value="<?php echo $organizacion2_leida; ?>">
 										
 									 		
-											<select class="form-control" readonly tabindex="-1" name="organizacion3" id="organizacion3" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" readonly tabindex="-1" name="organizacion3" id="organizacion3" style="width:400px;background-color:#DDFFFF">>
 											<option value="0">&nbsp;&nbsp;&nbsp;Seleccione la 3er. organización (si la hubiere):</option>
 										<?php
 	             //leo datos de la tabla detalleactividadorganizacion para extraer la TERCERA organizacion
@@ -386,7 +387,7 @@ function valida_envia(){
 										    <div class="form-group mx-sm-3 mb-2">
 											
 																				
-											<select class="form-control" name="responsable_org1" readonly tabindex="-1" id="responsable_org1" required style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="responsable_org1" readonly tabindex="-1" id="responsable_org1" required style="width:400px;background-color:#DDFFFF">>
 											
 										<?php
 		                                    //leo datos de la tabla detalleactividadpersona para extraer la PRIMER organizacion
@@ -439,7 +440,7 @@ function valida_envia(){
                                       									
 									 
 																				
-											<select class="form-control" name="responsable_org2" readonly tabindex="-1" id="responsable_org2" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="responsable_org2" readonly tabindex="-1" id="responsable_org2" style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione el RRHH que figura en la resolución:</option>
 										<?php
 		                                    //leo datos de la tabla detalleactividadpersona para extraer la segunda organizacion
@@ -491,7 +492,7 @@ function valida_envia(){
 	<!-- Grupo de Select para RRHH3 de la Organización -->	
                                         
 									 																				
-											<select class="form-control" name="responsable_org3" readonly tabindex="-1"  id="responsable_org3" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="responsable_org3" readonly tabindex="-1"  id="responsable_org3" style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione el RRHH que figura en la resolución:</option>
 										<?php
 		                                    //leo datos de la tabla detalleactividadpersona para extraer la tercer organizacion
@@ -575,7 +576,7 @@ function valida_envia(){
 											
 											
 										
-											<select class="form-control" name="unidad1" readonly tabindex="-1" id="unidad1" required style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="unidad1" readonly tabindex="-1" id="unidad1" required style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione la unidad ejecutora que figura en la resolución:</option>
 										<?php
 		//leo datos de la tabla detalleactividadunidad para extraer la PRIMER unidad
@@ -630,7 +631,7 @@ function valida_envia(){
 																										
 									  
 																				
-											<select class="form-control" name="unidad2" id="unidad2" readonly tabindex="-1" required style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="unidad2" id="unidad2" readonly tabindex="-1" required style="width:400px;background-color:#DDFFFF">
 											<option value="0">Seleccione la 2da. unidad ejecutora (si la hubiere) que figura en la resolución:</option>
 										<?php
 		//leo datos de la tabla detalleactividadunidad para extraer la SEGUNDA unidad
@@ -686,7 +687,7 @@ function valida_envia(){
 									  
 											
 										
-											<select class="form-control" name="unidad3" id="unidad3" readonly tabindex="-1" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="unidad3" id="unidad3" readonly tabindex="-1" style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione la unidad ejecutora que figura en la resolución:</option>
 										<?php
 		//leo datos de la tabla detalleactividadunidad para extraer la TERCER unidad
@@ -750,7 +751,7 @@ function valida_envia(){
 										    <div class="div-2">
 											
 																				
-											<select class="form-control" name="responsable_unidad1" readonly tabindex="-1" id="responsable_unidad1" required style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="responsable_unidad1" readonly tabindex="-1" id="responsable_unidad1" required style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione el RRHH que figura en la resolución:</option>
 										<?php
 		                                    //leo datos de la tabla detalleactividadpersona para extraer la PRIMER organizacion
@@ -804,7 +805,7 @@ function valida_envia(){
 											
 									 
 																				
-											<select class="form-control" name="responsable_unidad2" readonly tabindex="-1" id="responsable_unidad2" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="responsable_unidad2" readonly tabindex="-1" id="responsable_unidad2" style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione el RRHH que figura en la resolución:</option>
 										<?php
 		                                    //leo datos de la tabla detalleactividadpersona para extraer la PRIMER organizacion
@@ -859,7 +860,7 @@ function valida_envia(){
 											
 									 
 																	
-											<select class="form-control" name="responsable_unidad3" readonly tabindex="-1" id="responsable_unidad3" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="responsable_unidad3" readonly tabindex="-1" id="responsable_unidad3" style="width:400px;background-color:#DDFFFF">
 											<option value="">Seleccione el RRHH que figura en la resolución:</option>
 											
 										<?php
@@ -913,7 +914,7 @@ function valida_envia(){
 												</div>
 												</div>
        <hr/>
-</div
+</div>
 
 						</div>
 
@@ -959,7 +960,7 @@ function valida_envia(){
 										    <div class="form-group mx-sm-3 mb-2">
 											<label for="MonedaInversion" id="moneda_organizacion" class="sr-only">Tipo de Moneda:</label>
 																			
-											<select class="form-control" name="moneda_organizacion" readonly tabindex="-1" id="moneda_organizacion" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="moneda_organizacion" readonly tabindex="-1" id="moneda_organizacion" style="width:400px;background-color:#DDFFFF">
 											<?php
 		                                    $query_org='SELECT * FROM monedadeinversion' ;
 											$query = mysqli_query($conn,$query_org);
@@ -1019,7 +1020,7 @@ function valida_envia(){
 										    <div class="form-group mx-sm-3 mb-2">
 											<label for="MonedaUnidad" id="moneda_unidad" class="sr-only">Tipo de Moneda:</label>
 																			
-											<select class="form-control" name="moneda_unidad" readonly tabindex="-1"  id="moneda_unidad" style="width:400px;background-color:#DDFFFF"">
+											<select class="form-control" name="moneda_unidad" readonly tabindex="-1"  id="moneda_unidad" style="width:400px;background-color:#DDFFFF">
 											<?php
 		                                    $query_org='SELECT * FROM monedadeinversion' ;
 											$query = mysqli_query($conn,$query_org);
@@ -1089,7 +1090,7 @@ function valida_envia(){
         <!--/.wrapper--><br />
         <div class="footer span-12">
             <div class="container">
-              <center> <b class="copyright"><a href="#"> BCFEXA IdeI</a> &copy; <?php echo date("Y")?> </b></center>
+              <center> <b class="copyright"><a href="#"> BCFEXA IdeI</a> &copy; <?php echo date("Y"); ?> </b></center>
             </div>
         </div>
         
@@ -1107,4 +1108,9 @@ function valida_envia(){
 
       
 </body>
-		}
+</html>
+
+<?php
+} 
+} 
+?>

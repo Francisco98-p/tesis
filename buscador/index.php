@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
     <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../scripts/jquery-3.2.1.js"></script>
 
     <!-- select2 css -->
     <link href='./assets/select2v410/css/select2.min.css' rel='stylesheet' type='text/css'>

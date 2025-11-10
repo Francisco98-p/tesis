@@ -39,17 +39,17 @@ $userID = $_SESSION['userID'];
  						
 				<?php
 								// borro registro
-				if(isset($_GET['action']) == 'delete') {
+				if(isset($_GET['action']) && $_GET['action'] == 'delete') {
 					$id_delete = intval($_GET['id']);
-					$query = mysqli_query($conn, "SELECT * FROM digesto WHERE id='$id_delete'");
+					$query = mysqli_query($conn, "SELECT * FROM actividad WHERE Id='$id_delete'");
 					if(mysqli_num_rows($query) == 0){
-						echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> No se encontraron datos.</div>';
+						echo '<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> No se encontraron datos.</div>';
 					}else{
-						$delete = mysqli_query($conn, "DELETE FROM digesto WHERE id='$id_delete'");
+						$delete = mysqli_query($conn, "DELETE FROM actividad WHERE Id='$id_delete'");
 						if($delete){
-						// echo '<div class="alert alert-primary alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>  Luis, los datos han sido eliminados correctamente.</div>'; 
+						echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> La actividad ha sido eliminada correctamente.</div>'; 
 						}else{
-							echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Error, no se pudo eliminar los datos.</div>';
+							echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Error, no se pudo eliminar la actividad.</div>';
 						}
 					}
 				}
@@ -67,7 +67,7 @@ $userID = $_SESSION['userID'];
 								<a href="alta_unidad_ejecutora.php" class="btn btn-sm btn-info">Alta Unidad Ejecutora</a>
 								<a href="alta_organizacion.php" class="btn btn-sm btn-info">Alta Organización</a>
 								<a href="alta_tipo_actividad.php" class="btn btn-sm btn-info">Alta Tipo de Actividad</a>
-								<a href="registro.php" class="btn btn-sm btn-primary">Ingresear Nueva Actividad</a>
+								<a href="registro.php" class="btn btn-sm btn-primary">Ingresar Nueva Actividad</a>
 							</div><br>
 							<hr>
 
