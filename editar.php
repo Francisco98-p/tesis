@@ -1,19 +1,24 @@
-﻿<?php include "conn.php";
+<?php include "conn.php";
 include 'session_bcfexa.php';
 $username = $_SESSION['username'];
 $userID = $_SESSION['userID'];
  ?>
  
 <!DOCTYPE html>
-<!-- Para llenar un Selct con Mysql
-https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
- -->
 <html lang="en">
 <head>
-    <head>
 	<?php include("head_alta_persona.php");?>
+	
+	<!-- Select2 CSS -->
+	<link href='./buscador/assets/select2v410/css/select2.min.css' rel='stylesheet' type='text/css'>
+	
+	<!-- jQuery (necesario para Select2) -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	<!-- Select2 JS -->
+	<script src='./buscador/assets/select2v410/js/select2.min.js'></script>
 
-	  <style type="text/css">
+	<style type="text/css">
 		/* Variables CSS para consistencia */
 		:root {
 			--primary-color: #337ab7;
@@ -46,10 +51,6 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			padding: 30px;
 		}
 
-		#campos_adicionales {
-			display: none;
-		}
-
 		/* Estilos modernos para las secciones */
 		.section-card {
 			background: white;
@@ -74,17 +75,6 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			border-bottom: 2px solid #f0f0f0;
 		}
 
-		.section-icon {
-			width: 40px;
-			height: 40px;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			margin-right: 15px;
-			font-size: 18px;
-		}
-
 		.section-title {
 			font-size: 18px;
 			font-weight: 600;
@@ -92,22 +82,22 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			margin: 0;
 		}
 
-		/* Colores específicos para cada sección */
-		.div-1, .div-2, .div-3 {
-			background: #f8f9fa;
-			padding: 20px;
-			border-radius: var(--border-radius);
-			margin-bottom: 20px;
-			border-left: 4px solid var(--primary-color);
-		}
-
 		/* Estilos para formularios */
-		.form-group {
+		.form-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 20px;
 			margin-bottom: 20px;
 		}
 
-		.control-group {
-			margin-bottom: 20px;
+		.form-col {
+			flex: 1;
+			min-width: 250px;
+		}
+
+		.form-col-half {
+			flex: 0 0 calc(50% - 10px);
+			min-width: 200px;
 		}
 
 		.control-label {
@@ -135,50 +125,15 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			box-shadow: 0 0 0 3px rgba(51, 122, 183, 0.1);
 		}
 
-		.form-control.span8 {
-			width: 100%;
-			max-width: 600px;
-		}
-
 		select.form-control {
 			cursor: pointer;
-			width: 100% !important;
-			max-width: 100% !important;
-		}
-
-		/* Asegurar que los select tengan suficiente altura */
-		select.form-control {
 			height: auto !important;
 			min-height: 42px !important;
-			padding: 10px 15px !important;
-			white-space: normal !important;
-			line-height: 1.5 !important;
-		}
-
-		/* Asegurar que las opciones del select no se corten */
-		select.form-control option {
-			padding: 8px 12px;
-			white-space: normal;
-			word-wrap: break-word;
 		}
 
 		textarea.form-control {
 			min-height: 100px;
 			resize: vertical;
-		}
-
-		/* Estilos específicos para inputs con colores */
-		input[style*="background-color:#DDFFFF"],
-		select[style*="background-color:#DDFFFF"] {
-			background-color: #e7f3ff !important;
-			border-color: #5bc0de !important;
-		}
-
-		/* Estilos para los select con ancho específico */
-		select[style*="width:400px"],
-		select[style*="width:600px"] {
-			width: 100% !important;
-			max-width: none !important;
 		}
 
 		/* Botones modernos */
@@ -218,11 +173,6 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			box-shadow: 0 5px 15px rgba(217, 83, 79, 0.3);
 		}
 
-		.btn-sm {
-			padding: 8px 16px;
-			font-size: 12px;
-		}
-
 		/* Header del formulario */
 		blockquote {
 			background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
@@ -231,9 +181,23 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			margin: -30px -30px 30px -30px;
 			border-left: none;
 			border-radius: var(--border-radius) var(--border-radius) 0 0;
-			font-size: 24px;
+		}
+
+		blockquote h3 {
+			margin: 0;
 			font-weight: 600;
+			font-size: 24px;
 			text-align: center;
+		}
+
+		/* Botones de acción en footer */
+		.form-actions {
+			background: #f8f9fa;
+			padding: 25px 30px;
+			margin: 30px -30px -30px -30px;
+			border-top: 1px solid #e1e8ed;
+			text-align: center;
+			border-radius: 0 0 var(--border-radius) var(--border-radius);
 		}
 
 		/* Footer */
@@ -245,18 +209,21 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			margin-top: 30px;
 		}
 
-		/* Separadores */
-		hr {
-			border: none;
-			border-top: 2px solid #f0f0f0;
-			margin: 30px 0;
-		}
+		/* Responsive */
+		@media (max-width: 768px) {
+			.container {
+				margin: 10px;
+			}
 
-		/* Espaciado entre secciones */
-		.control-group + .div-1,
-		.control-group + .div-2,
-		.control-group + .div-3 {
-			margin-top: 30px;
+			.content {
+				padding: 20px;
+			}
+
+			.form-col,
+			.form-col-half {
+				flex: 1 1 100%;
+				min-width: auto;
+			}
 		}
 
 		/* Navbar */
@@ -265,1143 +232,1021 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		}
 
-		/* Botón volver arriba */
-		.top-button {
-			text-align: right;
-			padding: 10px;
+		/* Estilos para Select2 mejorados */
+		.select2-container--default .select2-selection--single {
+			background-color: white !important;
+			border: 2px solid var(--border-color) !important;
+			border-radius: var(--border-radius) !important;
+			height: 42px !important;
+			line-height: 42px !important;
+			transition: all 0.3s ease !important;
 		}
 
-    </style>
-	
-    </head>
-	
-<script type="text/javascript">
-   
-function valida_envia(){
-   	//valido el nombre https://desarrolloweb.com/articulos/1767.php
-   	//valido el tipo de actividad
-	
-   	if (document.getElementById("actividad").value == 0){
-      		alert("OJO!, no ha indicado el TIPO DE ACTIVIDAD")
-      		document.form1.actividad.focus()
-			return 0;
-   	}
-  	//valido el No de Resolución
- 
-	 if (document.form1.nro_resolucion.value.trim() == ''){
-      		alert("OJO!, no ha indicado el NÚMERO DE RESOLUCIÓN")
-      		document.form1.nro_resolucion.focus()
-			return 0;
-   	}
-	
-		//valido el Resumen
- 
-	 if (document.form1.resumen.value.trim() == ''){
-      		alert("OJO!, no ha indicado el RESUMEN")
-      		document.form1.resumen.focus()
-			return 0;
-   	}
-	
-		//valido Organizacion(es) 
+		.select2-container--default .select2-selection--single:hover {
+			border-color: var(--primary-color) !important;
+		}
+
+		.select2-container--default.select2-container--focus .select2-selection--single {
+			border-color: var(--primary-color) !important;
+			box-shadow: 0 0 0 3px rgba(51, 122, 183, 0.1) !important;
+		}
+
+		.select2-container--default .select2-selection--single .select2-selection__rendered {
+			color: #333 !important;
+			line-height: 38px !important;
+			padding-left: 15px !important;
+		}
+
+		.select2-container--default .select2-selection--single .select2-selection__arrow {
+			height: 38px !important;
+			right: 10px !important;
+		}
+
+		.select2-container {
+			width: 100% !important;
+		}
+
+		/* Estilos específicos para selects de diferentes secciones */
+		.select2-container.unidad-select .select2-selection--single {
+			background-color: #f0f8ff !important;
+			border-color: #4facfe !important;
+		}
+
+		.select2-container.persona-org-select .select2-selection--single {
+			background-color: #f0fff0 !important;
+			border-color: #96c93d !important;
+		}
+
+		.select2-container.persona-unidad-select .select2-selection--single {
+			background-color: #f0f8ff !important;
+			border-color: #4facfe !important;
+		}
+
+		/* Dropdown mejorado */
+		.select2-dropdown {
+			border: 2px solid var(--border-color) !important;
+			border-radius: var(--border-radius) !important;
+			box-shadow: var(--shadow) !important;
+		}
+
+		.select2-results__option {
+			padding: 12px 15px !important;
+			font-size: 14px !important;
+		}
+
+		.select2-results__option--highlighted {
+			background-color: var(--primary-color) !important;
+		}
+
+		.select2-search__field {
+			border: 2px solid var(--border-color) !important;
+			border-radius: var(--border-radius) !important;
+			padding: 8px 12px !important;
+			font-size: 14px !important;
+		}
+
+		.select2-search__field:focus {
+			outline: none !important;
+			border-color: var(--primary-color) !important;
+		}
+	</style>
+
+	<script type="text/javascript">
+		function valida_envia(){
+			// Validar Tipo de Actividad
+			if (document.getElementById("actividad").value == 0 || document.getElementById("actividad").value == ''){
+				alert("OJO!, no ha indicado el TIPO DE ACTIVIDAD")
+				document.form1.actividad.focus()
+				return 0;
+			}
+			
+			// Validar Número de Resolución
+			if (document.form1.nro_resolucion.value.trim() == ''){
+				alert("OJO!, no ha indicado el NÚMERO DE RESOLUCIÓN")
+				document.form1.nro_resolucion.focus()
+				return 0;
+			}
+			
+			// Validar Resumen
+			if (document.form1.resumen.value.trim() == ''){
+				alert("OJO!, no ha indicado el RESUMEN")
+				document.form1.resumen.focus()
+				return 0;
+			}
+			
+		// Validar Organizaciones (no repetir)
 		var o1= document.getElementById("organizacion1").value;		
 		var o2= document.getElementById("organizacion2").value;		
 		var o3= document.getElementById("organizacion3").value;
-   
-   	if ((o1==o2) || (o1==o3) || ((o2==o3) && (o2+o3>0))){
-      		alert("OJO!, NO puede REPETIR las ORGANIZACIONES")
-      		document.form1.organizacion1.focus()
+		
+		// Solo validar si ambos valores no están vacíos
+		if ((o1==o2 && o1!='' && o2!='') || (o1==o3 && o1!='' && o3!='') || (o2==o3 && o2!='' && o3!='')){
+			alert("OJO!, NO puede REPETIR las ORGANIZACIONES")
+			document.form1.organizacion1.focus()
 			return 0;
-   	}
-	
-	//valido Unidad(es) 
-		var u1= document.getElementById("unidad1").value;		
-		var u2= document.getElementById("unidad2").value;		
-		var u3= document.getElementById("unidad3").value;
-   	if ((u1==u2) || (u1==u3) || ((u2==u3) && (u2+u3>0))){
-      		alert("OJO!, NO puede REPETIR las UNIDADES")
-      		document.form1.unidad1.focus()
-			return 0;
-   	}
-	
-	//valido Fechas Incio/Fin 
-		var f1= document.getElementById("fecha_inicio").value;	
-//		
-		var f2= document.getElementById("fecha_fin").value;		
-	
-	   	if (f1>f2) {
-      		alert("OJO!, DEBE INDICAR UN RANGO DE FECHAS VÁLIDO")
-      		document.form1.fecha_inicio.focus()
-			return 0;
-   	}
-	
-	
-	// valido Numero entero Monto Organizacion
-	    var monto= document.getElementById("monto_inversion_organizacion").value;
-        if (isNaN(monto)) {
-           alert("OJO!, DEBE INGRESAR UN NÚMERO ENTERO")
-      		document.form1.monto_inversion_organizacion.focus()
-			return 0;
-}
-	
-		// valido Numero entero Monto FCEFN
-	    var monto= document.getElementById("monto_inversion_unidad").value;
-        if (isNaN(monto)) {
-           alert("OJO!, DEBE INGRESAR UN NÚMERO ENTERO")
-      		document.form1.monto_inversion_unidad.focus()
-			return 0;
-}
-
-   	//el formulario se envia
-     	alert("Está todo CONTROLADO, muchas gracias por utilizar BCFEXA!");
-    	document.form1.submit(); 
-}  
- 
-</script>
-    <body>
-       <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-            </div>
-        </div>
-
-            <div class="container">
-                <div class="row">
-                    <div class="span12">
-                        <div class="content">
-                            <?php
-           $id = intval($_GET['id']);
-		//   var_dump($id);
-			$sql = mysqli_query($conn, "SELECT * FROM actividad WHERE Id='$id'");
-			if(mysqli_num_rows($sql) == 0){
-				header("Location: ibndex.php");
-			}else{
-				$row = mysqli_fetch_assoc($sql);
-				$Fecha_inicio=$row['Fecha_inicio'];
-				//var_dump($Fecha_inicio);
-				//var_dump($row);
-				//exit;
+		}			// Validar Unidades (no repetir)
+			var u1= document.getElementById("unidad1").value;		
+			var u2= document.getElementById("unidad2").value;		
+			var u3= document.getElementById("unidad3").value;
 			
+		
+		// Solo validar si ambos valores no están vacíos
+		if ((u1==u2 && u1!='' && u2!='') || (u1==u3 && u1!='' && u3!='') || (u2==u3 && u2!='' && u3!='')){
+			alert("OJO!, NO puede REPETIR las UNIDADES")
+			document.form1.unidad1.focus()
+			return 0;
+		}			// Validar Fechas Inicio/Fin
+			var f1= document.getElementById("fecha_inicio").value;	
+			var f2= document.getElementById("fecha_fin").value;		
+			
+			if (f1>f2) {
+				alert("OJO!, DEBE INDICAR UN RANGO DE FECHAS VÁLIDO")
+				document.form1.fecha_inicio.focus()
+				return 0;
 			}
-			?>
-          
-            <blockquote>
-			Actualizar datos de la Actividad
-            </blockquote>
-                         <form name="form1" id="form1" class="form-horizontal row-fluid" action="update-edit.php" method="POST" >
-											
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Registro</label>
-											<div class="controls">
-												<input type="text" name="id" id="id" value="<?php echo $row['Id']; ?>" placeholder="Tidak perlu di isi" class="form-control span8 tip" readonly="readonly">
-											</div>
-										</div>
-										
-										<div class="div-3">
-											<div class="control-group">
-												<label class="control-label">Tipo de Actividad</label>
-												<div class="controls">
-													<select class="form-control" id="actividad" name="actividad" style="width:600px;background-color:#DDFFFF">
-											<?php
-											include "conn.php";
-											$query = mysqli_query($conn,"SELECT * FROM tipoactividad ORDER BY Nombre");
-											var_dump (mysqli_num_rows($query));
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													if ($valores['Id']==$row['TipoActividad_Id']) { ?> 
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre'];?></option>
-													 
-													 <?php }
-												    else { ?>
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']; ?> </option>
-														<?php 
-														}
-													
-													  }
-												}
-													
-													?>
-													
-												</select>
-												</div>
-											</div>
-										
-										
-										<div class="control-group">
-											<label class="control-label">Número Convenio Marco</label>
-											<div class="controls">
-												<input   type="text" name="nro_convenio_marco" value="<?php echo $row['NroConvenioMarco']; ?>" id="nro_convenio_marco" 
-												placeholder="ingrese SOLO el número" class="form-control span8 tip">
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label">Número de Expediente</label>
-											<div class="controls">
-												<input   type="text" name="nro_expediente" value="<?php echo $row['NroExpediente']; ?>" id="nro_expediente" 
-												placeholder="ingrese el número que inicia el trámite" class="form-control span8 tip">
-											</div>
-										</div>
-										
-										
-										<div class="control-group">
-											<label class="control-label">Resolución FCEFN</label>
-											<div class="controls">
-												<input type="text" name="nro_resolucion" onchange='add();' id="nro_resolucion" value="<?php echo $row['NroResolucion']; ?>"
-												placeholder="ingrese según patrón Rxx/aa" class="form-control span8 tip" required>
-											</div>
-										
-										<br/>
-										</div>
-										</div>
-																
-									
-										
-									  <div id="tipo_organizacion" class="div-1">
-									  	<div class="control-group">
-											<label class="control-label">Organización</label>
-											<div class="controls">
-										    <div class="form-group mx-sm-3 mb-2">
-											
-											<label for="organizacion" class="sr-only">Tipo de Organización:</label>
-										
-											<select class="form-control" name="organizacion1" id="organizacion1" required style="width:400px;background-color:#DDFFFF"">
-											
-										<?php
-										
-		//leo datos de la tabla detalleactividadorganizacion para extraer la PRIMER organizacion
-									
-								        	include "conn.php";
-											$query_org= 'SELECT Organizacion_Id,Nombre ';
-											$query_org.='FROM detalleactividadorganizacion ';
-											$query_org.='JOIN organizacion on (Organizacion_Id=organizacion.Id) ';
-											$query_org.='WHERE Actividad_Id='.$row['Id'].' limit 0,1';
-											$query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$organizacion1_leida="antes del while dio 0 la busqueda=".mysqli_num_rows($query);
-													
-												} else
-													$organizacion1_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$organizacion1_leida= $valores['Organizacion_Id'];
-													echo $organizacion1_leida;
-												   }
-																				
-											$query = mysqli_query($conn,"SELECT  * FROM organizacion ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$organizacion1_leida) { 
-									   ?> 
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?>
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-													
-										
-											<input type="hidden" name="organizacion1_leida" id="organizacion1_leida" value="<?php echo $organizacion1_leida; ?>" >
-											
-										
-										
-									 		
-										
-											<select class="form-control" name="organizacion2" id="organizacion2" style="width:400px;background-color:#DDFFFF"">
-											<option value="0">&nbsp;&nbsp;&nbsp;Seleccione la 2da. organización (si la hubiere):</option>
-										<?php
-	                  //leo datos de la tabla detalleactividadorganizacion para extraer la SEGUNDA organizacion
-									
-								        	include "conn.php";
-											$query_org= 'SELECT Organizacion_Id,Nombre ';
-											$query_org.='FROM detalleactividadorganizacion ';
-											$query_org.='JOIN organizacion on (Organizacion_Id=organizacion.Id) ';
-											$query_org.='WHERE Actividad_Id='.$row['Id'].' limit 1,1';
-											$query = mysqli_query($conn,$query_org);
-											
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$organizacion2_leida="0";
-													
-												} else
-													$organizacion2_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$organizacion2_leida= $valores['Organizacion_Id'];
-													echo $organizacion2_leida;
-												   }
-												 
-												
-											
-										
-											$query = mysqli_query($conn,"SELECT  * FROM organizacion ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}
-												else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$organizacion2_leida) { 
-									   ?> 
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?>
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']?> </option>
-														<?php 
-														}
-													
-													  }
-												}													
-													?>
-													
-												</select>
-												
-											<input type="hidden" name="organizacion2_leida" id="organizacion2_leida" value="<?php echo $organizacion2_leida; ?>">
-										
-									 		
-											<select class="form-control" name="organizacion3" id="organizacion3" style="width:400px;background-color:#DDFFFF"">
-											<option value="0">&nbsp;&nbsp;&nbsp;Seleccione la 3er. organización (si la hubiere):</option>
-										<?php
-	             //leo datos de la tabla detalleactividadorganizacion para extraer la TERCERA organizacion
-									
-								        	include "conn.php";
-											$query_org= 'SELECT Organizacion_Id,Nombre ';
-											$query_org.='FROM detalleactividadorganizacion ';
-											$query_org.='JOIN organizacion on (Organizacion_Id=organizacion.Id) ';
-											$query_org.='WHERE Actividad_Id='.$row['Id'].' limit 2,1';
-											$query = mysqli_query($conn,$query_org);
-											
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$organizacion3_leida="0";
-													
-												} else
-													$organizacion3_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$organizacion3_leida= $valores['Organizacion_Id'];
-													echo $organizacion3_leida;
-												   }
-												 
-												
-											
-										
-											$query = mysqli_query($conn,"SELECT  * FROM organizacion ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$organizacion3_leida) { 
-										?>  
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?>
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']?> </option>
-														<?php 
-														}
-													
-													  }
-												}													
-													?>
-													
-												</select>
-												<input type="hidden" name="organizacion3_leida" id="organizacion3_leida" value="<?php echo $organizacion3_leida; ?>" >
-											
-												</div>
-												</div>
-												</div>
-     <!--   <hr/> -->
-		
-    <!-- Grupo de Select para RRHH1 de la Organización -->	
-                                      		
-									  <div id="tipo_organizacion" class="div-1">
-									  	<div class="control-group">
-											<label class="control-label">👤 RRHH designado por la organización</label>
-											<div class="controls">
-										    <div class="form-group mx-sm-3 mb-2">
-											
-																				
-											<select class="form-control" name="responsable_org1" id="responsable_org1" required style="width:400px;background-color:#DDFFFF"">
-											
-										<?php
-		                                    //leo datos de la tabla detalleactividadpersona para extraer la PRIMER organizacion
-									
-								        	include "conn.php";
-											$query_org='SELECT Persona_Id,Nombre FROM detallepersonaactividad
-											JOIN persona on (Persona_Id=persona.Id) WHERE Actividad_Id='.$row[Id].' AND Org_o_Uni = 1 limit 0,1' ;
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$responsable_org1_leida="0";
-													
-												} else
-													$responsable_org1_leida="0";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$responsable_org1_leida= $valores['Persona_Id'];
-													echo $responsable_org1_leida;
-												   }
-												 
-																					
-										
-											$query = mysqli_query($conn,"SELECT  * FROM persona ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$responsable_org1_leida) { 
-									   ?>
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-											    <input type="hidden" name="responsable_org1_leida" id="responsable_org1_leida" value="<?php echo $responsable_org1_leida; ?>" >
-
-		
-    <!-- Grupo de Select para RRHH2 de la Organización -->	
-                                      									
-									 
-																				
-											<select class="form-control" name="responsable_org2" id="responsable_org2" style="width:400px;background-color:#DDFFFF"">
-											<option value="">Seleccione el RRHH que figura en la resolución:</option>
-										<?php
-		                                    //leo datos de la tabla detalleactividadpersona para extraer la segunda organizacion
-									
-								        	include "conn.php";
-											$query_org='SELECT Persona_Id,Nombre FROM detallepersonaactividad
-											JOIN persona on (Persona_Id=persona.Id) WHERE Actividad_Id='.$row[Id].' AND Org_o_Uni = 1 limit 1,1' ;
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$responsable_org2_leida="0";
-													
-												} else
-													$responsable_org2_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$responsable_org2_leida= $valores['Persona_Id'];
-													echo $responsable_org2_leida;
-												   }
-												 
-																					
-										
-											$query = mysqli_query($conn,"SELECT  * FROM persona ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$responsable_org2_leida) { 
-									   ?>
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-												
-												<input type="hidden" name="responsable_org2_leida" id="responsable_org2_leida" value="<?php echo $responsable_org2_leida; ?>" >
-
-	<!-- Grupo de Select para RRHH3 de la Organización -->	
-                                        
-									 																				
-											<select class="form-control" name="responsable_org3" id="responsable_org3" style="width:400px;background-color:#DDFFFF"">
-											<option value="">Seleccione el RRHH que figura en la resolución:</option>
-										<?php
-		                                    //leo datos de la tabla detalleactividadpersona para extraer la tercer organizacion
-									
-								        	include "conn.php";
-											$query_org='SELECT Persona_Id,Nombre FROM detallepersonaactividad
-											JOIN persona on (Persona_Id=persona.Id) WHERE Actividad_Id='.$row[Id].' AND Org_o_Uni = 1 limit 2,1' ;
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$responsable_org3_leida="0";
-													
-												} else
-													$responsable_org3_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$responsable_org3_leida= $valores['Persona_Id'];
-													echo $responsable_org3_leida;
-												   }
-												 
-																					
-										
-											$query = mysqli_query($conn,"SELECT  * FROM persona ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$responsable_org3_leida) { 
-									   ?>
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre'];?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-												
-											 <input type="hidden" name="responsable_org3_leida" id="responsable_org3_leida" value="<?php echo $responsable_org3_leida; ?>" >
-
-											</div>
-												</div>
-												</div>
-       <hr/>
-</div>
-										<div class="div-3">
-											<label class="control-label">Resumen</label>
-										</div>										
-										<div class="controls">
-										    <!-- 
-												<input name="resumen" id="resumen" value="<?php echo $row['Resumen']; ?>"class=" form-control span8 tip"  
-												type="text" placeholder="Resumen" required />
-											-->
-												
-												<textarea name="resumen" id="resumen" class="form-control span8 tip" placeholder="Resumen" required /><?php echo $row['Resumen']; ?>
-												</textarea>
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label">🎯Objetivo</label>
-											<div class="controls">
-												<!--
-												<input name="objetivo" id="objetivo" value="<?php echo $row['Objetivo']; ?> "class=" form-control span8 tip"   type="text" placeholder="objetivo" />
-											    -->
-												<textarea name="objetivo" id="objetivo"  class="form-control span8 tip"   placeholder="objetivo"/><?php echo $row['Objetivo']; ?>
-											    </textarea>
-											</div>
-										</div>	   
 			
-<!-- Grupo de Select para Unidad(es) ejecutora -->						
+			// Validar Número entero Monto Organización
+			var monto= document.getElementById("monto_inversion_organizacion").value;
+			if (monto != '' && isNaN(monto)) {
+				alert("OJO!, DEBE INGRESAR UN NÚMERO ENTERO")
+				document.form1.monto_inversion_organizacion.focus()
+				return 0;
+			}
+			
+			// Validar Número entero Monto FCEFN
+			var monto= document.getElementById("monto_inversion_unidad").value;
+			if (monto != '' && isNaN(monto)) {
+				alert("OJO!, DEBE INGRESAR UN NÚMERO ENTERO")
+				document.form1.monto_inversion_unidad.focus()
+				return 0;
+			}
+
+			// El formulario se envía
+			alert("Está todo CONTROLADO, muchas gracias por utilizar BCFEXA!");
+			document.form1.submit(); 
+		}  
+	</script>
+</head>
+
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<div class="content">
+					<?php
+					$id = intval($_GET['id']);
+					$sql = mysqli_query($conn, "SELECT * FROM actividad WHERE Id='$id'");
+					if(mysqli_num_rows($sql) == 0){
+						header("Location: index.php");
+					}else{
+						$row = mysqli_fetch_assoc($sql);
+					}
 					
-									
-										<br/>
-										</div>
-									  <div id="tipo_organizacion" class="div-2">
-									  	<div class="control-group">
-											<label class="control-label">Unidad Ejecutora</label>
-											<div class="controls">
-										    <div class="form-group mx-sm-3 mb-2">
-											
-											
-										
-											<select class="form-control" name="unidad1" id="unidad1" required style="width:400px;background-color:#DDFFFF"">
-											<option value="">Seleccione la unidad ejecutora que figura en la resolución:</option>
-										<?php
-		//leo datos de la tabla detalleactividadunidad para extraer la PRIMER unidad
-									
-								        	include "conn.php";
-											$query_org='SELECT UnidadEjecutora_Id,Unidad FROM detalleactividadunidad 
-											JOIN unidadejecutora on (UnidadEjecutora_Id=unidadejecutora.Id) WHERE Actividad_Id='.$row[Id].' limit 0,1';
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$unidad1_leida="0";
-													
-												} else
-													$unidad1_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$unidad1_leida= $valores['UnidadEjecutora_Id'];
-													echo $unidad1_leida;
-												   }
-												 
-												
-											
-										
-											$query = mysqli_query($conn,"SELECT  * FROM unidadejecutora ORDER BY Unidad");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$unidad1_leida) { 
-									   ?> 
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Unidad']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?>
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Unidad']?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-												
-												   <input type="hidden" name="unidad1_leida" id="unidad1_leida" value="<?php echo $unidad1_leida; ?>" >
-
-			<!-- Grupo de Select para 2da. Unidad(es) ejecutora -->						
+					// Obtener datos de ubicación del archivo
+					$ubicacion_original = '';
+					$ubicacion_copia = '';
+					$ubicacion_digital = '';
 					
-																										
-									  
-																				
-											<select class="form-control" name="unidad2" id="unidad2" required style="width:400px;background-color:#DDFFFF"">
-											<option value="0">Seleccione la 2da. unidad ejecutora (si la hubiere) que figura en la resolución:</option>
-										<?php
-		//leo datos de la tabla detalleactividadunidad para extraer la SEGUNDA unidad
-									
-								        	include "conn.php";
-											$query_org='SELECT UnidadEjecutora_Id,Unidad FROM detalleactividadunidad 
-											JOIN unidadejecutora on (UnidadEjecutora_Id=unidadejecutora.Id) WHERE Actividad_Id='.$row[Id].' limit 1,1';
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$unidad2_leida="0";
-													
-												} else
-													$unidad2_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$unidad2_leida= $valores['UnidadEjecutora_Id'];
-													echo $unidad2_leida;
-												   }
-												 
-												
-											
-										
-											$query = mysqli_query($conn,"SELECT  * FROM unidadejecutora ORDER BY Unidad");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$unidad2_leida) { 
-									   ?> 
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Unidad']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?>
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Unidad']?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-												
-												 <input type="hidden" name="unidad2_leida" id="unidad2_leida" value="<?php echo $unidad2_leida; ?>" >
-
-			<!-- Grupo de Select para 3er. Unidad(es) ejecutora -->						
+					if ($row['UbicacionArchivo_Id'] > 0) {
+						$query_ubicacion = mysqli_query($conn, "SELECT * FROM ubicacionarchivo WHERE Id = " . $row['UbicacionArchivo_Id']);
+						if (mysqli_num_rows($query_ubicacion) > 0) {
+							$ubicacion = mysqli_fetch_assoc($query_ubicacion);
+							$ubicacion_original = $ubicacion['UbicacionOriginal'];
+							$ubicacion_copia = $ubicacion['UbicacionCopia'];
+							$ubicacion_digital = $ubicacion['UbicacionDigital'];
+						}
+					}
 					
-																										
-									  
-											
-										
-											<select class="form-control" name="unidad3" id="unidad3" style="width:400px;background-color:#DDFFFF"">
-											<option value="">Seleccione la unidad ejecutora que figura en la resolución:</option>
+					// Leer organizaciones
+					$query_org1 = 'SELECT Organizacion_Id FROM detalleactividadorganizacion WHERE Actividad_Id='.$row['Id'].' LIMIT 0,1';
+					$query = mysqli_query($conn,$query_org1);
+					$organizacion1_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$organizacion1_leida = $valores['Organizacion_Id'];
+					}
+					
+					$query_org2 = 'SELECT Organizacion_Id FROM detalleactividadorganizacion WHERE Actividad_Id='.$row['Id'].' LIMIT 1,1';
+					$query = mysqli_query($conn,$query_org2);
+					$organizacion2_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$organizacion2_leida = $valores['Organizacion_Id'];
+					}
+					
+					$query_org3 = 'SELECT Organizacion_Id FROM detalleactividadorganizacion WHERE Actividad_Id='.$row['Id'].' LIMIT 2,1';
+					$query = mysqli_query($conn,$query_org3);
+					$organizacion3_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$organizacion3_leida = $valores['Organizacion_Id'];
+					}
+					
+					// Leer responsables de organizaciones
+					$query_resp_org1 = 'SELECT Persona_Id FROM detallepersonaactividad WHERE Actividad_Id='.$row['Id'].' AND Org_o_Uni = 1 LIMIT 0,1';
+					$query = mysqli_query($conn,$query_resp_org1);
+					$responsable_org1_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$responsable_org1_leida = $valores['Persona_Id'];
+					}
+					
+					$query_resp_org2 = 'SELECT Persona_Id FROM detallepersonaactividad WHERE Actividad_Id='.$row['Id'].' AND Org_o_Uni = 1 LIMIT 1,1';
+					$query = mysqli_query($conn,$query_resp_org2);
+					$responsable_org2_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$responsable_org2_leida = $valores['Persona_Id'];
+					}
+					
+					$query_resp_org3 = 'SELECT Persona_Id FROM detallepersonaactividad WHERE Actividad_Id='.$row['Id'].' AND Org_o_Uni = 1 LIMIT 2,1';
+					$query = mysqli_query($conn,$query_resp_org3);
+					$responsable_org3_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$responsable_org3_leida = $valores['Persona_Id'];
+					}
+					
+					// Leer unidades ejecutoras
+					$query_un1 = 'SELECT UnidadEjecutora_Id FROM detalleactividadunidad WHERE Actividad_Id='.$row['Id'].' LIMIT 0,1';
+					$query = mysqli_query($conn,$query_un1);
+					$unidad1_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$unidad1_leida = $valores['UnidadEjecutora_Id'];
+					}
+					
+					$query_un2 = 'SELECT UnidadEjecutora_Id FROM detalleactividadunidad WHERE Actividad_Id='.$row['Id'].' LIMIT 1,1';
+					$query = mysqli_query($conn,$query_un2);
+					$unidad2_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$unidad2_leida = $valores['UnidadEjecutora_Id'];
+					}
+					
+					$query_un3 = 'SELECT UnidadEjecutora_Id FROM detalleactividadunidad WHERE Actividad_Id='.$row['Id'].' LIMIT 2,1';
+					$query = mysqli_query($conn,$query_un3);
+					$unidad3_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$unidad3_leida = $valores['UnidadEjecutora_Id'];
+					}
+					
+					// Leer responsables de unidades
+					$query_resp_un1 = 'SELECT Persona_Id FROM detallepersonaactividad WHERE Actividad_Id='.$row['Id'].' AND Org_o_Uni = 2 LIMIT 0,1';
+					$query = mysqli_query($conn,$query_resp_un1);
+					$responsable_unidad1_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$responsable_unidad1_leida = $valores['Persona_Id'];
+					}
+					
+					$query_resp_un2 = 'SELECT Persona_Id FROM detallepersonaactividad WHERE Actividad_Id='.$row['Id'].' AND Org_o_Uni = 2 LIMIT 1,1';
+					$query = mysqli_query($conn,$query_resp_un2);
+					$responsable_unidad2_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$responsable_unidad2_leida = $valores['Persona_Id'];
+					}
+					
+					$query_resp_un3 = 'SELECT Persona_Id FROM detallepersonaactividad WHERE Actividad_Id='.$row['Id'].' AND Org_o_Uni = 2 LIMIT 2,1';
+					$query = mysqli_query($conn,$query_resp_un3);
+					$responsable_unidad3_leida = 0;
+					if(mysqli_num_rows($query) > 0) {
+						$valores = mysqli_fetch_array($query);
+						$responsable_unidad3_leida = $valores['Persona_Id'];
+					}
+					?>
+					
+					<blockquote>
+						<h3>Actualizar datos de la Actividad</h3>
+					</blockquote>
+					
+					<form name="form1" id="form1" class="form-horizontal row-fluid" action="update-edit.php" method="POST">
+						
+						<!-- Campo oculto para el ID -->
+						<input type="hidden" name="id" id="id" value="<?php echo $row['Id']; ?>">
+						
+						<!-- Campos ocultos para valores leídos -->
+						<input type="hidden" name="organizacion1_leida" value="<?php echo $organizacion1_leida; ?>">
+						<input type="hidden" name="organizacion2_leida" value="<?php echo $organizacion2_leida; ?>">
+						<input type="hidden" name="organizacion3_leida" value="<?php echo $organizacion3_leida; ?>">
+						<input type="hidden" name="responsable_org1_leida" value="<?php echo $responsable_org1_leida; ?>">
+						<input type="hidden" name="responsable_org2_leida" value="<?php echo $responsable_org2_leida; ?>">
+						<input type="hidden" name="responsable_org3_leida" value="<?php echo $responsable_org3_leida; ?>">
+						<input type="hidden" name="unidad1_leida" value="<?php echo $unidad1_leida; ?>">
+						<input type="hidden" name="unidad2_leida" value="<?php echo $unidad2_leida; ?>">
+						<input type="hidden" name="unidad3_leida" value="<?php echo $unidad3_leida; ?>">
+						<input type="hidden" name="responsable_unidad1_leida" value="<?php echo $responsable_unidad1_leida; ?>">
+						<input type="hidden" name="responsable_unidad2_leida" value="<?php echo $responsable_unidad2_leida; ?>">
+						<input type="hidden" name="responsable_unidad3_leida" value="<?php echo $responsable_unidad3_leida; ?>">
+						<input type="hidden" name="ubicacion_id" value="<?php echo $row['UbicacionArchivo_Id']; ?>">
+						
+						<!-- Sección 1: Información General -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Información General</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Tipo de Actividad <span style="color: red;">*</span></label>
+									<select class="form-control" id="actividad" name="actividad" required>
+										<option value="">Seleccione el tipo de actividad:</option>
 										<?php
-		//leo datos de la tabla detalleactividadunidad para extraer la TERCER unidad
-									
-								        	include "conn.php";
-											$query_org='SELECT UnidadEjecutora_Id,Unidad FROM detalleactividadunidad 
-											JOIN unidadejecutora on (UnidadEjecutora_Id=unidadejecutora.Id) WHERE Actividad_Id='.$row[Id].' limit 2,1';
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$unidad3_leida="0";
-													
-												} else
-													$unidad3_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$unidad3_leida= $valores['UnidadEjecutora_Id'];
-													echo $unidad3_leida;
-												   }
-												 
-												
-											
-										
-											$query = mysqli_query($conn,"SELECT  * FROM unidadejecutora ORDER BY Unidad");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$unidad3_leida) { 
-									   ?> 
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Unidad']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?>
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Unidad']?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-												   <input type="hidden" name="unidad3_leida" id="unidad3_leida" value="<?php echo $unidad3_leida; ?>" >
-
-												</div>
-												</div>
-												</div>
-     <!--   <hr/> -->
-		
-    <!-- Grupo de Select para RRHH1 de la Unidad -->	
-                                        <label for="organizacion" id="responsable_unidad1" class="sr-only">=====Tipo de Organización:</label>
-											
-									  <div id="tipo_organizacion" class="div-2">
-									  	<div class="div-2">
-											<label class="control-label">👤 RRHH designado por la Unidad Ejecutora</label>
-											<div class="controls">
-										    <div class="div-2">
-											
-																				
-											<select class="form-control" name="responsable_unidad1" id="responsable_unidad1" required style="width:400px;background-color:#DDFFFF"">
-											<option value="">Seleccione el RRHH que figura en la resolución:</option>
-										<?php
-		                                    //leo datos de la tabla detalleactividadpersona para extraer la PRIMER organizacion
-									
-								        	include "conn.php";
-											$query_org='SELECT Persona_Id,Nombre FROM detallepersonaactividad
-											JOIN persona on (Persona_Id=persona.Id) WHERE Actividad_Id='.$row[Id].' AND Org_o_Uni = 2 limit 0,1' ;
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$responsable_unidad1_leida="0";
-													
-												} else
-													$responsable_unidad1_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$responsable_unidad1_leida= $valores['Persona_Id'];
-													echo $responsable_unidad1_leida;
-												   }
-												 
-																					
-										
-											$query = mysqli_query($conn,"SELECT  * FROM persona ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$responsable_unidad1_leida) { 
-									   ?>
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre'];?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-		 <input type="hidden" name="responsable_unidad1_leida" id="responsable_unidad1_leida" value="<?php echo $responsable_unidad1_leida; ?>" >
-
-		
-    <!-- Grupo de Select para RRHH2 de la Organización -->	
-                                        <label for="organizacion" id="responsable_unidad2" class="sr-only">=====Tipo de Organización:</label>
-											
-									 
-																				
-											<select class="form-control" name="responsable_unidad2" id="responsable_unidad2" style="width:400px;background-color:#DDFFFF"">
-											<option value="">Seleccione el RRHH que figura en la resolución:</option>
-										<?php
-		                                    //leo datos de la tabla detalleactividadpersona para extraer la PRIMER organizacion
-									
-								        	include "conn.php";
-											$query_org='SELECT Persona_Id,Nombre FROM detallepersonaactividad
-											JOIN persona on (Persona_Id=persona.Id) WHERE Actividad_Id='.$row[Id].' AND Org_o_Uni = 2 limit 1,1' ;
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$responsable_unidad2_leida="0";
-													
-												} else
-													$responsable_unidad2_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$responsable_unidad2_leida= $valores['Persona_Id'];
-													echo $responsable_unidad2_leida;
-												   }
-												 
-																					
-										
-											$query = mysqli_query($conn,"SELECT  * FROM persona ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0)
-												{
-													
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$responsable_unidad2_leida) { 
-									   ?>
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre'];?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-												 <input type="hidden" name="responsable_unidad2_leida" id="responsable_unidad2_leida" value="<?php echo $responsable_unidad2_leida; ?>" >
-
-	<!-- Grupo de Select para RRHH3 de la Organización -->	
-                                        <label for="organizacion" id="responsable_unidad3" class="sr-only">=====Tipo de Organización:</label>
-											
-									 
-																				
-											<select class="form-control" name="responsable_unidad3" id="responsable_unidad3" style="width:400px;background-color:#DDFFFF"">
-											<option value="">Seleccione el RRHH que figura en la resolución:</option>
-										<?php
-		                                    //leo datos de la tabla detalleactividadpersona para extraer la PRIMER organizacion
-									
-								        	include "conn.php";
-											$query_org='SELECT Persona_Id,Nombre FROM detallepersonaactividad
-											JOIN persona on (Persona_Id=persona.Id) WHERE Actividad_Id='.$row[Id].' AND Org_o_Uni = 2 limit 2,1' ;
-																				 $query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-													$responsable_unidad3_leida="0";
-													
-												} else
-													$responsable_unidad3_leida="antes del while";
-												   while ($valores = mysqli_fetch_array($query)) {
-													$responsable_unidad3_leida= $valores['Persona_Id'];
-													echo $responsable_unidad3_leida;
-												   }
-												 
-																					
-										
-											$query = mysqli_query($conn,"SELECT  * FROM persona ORDER BY Nombre");
-											
-												if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-												}else{
-												   while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$responsable_unidad3_leida) { 
-									   ?>
-													
-													 <option value="<?php echo $valores['Id'];?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre'];?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-												 <input type="hidden" name="responsable_unidad3_leida" id="responsable_unidad3_leida" value="<?php echo $responsable_unidad3_leida; ?>" >
-
-											</div>
-												</div>
-												</div>
-       <hr/>
-</div
-
+										$query = mysqli_query($conn,"SELECT * FROM tipoactividad ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $row['TipoActividad_Id']) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
 						</div>
-<!-- Puede ir las fechas y la renovación en una tabla para una sola fila						
-<table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-</table>
--->
-										<div class="control-group">
-											<label class="control-label">Fecha de Inicio de la Actividad</label>
-											<div class="controls" style="width:200px;">
-												<input name="fecha_inicio" id="fecha_inicio"  class="form-control span8 tip" 
-												value="<?php 
-			
-												echo $row['Fecha_inicio']; ?>"
-												type="date" placeholder="Ingrese SOLO el año"  required />
-											
-											</div>
-												</br>		
-										
-											<label class="control-label">Fecha de Fin de la Actividad</label>
-											<div class="controls" style="width:200px;">
-												<input name="fecha_fin" id="fecha_fin" class="form-control span8 tip" 
-												value="<?php echo $row['Fecha_final']; ?>"
-												type="date" placeholder="Ingrese SOLO el año"  required />
-											</div>
-										</div>
-										
-										
-										<div class="control-group">
-											<label class="control-label" for="basicinput">Plazo de Renovación (meses)</label>
-											<div class="controls">
-												<input type="text" name="plazo_renovacion"  style="width:50px;background-color:#DDFFFF" id="plazo_renovacion" 
-												value="<?php echo $row['PlazoRenovacion']; ?>" 
-												placeholder="Tidak perlu di isi" class="form-control span8 tip">
-											</div>
-										</div>
-										
-											<div class="control-group">
-												<label class="control-label">Renovación Automática</label>
-												<div class="controls">
-											<select class="form-control" id="renovacion_automatica" name="renovacion_automatica" style="width:600px;background-color:#DDFFFF">
-											<?php
-											  if ($row['RenovacionAutomatica']==0) { ?> 
-													
-													 <option value="0" selected>NO</option>
-													  <option value="1">SÍ</option>
-													 <?php }
-												    else { ?>
-														<option value="0">NO</option>
-														<option value="1" selected>SÍ</option>
-														<?php 
-														}
-													
-													  
-												
-													
-													?>
-													
-												</select>
-												</div>
-												</div>
-												
-										
-											
-										<div class="control-group">
-											<label class="control-label">Tipo de Moneda Inversión Organización</label>
-											<div class="controls">
-										    <div class="form-group mx-sm-3 mb-2">
-											<label for="MonedaInversion" id="moneda_organizacion" class="sr-only">Tipo de Moneda:</label>
-																			
-											<select class="form-control" name="moneda_organizacion" id="moneda_organizacion" style="width:400px;background-color:#DDFFFF"">
-											<?php
-		                                    $query_org='SELECT * FROM monedadeinversion' ;
-											$query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-																									
-												} else
-													{
-												     while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$row['MonedaOrganizacion_Id']) { 
-									     ?>													
-													 <option value="<?php echo $valores['Id']; ?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre'];?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-											
-											
-												</div>
-														</div>
-											</div>
-										
-                                         <div class="control-group">
-											<label class="control-label">Monto de la inversión aportada por la Organización</label>
-											<div class="controls">
-												<input   type="text" pattern="[0-9]{1,9}" name="monto_inversion_organizacion" id="monto_inversion_organizacion" 
-												placeholder="ingrese SOLO el número" 
-												value="<?php echo $row['InversionOrganizacion'];?>"
-												class="form-control span8 tip">
-											</div>
-										 </div>
-										
-										<div class="control-group">
-											<label class="control-label">Nota Aclaratoria Inversión de la Organización</label>
-											<div class="controls">
-											 
-												<textarea name="nota_inversion_organizacion" id="nota_inversion_organizacion" 
-												class=" form-control span8 tip"  placeholder="" /><?php echo $row['NotaInversionOrganizacion'];?></textarea>											</div>
-										</div>
+						
+						<!-- Sección 2: Información Documental -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Información Documental</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Convenio Marco</label>
+									<input type="text" name="nro_convenio_marco" value="<?php echo $row['NroConvenioMarco']; ?>" 
+										id="nro_convenio_marco" placeholder="Ingrese SOLO el número" class="form-control">
+								</div>
+								<div class="form-col">
+									<label class="control-label">Número de Expediente</label>
+									<input type="text" name="nro_expediente" value="<?php echo $row['NroExpediente']; ?>" 
+										id="nro_expediente" placeholder="Ingrese el número que inicia el trámite" class="form-control">
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Resolución FCEFN <span style="color: red;">*</span></label>
+									<input type="text" name="nro_resolucion" id="nro_resolucion" 
+										value="<?php echo $row['NroResolucion']; ?>"
+										placeholder="Ingrese según patrón Rxx/aa" class="form-control" required>
+								</div>
+								<div class="form-col">
+									<label class="control-label">Resolución Asociada</label>
+									<input type="text" name="nro_resolucion_asociada" id="nro_resolucion_asociada" 
+										value="<?php echo $row['NroResolucion_Asociada']; ?>"
+										placeholder="Resolución relacionada (opcional)" class="form-control">
+								</div>
+							</div>
+						</div>
+						
+						<!-- Sección 3: Organizaciones Participantes -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Organizaciones Participantes</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Organización Principal <span style="color: red;">*</span></label>
+									<select class="form-control" name="organizacion1" id="organizacion1" required>
+										<option value="">Seleccione la organización:</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM organizacion ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $organizacion1_leida) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="form-col">
+									<label class="control-label">Organización Secundaria</label>
+									<select class="form-control" name="organizacion2" id="organizacion2">
+										<option value="">Seleccione otra organización (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM organizacion ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $organizacion2_leida && $organizacion2_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Organización Adicional</label>
+									<select class="form-control" name="organizacion3" id="organizacion3">
+										<option value="">Seleccione otra organización (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM organizacion ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $organizacion3_leida && $organizacion3_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							
+							<div class="section-header" style="margin-top: 30px;">
+								<h4 class="section-title">Responsables de las Organizaciones</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Responsable Principal <span style="color: red;">*</span></label>
+									<select class="form-control" name="responsable_org1" id="responsable_org1" required>
+										<option value="">Seleccione el RRHH:</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM persona ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $responsable_org1_leida) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="form-col">
+									<label class="control-label">Responsable Secundario</label>
+									<select class="form-control" name="responsable_org2" id="responsable_org2">
+										<option value="">Seleccione otro RRHH (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM persona ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $responsable_org2_leida && $responsable_org2_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Responsable Adicional</label>
+									<select class="form-control" name="responsable_org3" id="responsable_org3">
+										<option value="">Seleccione otro RRHH (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM persona ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $responsable_org3_leida && $responsable_org3_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Sección 4: Descripción de la Actividad -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Descripción de la Actividad</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Resumen <span style="color: red;">*</span></label>
+									<textarea name="resumen" id="resumen" class="form-control" 
+										placeholder="Ingrese un resumen detallado de la actividad" required rows="4"><?php echo $row['Resumen']; ?></textarea>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Objetivo <span style="color: red;">*</span></label>
+									<textarea name="objetivo" id="objetivo" class="form-control" 
+										placeholder="Describa los objetivos de la actividad" rows="3" required><?php echo $row['Objetivo']; ?></textarea>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Sección 5: Unidades Ejecutoras -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Unidades Ejecutoras</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Unidad Principal <span style="color: red;">*</span></label>
+									<select class="form-control" id="unidad1" name="unidad1" required>
+										<option value="">Seleccione la UNIDAD:</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM unidadejecutora ORDER BY Unidad");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $unidad1_leida) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Unidad'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="form-col">
+									<label class="control-label">Unidad Secundaria</label>
+									<select class="form-control" id="unidad2" name="unidad2">
+										<option value="">Seleccione otra Unidad (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM unidadejecutora ORDER BY Unidad");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $unidad2_leida && $unidad2_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Unidad'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Unidad Adicional</label>
+									<select class="form-control" id="unidad3" name="unidad3">
+										<option value="">Seleccione otra Unidad (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM unidadejecutora ORDER BY Unidad");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $unidad3_leida && $unidad3_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Unidad'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							
+							<div class="section-header" style="margin-top: 30px;">
+								<h4 class="section-title">Responsables de las Unidades</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Responsable Principal</label>
+									<select class="form-control" id="responsable_unidad1" name="responsable_unidad1">
+										<option value="">Seleccione el responsable:</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM persona ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $responsable_unidad1_leida) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="form-col">
+									<label class="control-label">Responsable Secundario</label>
+									<select class="form-control" id="responsable_unidad2" name="responsable_unidad2">
+										<option value="">Seleccione otro responsable (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM persona ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $responsable_unidad2_leida && $responsable_unidad2_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Responsable Adicional</label>
+									<select class="form-control" id="responsable_unidad3" name="responsable_unidad3">
+										<option value="">Seleccione otro responsable (opcional):</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM persona ORDER BY Nombre");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $responsable_unidad3_leida && $responsable_unidad3_leida > 0) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Sección 6: Fechas y Configuración Temporal -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Fechas y Configuración Temporal</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col-half">
+									<label class="control-label">Fecha de Inicio <span style="color: red;">*</span></label>
+									<input name="fecha_inicio" id="fecha_inicio" class="form-control" type="date" 
+										value="<?php echo $row['Fecha_inicio']; ?>" required />
+								</div>
+								<div class="form-col-half">
+									<label class="control-label">Fecha de Fin <span style="color: red;">*</span></label>
+									<input name="fecha_fin" id="fecha_fin" class="form-control" type="date" 
+										value="<?php echo $row['Fecha_final']; ?>" required />
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col-half">
+									<label class="control-label">Plazo de Renovación (meses)</label>
+									<input type="number" name="plazo_renovacion" id="plazo_renovacion" 
+										value="<?php echo $row['PlazoRenovacion']; ?>"
+										placeholder="Número de meses" class="form-control" min="1" max="60">
+								</div>
+								<div class="form-col-half">
+									<label class="control-label">¿Se renueva automáticamente?</label>
+									<select class="form-control" id="renovacion_automatica" name="renovacion_automatica">
+										<option value="0" <?php echo ($row['RenovacionAutomatica'] == 0) ? 'selected' : ''; ?>>NO</option>
+										<option value="1" <?php echo ($row['RenovacionAutomatica'] == 1) ? 'selected' : ''; ?>>SÍ</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Sección 7: Inversión de la Organización -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Inversión de la Organización</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col-half">
+									<label class="control-label">Tipo de Moneda</label>
+									<select class="form-control" id="moneda_organizacion" name="moneda_organizacion">
+										<option value="">Seleccione tipo de moneda</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM monedadeinversion");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $row['MonedaOrganizacion_Id']) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="form-col-half">
+									<label class="control-label">Monto de Inversión</label>
+									<input type="number" name="monto_inversion_organizacion" id="monto_inversion_organizacion" 
+										value="<?php echo $row['InversionOrganizacion']; ?>"
+										placeholder="Ingrese el monto" class="form-control" min="0" step="0.01">
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Nota Aclaratoria de la Inversión</label>
+									<textarea name="nota_inversion_organizacion" id="nota_inversion_organizacion" 
+										class="form-control" placeholder="Detalles adicionales sobre la inversión" rows="3"><?php echo $row['NotaInversionOrganizacion']; ?></textarea>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Sección 8: Inversión FCEFN -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">Inversión FCEFN</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col-half">
+									<label class="control-label">Tipo de Moneda</label>
+									<select class="form-control" id="moneda_unidad" name="moneda_unidad">
+										<option value="">Seleccione tipo de moneda</option>
+										<?php
+										$query = mysqli_query($conn,"SELECT * FROM monedadeinversion");
+										if(mysqli_num_rows($query) > 0){
+											while ($valores = mysqli_fetch_array($query)) {
+												$selected = ($valores['Id'] == $row['MonedaUnidad_Id']) ? 'selected' : '';
+												echo '<option value="'.$valores['Id'].'" '.$selected.'>'.$valores['Nombre'].'</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="form-col-half">
+									<label class="control-label">Monto de Inversión</label>
+									<input type="number" name="monto_inversion_unidad" id="monto_inversion_unidad" 
+										value="<?php echo $row['InversionUnidad']; ?>"
+										placeholder="Ingrese el monto" class="form-control" min="0" step="0.01">
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Nota Aclaratoria de la Inversión</label>
+									<textarea name="nota_inversion_unidad" id="nota_inversion_unidad" 
+										class="form-control" placeholder="Detalles adicionales sobre la inversión" rows="3"><?php echo $row['NotaInversionUnidad']; ?></textarea>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Sección 9: Ubicación del Archivo -->
+						<div class="section-card">
+							<div class="section-header">
+								<h4 class="section-title">📁 Ubicación del Archivo</h4>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col">
+									<label class="control-label">Ubicación del Original</label>
+									<input type="text" name="ubicacion_original" id="ubicacion_original" 
+										value="<?php echo $ubicacion_original; ?>"
+										placeholder="Especifique la ubicación del archivo original" class="form-control">
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-col-half">
+									<label class="control-label">Ubicación de la Copia</label>
+									<input type="text" name="ubicacion_copia" id="ubicacion_copia" 
+										value="<?php echo $ubicacion_copia; ?>"
+										placeholder="Especifique la ubicación de la copia" class="form-control">
+								</div>
+								<div class="form-col-half">
+									<label class="control-label">Ubicación Digital</label>
+									<input type="text" name="ubicacion_digital" id="ubicacion_digital" 
+										value="<?php echo $ubicacion_digital; ?>"
+										placeholder="Especifique la ubicación digital" class="form-control">
+								</div>
+							</div>
+						</div>
+						
+						<!-- Botones de Acción -->
+						<div class="form-actions">
+							<button type="button" name="update" id="update" onclick="valida_envia()" class="btn btn-primary">
+								💾 Actualizar
+							</button>
+							<a href="index.php" class="btn btn-danger">
+								✖ Cancelar
+							</a>
+						</div>
+						
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
 
+	<div class="footer">
+		<div class="container">
+			<center><b class="copyright">BCFEXA - IdeI &copy; <?php echo date("Y")?></b></center>
+		</div>
+	</div>
 
-																									
-										<div class="control-group">
-											<label class="control-label">Tipo de Moneda Inversión FCEFN</label>
-											<div class="controls">
-										    <div class="form-group mx-sm-3 mb-2">
-											<label for="MonedaUnidad" id="moneda_unidad" class="sr-only">Tipo de Moneda:</label>
-																			
-											<select class="form-control" name="moneda_unidad" id="moneda_unidad" style="width:400px;background-color:#DDFFFF"">
-											<?php
-		                                    $query_org='SELECT * FROM monedadeinversion' ;
-											$query = mysqli_query($conn,$query_org);
-											 if(mysqli_num_rows($query) == 0){
-													echo "no sale nada";
-																									
-												} else
-													{
-												     while ($valores = mysqli_fetch_array($query)) {
-													 if ($valores['Id']==$row['MonedaUnidad_Id']) { 
-									     ?>													
-													 <option value="<?php echo $valores['Id']; ?>" selected>
-													 <?php echo $valores['Nombre']; ?></option>
-													 
-													 <?php }
-												     else { 
-													?> 
-														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre'];?> </option>
-														<?php 
-														}
-													
-													  }
-												}											
-												   ?>
-													
-												</select>
-											
-											
-												</div>
-														</div>
-											</div>
-										
-                                         <div class="control-group">
-											<label class="control-label">Monto de la inversión aportada por la FCEFN</label>
-											<div class="controls">
-												<input   type="text" name="monto_inversion_unidad" id="monto_inversion_unidad" 
-												placeholder="ingrese SOLO el número" 
-												value="<?php echo $row['InversionUnidad'];?>"
-												class="form-control span8 tip">
-											</div>
-										 </div>
-										
-										<div class="control-group">
-											<label class="control-label">Nota Aclaratoria Inversión de la FCEFN</label>
-											<div class="controls">
-												<textarea name="nota_inversion_unidad" id="nota_inversion_unidad" class=" form-control span8 tip"  rows="4" cols="150" placeholder="Nota" /><?php echo $row['NotaInversionUnidad'];?></textarea>
-											</div>
-										</div>
+	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
+	<!-- Script para inicializar Select2 en todos los selectores relevantes -->
+	<script>
+		$(document).ready(function () {
+			// Configuración común para Select2
+			var select2Options = {
+				allowClear: true,
+				language: "es",
+				cache: true
+			};
 
-										<div class="control-group">
-											<div class="controls" style="text-align: center; padding: 20px 0;">
-												<input type="button" name="update" id="update" value="💾 Actualizar" onclick="valida_envia()" class="btn btn-primary"/>
-                                               <a href="index.php" class="btn btn-danger">✖ Cancelar</a>
-											</div>
-										</div>
-									</form>
-                        
-                        <!--/.content-->
-                    </div>
-                    <!--/.span9-->
-                </div>
-            </div>
-            <!--/.container-->
-        
-        <!--/.wrapper-->
-        <div class="footer">
-            <div class="container">
-              <center><b class="copyright">BCFEXA - IdeI &copy; <?php echo date("Y")?></b></center>
-            </div>
-        </div>
-        
-        <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-        
-	<!-- Maneja el div para carga de opcionales
-		https://tutobasico.com/activar-boton-o-enlace-con-jquery/
-		-->
-		<script>
-          $( "#mostrar_campos_adicionales" ).click( function() {
-          $( "#campos_adicionales" ).toggle();
-          });
-        </script>
+			// Función helper para pre-seleccionar valores en Select2 AJAX
+			function setSelectedOption($select, id, text) {
+				if (id && id > 0 && text) {
+					var option = new Option(text, id, true, true);
+					$select.append(option).trigger('change');
+				}
+			}
 
+			// Tipo de Actividad
+			$("#actividad").select2($.extend({}, select2Options, {
+				placeholder: "Buscar tipo de actividad...",
+				ajax: {
+					url: "ajax-select2-tipo-actividad.php",
+					type: "post",
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							searchTerm: params.term
+						};
+					},
+					processResults: function (response) {
+						return {
+							results: response
+						};
+					}
+				}
+			}));
+			// Pre-seleccionar tipo de actividad actual
+			<?php if ($row['TipoActividad_Id'] > 0): ?>
+				<?php 
+					$query_tipo = mysqli_query($conn, "SELECT Nombre FROM tipoactividad WHERE Id = " . $row['TipoActividad_Id']);
+					if ($tipo_data = mysqli_fetch_assoc($query_tipo)) {
+						echo "setSelectedOption($('#actividad'), {$row['TipoActividad_Id']}, '{$tipo_data['Nombre']}');";
+					}
+				?>
+			<?php endif; ?>
 
-      
+			// Organizaciones
+			$("#organizacion1, #organizacion2, #organizacion3").select2($.extend({}, select2Options, {
+				placeholder: "Buscar organización...",
+				containerCssClass: "persona-org-select",
+				ajax: {
+					url: "ajax-select2-organizacion.php",
+					type: "post",
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							searchTerm: params.term
+						};
+					},
+					processResults: function (response) {
+						return {
+							results: response
+						};
+					}
+				}
+			}));
+			// Pre-seleccionar organizaciones actuales
+			<?php 
+				if ($organizacion1_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM organizacion WHERE Id = $organizacion1_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#organizacion1'), $organizacion1_leida, '{$d['Nombre']}');";
+					}
+				}
+				if ($organizacion2_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM organizacion WHERE Id = $organizacion2_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#organizacion2'), $organizacion2_leida, '{$d['Nombre']}');";
+					}
+				}
+				if ($organizacion3_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM organizacion WHERE Id = $organizacion3_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#organizacion3'), $organizacion3_leida, '{$d['Nombre']}');";
+					}
+				}
+			?>
+
+			// Personas/RRHH - Organización
+			$("#responsable_org1, #responsable_org2, #responsable_org3").select2($.extend({}, select2Options, {
+				placeholder: "Buscar persona...",
+				containerCssClass: "persona-org-select",
+				ajax: {
+					url: "ajax-select2-persona.php",
+					type: "post",
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							searchTerm: params.term
+						};
+					},
+					processResults: function (response) {
+						return {
+							results: response
+						};
+					}
+				}
+			}));
+			// Pre-seleccionar responsables de organizaciones
+			<?php 
+				if ($responsable_org1_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM persona WHERE Id = $responsable_org1_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#responsable_org1'), $responsable_org1_leida, '{$d['Nombre']}');";
+					}
+				}
+				if ($responsable_org2_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM persona WHERE Id = $responsable_org2_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#responsable_org2'), $responsable_org2_leida, '{$d['Nombre']}');";
+					}
+				}
+				if ($responsable_org3_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM persona WHERE Id = $responsable_org3_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#responsable_org3'), $responsable_org3_leida, '{$d['Nombre']}');";
+					}
+				}
+			?>
+
+			// Unidades Ejecutoras
+			$("#unidad1, #unidad2, #unidad3").select2($.extend({}, select2Options, {
+				placeholder: "Buscar unidad ejecutora...",
+				containerCssClass: "unidad-select",
+				ajax: {
+					url: "ajax-select2-unidad-ejecutora.php",
+					type: "post",
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							searchTerm: params.term
+						};
+					},
+					processResults: function (response) {
+						return {
+							results: response
+						};
+					}
+				}
+			}));
+			// Pre-seleccionar unidades actuales
+			<?php 
+				if ($unidad1_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Unidad FROM unidadejecutora WHERE Id = $unidad1_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#unidad1'), $unidad1_leida, '{$d['Unidad']}');";
+					}
+				}
+				if ($unidad2_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Unidad FROM unidadejecutora WHERE Id = $unidad2_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#unidad2'), $unidad2_leida, '{$d['Unidad']}');";
+					}
+				}
+				if ($unidad3_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Unidad FROM unidadejecutora WHERE Id = $unidad3_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#unidad3'), $unidad3_leida, '{$d['Unidad']}');";
+					}
+				}
+			?>
+
+			// Personas/RRHH - Unidad
+			$("#responsable_unidad1, #responsable_unidad2, #responsable_unidad3").select2($.extend({}, select2Options, {
+				placeholder: "Buscar persona...",
+				containerCssClass: "persona-unidad-select",
+				ajax: {
+					url: "ajax-select2-persona.php",
+					type: "post",
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							searchTerm: params.term
+						};
+					},
+					processResults: function (response) {
+						return {
+							results: response
+						};
+					}
+				}
+			}));
+			// Pre-seleccionar responsables de unidades
+			<?php 
+				if ($responsable_unidad1_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM persona WHERE Id = $responsable_unidad1_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#responsable_unidad1'), $responsable_unidad1_leida, '{$d['Nombre']}');";
+					}
+				}
+				if ($responsable_unidad2_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM persona WHERE Id = $responsable_unidad2_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#responsable_unidad2'), $responsable_unidad2_leida, '{$d['Nombre']}');";
+					}
+				}
+				if ($responsable_unidad3_leida > 0) {
+					$q = mysqli_query($conn, "SELECT Nombre FROM persona WHERE Id = $responsable_unidad3_leida");
+					if ($d = mysqli_fetch_assoc($q)) {
+						echo "setSelectedOption($('#responsable_unidad3'), $responsable_unidad3_leida, '{$d['Nombre']}');";
+					}
+				}
+			?>
+		});
+	</script>
+
 </body>
+</html>

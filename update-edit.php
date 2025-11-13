@@ -58,8 +58,29 @@ if(isset($_POST)){
 				$monto_inversion_unidad=mysqli_real_escape_string($conn,(strip_tags($_POST['monto_inversion_unidad'], ENT_QUOTES)));
 				$nota_inversion_unidad=mysqli_real_escape_string($conn,(strip_tags($_POST['nota_inversion_unidad'], ENT_QUOTES)));
 				
+				// Nuevos campos: Ubicación del Archivo y Resolución Asociada
+				$ubicacion_id = intval($_POST['ubicacion_id']);
+				$ubicacion_original = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
+				$ubicacion_copia = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
+				$ubicacion_digital = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_digital'], ENT_QUOTES)));
+				$nro_resolucion_asociada = mysqli_real_escape_string($conn,(strip_tags($_POST['nro_resolucion_asociada'], ENT_QUOTES)));
+				
 				$id	= intval($_POST['id']);	
                 
+				// Actualizar o crear registro de ubicación del archivo
+				if ($ubicacion_id > 0) {
+					// Actualizar registro existente
+					mysqli_query($conn, "UPDATE ubicacionarchivo SET 
+						UbicacionOriginal='$ubicacion_original',
+						UbicacionCopia='$ubicacion_copia',
+						UbicacionDigital='$ubicacion_digital'
+						WHERE Id='$ubicacion_id'") or die(mysqli_error($conn));
+				} else {
+					// Crear nuevo registro si no existe
+					mysqli_query($conn, "INSERT INTO ubicacionarchivo (UbicacionOriginal, UbicacionCopia, UbicacionDigital) 
+						VALUES('$ubicacion_original', '$ubicacion_copia', '$ubicacion_digital')") or die(mysqli_error($conn));
+					$ubicacion_id = mysqli_insert_id($conn);
+				}
 										 
 				// Almaceno datos en tabla Actividad
 
@@ -79,7 +100,10 @@ if(isset($_POST)){
 				NotaInversionOrganizacion='$nota_inversion_organizacion',
 				MonedaUnidad_Id='$moneda_unidad',
 				InversionUnidad='$monto_inversion_unidad',
-				NotaInversionUnidad='$nota_inversion_unidad' WHERE id='$id'") or die(mysqli_error());
+				NotaInversionUnidad='$nota_inversion_unidad',
+				UbicacionArchivo_Id='$ubicacion_id',
+				NroResolucion_Asociada='$nro_resolucion_asociada' 
+				WHERE id='$id'") or die(mysqli_error());
 				
 		// Actualizo tabla "detalleactividadorganizacion" 
 		//Organizacion1
@@ -160,8 +184,8 @@ if(isset($_POST)){
 			               }
 				 }
 				} else 
-				if($unidad1 <> $unidad1_leida) {
-					// creo una entrada para la organización
+				if($unidad1 > 0 && $unidad1 <> $unidad1_leida) {
+					// creo una entrada para la unidad
 						mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad1','$id')") ;
 			   	
 				}
@@ -180,8 +204,8 @@ if(isset($_POST)){
 			               }
 				 }
 				} else 
-				if($unidad2 <> $unidad2_leida) {
-					// creo una entrada para la organización
+				if($unidad2 > 0 && $unidad2 <> $unidad2_leida) {
+					// creo una entrada para la unidad
 						mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad2','$id')") ;
 			   	
 				}
@@ -201,8 +225,8 @@ if(isset($_POST)){
 			               }
 				 }
 				} else 
-				if($unidad3 <> $unidad3_leida) {
-					// creo una entrada para la organización
+				if($unidad3 > 0 && $unidad3 <> $unidad3_leida) {
+					// creo una entrada para la unidad
 						mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad3','$id')") ;
 			   	
 				}

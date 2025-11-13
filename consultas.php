@@ -1,51 +1,9 @@
-<!-- el manejo simple de sesiones es tomado de 
-https://www.sourcecodessite.com/create-login-crud-system-using-php-mysql/
--->
-<?php
-include "conn.php";
-include 'session_bcfexa.php';
-$username = $_SESSION['username'];
-$userID = $_SESSION['userID'];
-
-// borro registro
-if(isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $id_delete = intval($_GET['id']);
-    $query = mysqli_query($conn, "SELECT * FROM actividad WHERE Id='$id_delete'");
-    if(mysqli_num_rows($query) == 0){
-        echo '<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> No se encontraron datos.</div>';
-    }else{
-        $delete = mysqli_query($conn, "DELETE FROM actividad WHERE Id='$id_delete'");
-        if($delete){
-        echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> La actividad ha sido eliminada correctamente.</div>'; 
-        }else{
-            echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Error, no se pudo eliminar la actividad.</div>';
-        }
-    }
-}
-
-// Consultas para estadísticas
-// Total de actividades
-$query_total = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad");
-$total_actividades = mysqli_fetch_assoc($query_total)['total'];
-
-// Actividades de este mes
-$query_mes = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad WHERE MONTH(Fecha_inicio) = MONTH(CURRENT_DATE()) AND YEAR(Fecha_inicio) = YEAR(CURRENT_DATE())");
-$actividades_mes = mysqli_fetch_assoc($query_mes)['total'];
-
-// Actividades completadas (donde Fecha_final < hoy)
-$query_completadas = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad WHERE Fecha_final < CURDATE()");
-$actividades_completadas = mysqli_fetch_assoc($query_completadas)['total'];
-
-// Actividades en proceso (donde Fecha_inicio <= hoy AND Fecha_final >= hoy)
-$query_proceso = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad WHERE Fecha_inicio <= CURDATE() AND Fecha_final >= CURDATE()");
-$actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCFEXA - Módulo de Intranet</title>
+    <title>BCFEXA - Módulo de Consulta</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -157,21 +115,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .btn-success-custom {
-            background-color: var(--success-color);
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-success-custom:hover {
-            background-color: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
         .table-custom {
             border-collapse: separate;
             border-spacing: 0;
@@ -274,14 +217,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             background-color: var(--accent-color);
         }
         
-        .action-btn.edit {
-            background-color: var(--warning-color);
-        }
-        
-        .action-btn.delete {
-            background-color: var(--danger-color);
-        }
-        
         .stats-card {
             text-align: center;
             padding: 20px;
@@ -324,20 +259,13 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
         
         .badge-container {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 4px;
-            align-items: flex-start;
-            max-width: 200px;
         }
         
         .badge-container .badge {
             font-size: 0.7rem;
             padding: 4px 6px;
-            width: fit-content;
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
         
         .text-truncate-custom {
@@ -345,23 +273,15 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: inline-block;
         }
         
-        /* Anchos fijos para columnas específicas */
-        .table-custom td:nth-child(7),
-        .table-custom th:nth-child(7) {
-            max-width: 200px;
-        }
-        
-        .table-custom td:nth-child(8),
-        .table-custom th:nth-child(8) {
-            max-width: 200px;
-        }
-        
-        .table-custom td:nth-child(9),
-        .table-custom th:nth-child(9) {
-            max-width: 150px;
+        .read-only-badge {
+            background-color: var(--gray-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
         
         @media (max-width: 768px) {
@@ -396,7 +316,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
         <div class="container">
             <a class="navbar-brand" href="#">
                 <i class="fas fa-university"></i>
-                <span>BCFEXA - Intranet</span>
+                <span>BCFEXA - Consulta</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -411,10 +331,10 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                             <?php echo $username; ?>
                         </div>
                     </li>
-                    <li class="nav-item ms-3">
-                        <a href="logout_bcfexa.php" class="btn btn-sm btn-outline-light">
-                            <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
-                        </a>
+                    <li class="nav-item ms-2">
+                        <span class="read-only-badge">
+                            <i class="fas fa-eye me-1"></i>Solo Lectura
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -428,21 +348,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 <div class="sidebar">
                     <h5 class="mb-3" style="color: var(--primary-color);">Acciones Rápidas</h5>
                     <div class="d-grid gap-2">
-                        <a href="registro.php" class="btn btn-success-custom btn-responsive">
-                            <i class="fas fa-plus-circle me-2"></i>Ingresar Nueva Actividad
-                        </a>
-                        <a href="alta_persona.php" class="btn btn-info-custom btn-responsive">
-                            <i class="fas fa-user-plus me-2"></i>Alta Persona
-                        </a>
-                        <a href="alta_unidad_ejecutora.php" class="btn btn-info-custom btn-responsive">
-                            <i class="fas fa-building me-2"></i>Alta Unidad Ejecutora
-                        </a>
-                        <a href="alta_organizacion.php" class="btn btn-info-custom btn-responsive">
-                            <i class="fas fa-sitemap me-2"></i>Alta Organización
-                        </a>
-                        <a href="alta_tipo_actividad.php" class="btn btn-info-custom btn-responsive">
-                            <i class="fas fa-tasks me-2"></i>Alta Tipo de Actividad
-                        </a>
                         <a href="fpdf/bcfexa_informes2.php" class="btn btn-primary-custom btn-responsive">
                             <i class="fas fa-chart-bar me-2"></i>INFORMES
                         </a>
@@ -454,23 +359,23 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                     <div class="row">
                         <div class="col-12 mb-3">
                             <div class="stats-card primary">
-                                <i class="fas fa-calendar-check"></i>
-                                <div class="number"><?php echo $actividades_mes; ?></div>
-                                <div class="label">Iniciadas este mes</div>
+                                <i class="fas fa-file-contract"></i>
+                                <div class="number">24</div>
+                                <div class="label">Activos este mes</div>
                             </div>
                         </div>
                         <div class="col-12 mb-3">
                             <div class="stats-card success">
                                 <i class="fas fa-check-circle"></i>
-                                <div class="number"><?php echo $actividades_completadas; ?></div>
-                                <div class="label">Ya finalizadas</div>
+                                <div class="number">18</div>
+                                <div class="label">Completados</div>
                             </div>
                         </div>
                         <div class="col-12 mb-3">
                             <div class="stats-card warning">
                                 <i class="fas fa-clock"></i>
-                                <div class="number"><?php echo $actividades_proceso; ?></div>
-                                <div class="label">Actualmente activas</div>
+                                <div class="number">6</div>
+                                <div class="label">En proceso</div>
                             </div>
                         </div>
                     </div>
@@ -482,7 +387,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 <div class="main-content">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 style="color: var(--primary-color);">
-                            <i class="fas fa-table me-2"></i>Registro de Actividades
+                            <i class="fas fa-table me-2"></i>Consulta de Actividades
                         </h3>
                         <div class="d-flex">
                             <button class="btn btn-outline-secondary me-2">
@@ -500,8 +405,8 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                         <div class="mb-3">
                             <label class="form-label">Buscar por TEXTO COMPLETO:</label>
                             <div class="input-group">
-                                <input type="text" class="form-control dataTables_filter_input" placeholder="Ingrese al menos 3 letras...">
-                                <button class="btn btn-primary-custom" type="button" onclick="$('.dataTables_filter_input').trigger('keyup')">
+                                <input type="text" class="form-control" placeholder="Ingrese al menos 3 letras...">
+                                <button class="btn btn-primary-custom" type="button">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
@@ -511,28 +416,27 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                                 <label class="form-label">Filtrar por FECHA DE INICIO:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">FI</span>
-                                    <input type="text" class="form-control dataTables_filter_input" placeholder="Ej: FI2023">
+                                    <input type="text" class="form-control" placeholder="Ej: FI2023">
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Filtrar por FECHA DE FIN:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">FF</span>
-                                    <input type="text" class="form-control dataTables_filter_input" placeholder="Ej: FF2025">
+                                    <input type="text" class="form-control" placeholder="Ej: FF2025">
                                 </div>
                             </div>
                         </div>
                         <div class="form-text">
-                            <i class="fas fa-info-circle me-1"></i>Presione ENTER para buscar después de ingresar los criterios. Para búsqueda por texto completo, ingrese al menos 3 letras. Para filtrar por FECHA DE INICIO, ingrese <b>FI</b> seguido del año (ej. FI2022). Para filtrar por FECHA DE FIN, ingrese <b>FF</b> seguido del año (ej. FF2025).
+                            <i class="fas fa-info-circle me-1"></i>Presione ENTER para buscar después de ingresar los criterios.
                         </div>
                     </div>
                     
-    <!-- Data Table -->
+                    <!-- Data Table -->
                     <div class="table-responsive">
                         <table id="lookup" class="table table-custom table-hover">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
                                     <th>Acciones</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
@@ -544,20 +448,70 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                                 </tr>
                             </thead>
                             <tbody>
-                            </tbody>
-                            <tfoot>
+                                <!-- Datos de ejemplo -->
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Acciones</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
-                                    <th>Tipo de Actividad</th>
-                                    <th>Nro Resolución</th>
-                                    <th>Unidad Ejecutora</th>
-                                    <th>Organización Solicitante</th>
-                                    <th>Resumen</th>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="action-btn view" title="Ver Detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>08-10-2025</td>
+                                    <td>17-10-2025</td>
+                                    <td>Acta Compromiso</td>
+                                    <td>rsd-45</td>
+                                    <td>
+                                        <div class="badge-container">
+                                            <span class="badge bg-light text-dark">No especificada</span>
+                                            <span class="badge bg-primary">Departamento de Biología</span>
+                                            <span class="badge bg-primary">Departamento de Geología</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-truncate-custom">Colegio Profesional de Ciencias Biológicas de San Juan</td>
+                                    <td class="text-truncate-custom">asdf123</td>
                                 </tr>
-                            </tfoot>
+                                <tr>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="action-btn view" title="Ver Detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>02-10-2025</td>
+                                    <td>14-10-2025</td>
+                                    <td>Acta Complementaria</td>
+                                    <td>12312312</td>
+                                    <td>
+                                        <div class="badge-container">
+                                            <span class="badge bg-primary">Departamento de Biología</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-truncate-custom">Colegio Profesional de Ciencias Biológicas de San Juan</td>
+                                    <td class="text-truncate-custom">asaaaaa</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="action-btn view" title="Ver Detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>01-10-2025</td>
+                                    <td>31-10-2025</td>
+                                    <td>Acta Constitutiva</td>
+                                    <td>rsd-10</td>
+                                    <td>
+                                        <div class="badge-container">
+                                            <span class="badge bg-primary">Departamento de</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-truncate-custom">Colegio</td>
+                                    <td class="text-truncate-custom">asdf</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -578,7 +532,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <p class="mb-0">
-                        <i class="fas fa-shield-alt me-1"></i>Sistema Seguro BCFEXA
+                        <i class="fas fa-shield-alt me-1"></i>Sistema Seguro BCFEXA - Modo Consulta
                     </p>
                 </div>
             </div>
@@ -593,8 +547,8 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
     
     <script>
         $(document).ready(function() {
-            // Inicializar DataTable con procesamiento server-side
-            var dataTable = $('#lookup').DataTable({
+            // Inicializar DataTable
+            $('#lookup').DataTable({
                 "language": {
                     "sProcessing": "Procesando...",
                     "sLengthMenu": "Mostrar _MENU_ registros",
@@ -604,7 +558,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                     "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
                     "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
                     "sInfoPostFix": "",
-                    
+                    "sSearch": "Buscar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Cargando...",
@@ -618,34 +572,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                         "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                     }
-                },
-                "processing": true,
-                "serverSide": true,
-                "columnDefs": [{
-                    "targets": [0], // id
-                    "visible": false
-                }],
-                "ajax": {
-                    url: "ajax-grid-data.php", // json datasource
-                    type: "post",  // method, by default get
-                    error: function() {  // error handling
-                        $(".lookup-error").html("");
-                        $("#lookup").append('<tbody class="employee-grid-error"><tr><th colspan="9">No hay datos disponibles</th></tr></tbody>');
-                        $("#lookup_processing").css("display", "none");
-                    }
-                }
-            });
-            
-            // Conectar los inputs de búsqueda personalizados con DataTable
-            $('.dataTables_filter_input').on('keyup', function() {
-                var searchValue = $(this).val();
-                dataTable.search(searchValue).draw();
-            });
-            
-            // Función para confirmar eliminación
-            $(document).on('click', '.delete-link', function(e) {
-                if(!confirm('¿Está seguro que desea eliminar esta actividad?')) {
-                    e.preventDefault();
                 }
             });
         });

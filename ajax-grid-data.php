@@ -187,6 +187,19 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	
 	$nestedData[] = $row["Id"];
 	
+	//armo columna de acciones (ahora segunda columna)
+	$nestedData[] = '<div class="action-buttons">
+						<a href="ver_detalle.php?id='.$row['Id'].'" class="action-btn view" title="Ver">
+							<i class="fas fa-eye"></i>
+						</a>
+						<a href="editar.php?id='.$row['Id'].'" class="action-btn edit" title="Editar">
+							<i class="fas fa-edit"></i>
+						</a>
+						<a href="index.php?action=delete&id='.$row['Id'].'" onclick="return confirm(\'¿Está seguro de que desea eliminar esta actividad?\')" class="action-btn delete" title="Eliminar">
+							<i class="fas fa-trash"></i>
+						</a>
+					</div>';
+	
 	$fecha = strtotime($row["Fecha_inicio"]); 
 	$fecha= date("d-m-Y", $fecha);
 	$nestedData[] = $fecha;
@@ -198,40 +211,44 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$nestedData[] = $row["Tipo"];             //.$requestData['start']." ,".$requestData['length']."   ";;
 	$nestedData[] = $row["NroResolucion"];    //." , ".$totalFiltered." , ".$totalData;
 	
-  $unidades_leidas= '<ul><li>'.$row[6].'</li>';
-  if ($row[7] >'') {
-	$unidades_leidas.= '<li>'.$row[7].'</li>';
-   }
-if ($row[8] >'') {
-	$unidades_leidas.= '<li>'.$row[8].'</li>';
-}
-$unidades_leidas.='</ul>';  
+  // Generar badges para unidades
+  $unidades_leidas = '<div class="badge-container">';
+  if ($row[6] == 'No especificada') {
+      $unidades_leidas .= '<span class="badge bg-light text-dark">'.$row[6].'</span>';
+  } else {
+      $unidades_leidas .= '<span class="badge bg-primary">'.$row[6].'</span>';
+  }
+  
+  if ($row[7] > '') {
+      $unidades_leidas .= '<span class="badge bg-primary">'.$row[7].'</span>';
+  }
+  
+  if ($row[8] > '') {
+      $unidades_leidas .= '<span class="badge bg-primary">'.$row[8].'</span>';
+  }
+  $unidades_leidas .= '</div>';
 
 	$nestedData[] = $unidades_leidas; // 1,2 3 ra. unidad ejecutora
  
- $organizaciones_leidas= '<ul><li>'.$row[9].'</li>';
-  if ($row[10] >'') {
-	$organizaciones_leidas.= '<li>'.$row[10].'</li>';
-   }
-if ($row[11] >'') {
-	$organizaciones_leidas.= '<li>'.$row[11].'</li>';
-}
-$organizaciones_leidas.='</ul>';  	
+  // Generar badges para organizaciones
+  $organizaciones_leidas = '<div class="badge-container">';
+  if ($row[9] > '') {
+      $organizaciones_leidas .= '<span class="badge bg-success">'.$row[9].'</span>';
+  }
+  
+  if ($row[10] > '') {
+      $organizaciones_leidas .= '<span class="badge bg-success">'.$row[10].'</span>';
+  }
+  
+  if ($row[11] > '') {
+      $organizaciones_leidas .= '<span class="badge bg-success">'.$row[11].'</span>';
+  }
+  $organizaciones_leidas .= '</div>';
 	
     $nestedData[] = $organizaciones_leidas; //1,2 y 3 ra. Organizacion solicitante
  
-	$nestedData[] = $row["Resumen"];  //."//".$requestData['draw']; // $totalData."//".$totalFiltered."//";
+	$nestedData[] = '<span class="text-truncate-custom" title="'.$row["Resumen"].'">'.$row["Resumen"].'</span>';  //."//".$requestData['draw']; // $totalData."//".$totalFiltered."//";
     
-   	//armo última columna de acciones Editar Borrar Descargar
-    $nestedData[] = '<td><center><a href="editar.php?id='.$row['Id'].'"  data-toggle="tooltip" title="Editar" class="btn btn-sm btn-info">
-                 	<i class="menu-icon icon-pencil"></i> </a> <br> 
-					<a href="ver_detalle.php?id='.$row['Id'].'"  data-toggle="tooltip" title="Consultar" class="btn btn-sm btn-success">
-                 	<i class="menu-icon icon-search"></i> </a> <br>
-					<a href="index.php?action=delete&id='.$row['Id'].'" onclick="return confirm(\'¿Está seguro de que desea eliminar esta actividad?\')" data-toggle="tooltip" title="Eliminar" class="btn btn-sm btn-danger">
-                 	<i class="menu-icon icon-trash"></i> </a>
-					</td>';
-					 
-				 
 	$data[] = $nestedData;
     
 }

@@ -712,9 +712,26 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 				return false;
 			}
 
-			if (document.form1.ubicacion_digital.value.trim() == '') {
-				alert("OJO!, DEBE INDICAR la UBICACIÓN DIGITAL")
-				document.form1.ubicacion_digital.focus()
+			// Validar que se haya seleccionado un archivo PDF
+			var fileInput = document.getElementById("ubicacion_digital");
+			if (!fileInput.files || fileInput.files.length === 0) {
+				alert("OJO!, DEBE SELECCIONAR UN ARCHIVO PDF PARA LA UBICACIÓN DIGITAL")
+				fileInput.focus()
+				return false;
+			}
+
+			// Validar tipo de archivo
+			var file = fileInput.files[0];
+			if (file.type !== 'application/pdf') {
+				alert("Error: Solo se permiten archivos PDF.")
+				fileInput.value = '';
+				return false;
+			}
+
+			// Validar tamaño del archivo (10MB máximo)
+			if (file.size > 10 * 1024 * 1024) {
+				alert("Error: El archivo es demasiado grande. El tamaño máximo permitido es 10MB.")
+				fileInput.value = '';
 				return false;
 			}
 
@@ -805,8 +822,21 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 						if (empty($_POST['ubicacion_copia'])) {
 							$errores[] = "Debe ingresar la Ubicación de la Copia.";
 						}
-						if (empty($_POST['ubicacion_digital'])) {
-							$errores[] = "Debe ingresar la Ubicación Digital.";
+						// Validar archivo PDF en lugar de campo de texto
+						if (empty($_FILES['ubicacion_digital']['name'])) {
+							$errores[] = "Debe seleccionar un archivo PDF para la Ubicación Digital.";
+						} else {
+							// Validar tipo de archivo
+							$allowed_type = 'application/pdf';
+							$file_type = $_FILES['ubicacion_digital']['type'];
+							if ($file_type !== $allowed_type) {
+								$errores[] = "El archivo debe ser de tipo PDF.";
+							}
+							// Validar tamaño (10MB máximo)
+							$max_size = 10 * 1024 * 1024; // 10MB en bytes
+							if ($_FILES['ubicacion_digital']['size'] > $max_size) {
+								$errores[] = "El archivo es demasiado grande. El tamaño máximo permitido es 10MB.";
+							}
 						}
 						
 						// Si hay errores, mostrarlos
@@ -896,16 +926,35 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 							$monto_inversion_unidad = 0;
 						}
 
-						$ubicacion_original = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
-						$ubicacion_copia = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
-						$ubicacion_digital = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_digital'], ENT_QUOTES)));
+					$ubicacion_original = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
+					$ubicacion_copia = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
+					
+					// Procesar archivo PDF para ubicacion_digital
+					$ubicacion_digital = '';
+					if (!empty($_FILES['ubicacion_digital']['name'])) {
+						// Crear carpeta para almacenar PDFs si no existe
+						$upload_dir = 'uploads/pdfs/';
+						if (!file_exists($upload_dir)) {
+							mkdir($upload_dir, 0777, true);
+						}
+						
+						// Generar nombre único para el archivo
+						$file_extension = pathinfo($_FILES['ubicacion_digital']['name'], PATHINFO_EXTENSION);
+						$new_filename = 'actividad_' . date('Ymd_His') . '_' . uniqid() . '.' . $file_extension;
+						$upload_path = $upload_dir . $new_filename;
+						
+						// Mover el archivo subido
+						if (move_uploaded_file($_FILES['ubicacion_digital']['tmp_name'], $upload_path)) {
+							$ubicacion_digital = $upload_path;
+						} else {
+							$errores[] = "Error al subir el archivo PDF.";
+						}
+					}
 
-						// Si los campos de ubicación están vacíos, asignar 'Sin especificar'
-						if (empty($ubicacion_original)) $ubicacion_original = 'Sin especificar';
-						if (empty($ubicacion_copia)) $ubicacion_copia = 'Sin especificar';
-						if (empty($ubicacion_digital)) $ubicacion_digital = 'Sin especificar';
-
-
+					// Si los campos de ubicación están vacíos, asignar 'Sin especificar'
+					if (empty($ubicacion_original)) $ubicacion_original = 'Sin especificar';
+					if (empty($ubicacion_copia)) $ubicacion_copia = 'Sin especificar';
+					if (empty($ubicacion_digital)) $ubicacion_digital = 'Sin especificar';
 
 						// Almaceno datos en tabla Actividad
 					
@@ -1007,12 +1056,10 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 					} // Cierre del if (isset($_POST['actividad']))
 					?>
 
-					<blockquote>
-						<h3> Agregar Detalles de Actividades</h3>
-					</blockquote>
-					<form name="form1" id="form1" class="form-horizontal row-fluid d-flex justify-content-center" action="registro.php" method="POST">
-
-						<!-- Sección 1: Tipo de Actividad -->
+				<blockquote>
+					<h3> Agregar Detalles de Actividades</h3>
+				</blockquote>
+				<form name="form1" id="form1" class="form-horizontal row-fluid d-flex justify-content-center" action="registro.php" method="POST" enctype="multipart/form-data">						<!-- Sección 1: Tipo de Actividad -->
 						<div class="section-card">
 							<div class="section-header">
 
@@ -1364,10 +1411,39 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 										placeholder="Especifique la ubicación de la copia" class="form-control" required>
 								</div>
 								<div class="form-col-half">
-									<label class="control-label">Ubicación Digital<span
+									<label class="control-label">Ubicación Digital (Archivo PDF)<span
 											style="color: red;">*</span></label>
-									<input type="text" name="ubicacion_digital" id="ubicacion_digital"
-										placeholder="Especifique la ubicación digital" class="form-control" required>
+									
+									<!-- Área de subida de archivos -->
+									<div class="file-upload-area" id="fileUploadArea">
+										<div class="file-upload-icon">
+											<i class="fas fa-file-pdf"></i>
+										</div>
+										<p class="mb-2"><strong>Arrastre y suelte su archivo PDF aquí</strong></p>
+										<p class="text-muted small mb-2">o haga clic para seleccionar un archivo</p>
+										<input type="file" id="ubicacion_digital" name="ubicacion_digital" accept=".pdf" style="display: none;" required>
+										<button type="button" class="btn btn-sm btn-primary" id="selectFileBtn">
+											<i class="fas fa-folder-open me-1"></i>Seleccionar Archivo
+										</button>
+									</div>
+									
+									<!-- Información del archivo seleccionado -->
+									<div class="file-info" id="fileInfo" style="display: none;">
+										<div class="d-flex justify-content-between align-items-center">
+											<div>
+												<i class="fas fa-file-pdf me-2 text-danger"></i>
+												<span id="fileName">Nombre del archivo</span>
+												<small class="text-muted d-block" id="fileSize">Tamaño del archivo</small>
+											</div>
+											<button type="button" class="btn btn-sm btn-outline-danger" id="removeFileBtn">
+												<i class="fas fa-times"></i>
+											</button>
+										</div>
+									</div>
+									
+									<div class="form-text small mt-2">
+										<i class="fas fa-info-circle me-1"></i>Solo archivos PDF, máximo 10MB.
+									</div>
 								</div>
 							</div>
 						</div>
@@ -1641,6 +1717,46 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 			span[style*="color: red"] {
 				font-weight: bold;
 				font-size: 16px;
+			}
+
+			/* Estilos para área de carga de archivos PDF */
+			.file-upload-area {
+				border: 2px dashed #ccc;
+				border-radius: 10px;
+				padding: 20px;
+				text-align: center;
+				background-color: #f8f9fa;
+				transition: all 0.3s;
+				cursor: pointer;
+				margin-top: 5px;
+			}
+
+			.file-upload-area:hover {
+				border-color: var(--accent-color, #4c9ae8);
+				background-color: #e9f2fb;
+			}
+
+			.file-upload-area.dragover {
+				border-color: var(--primary-color, #1a4b8c);
+				background-color: #e3f2fd;
+			}
+
+			.file-upload-icon {
+				font-size: 2.5rem;
+				color: #dc3545;
+				margin-bottom: 10px;
+			}
+
+			.file-info {
+				background-color: #e9f2fb;
+				border-radius: 6px;
+				padding: 12px;
+				margin-top: 10px;
+			}
+
+			.file-info .btn-sm {
+				padding: 2px 8px;
+				font-size: 12px;
 			}
 		</style>
 
@@ -1920,20 +2036,133 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 			var successDiv = document.getElementById('modalMessageSuccessUnidad');
 			var errorDiv = document.getElementById('modalMessageErrorUnidad');
 			
-			// Ocultar ambos mensajes primero
-			successDiv.style.display = 'none';
-			errorDiv.style.display = 'none';
+		// Ocultar ambos mensajes primero
+		successDiv.style.display = 'none';
+		errorDiv.style.display = 'none';
+		
+		if (tipo === 'success') {
+			successDiv.textContent = mensaje;
+			successDiv.style.display = 'block';
+		} else {
+			errorDiv.textContent = mensaje;
+			errorDiv.style.display = 'block';
+		}
+	}
+</script>
+
+<!-- Script para manejo de carga de archivos PDF -->
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const fileInput = document.getElementById('ubicacion_digital');
+		const fileUploadArea = document.getElementById('fileUploadArea');
+		const selectFileBtn = document.getElementById('selectFileBtn');
+		const fileInfo = document.getElementById('fileInfo');
+		const fileName = document.getElementById('fileName');
+		const fileSize = document.getElementById('fileSize');
+		const removeFileBtn = document.getElementById('removeFileBtn');
+		
+		// Abrir selector de archivos al hacer clic en el botón o en el área
+		selectFileBtn.addEventListener('click', function(e) {
+			e.preventDefault();
+			fileInput.click();
+		});
+		
+		fileUploadArea.addEventListener('click', function(e) {
+			if (e.target !== selectFileBtn && !e.target.closest('#selectFileBtn')) {
+				fileInput.click();
+			}
+		});
+		
+		// Manejar la selección de archivos
+		fileInput.addEventListener('change', function() {
+			if (this.files && this.files[0]) {
+				const file = this.files[0];
+				
+				// Validar tipo de archivo
+				if (file.type !== 'application/pdf') {
+					alert('Error: Solo se permiten archivos PDF.');
+					this.value = '';
+					return;
+				}
+				
+				// Validar tamaño del archivo (10MB máximo)
+				if (file.size > 10 * 1024 * 1024) {
+					alert('Error: El archivo es demasiado grande. El tamaño máximo permitido es 10MB.');
+					this.value = '';
+					return;
+				}
+				
+				// Mostrar información del archivo
+				fileName.textContent = file.name;
+				fileSize.textContent = formatFileSize(file.size);
+				fileInfo.style.display = 'block';
+				
+				// Cambiar estilo del área de subida
+				fileUploadArea.style.borderColor = '#28a745';
+				fileUploadArea.style.backgroundColor = '#f0fff4';
+			}
+		});
+		
+		// Eliminar archivo seleccionado
+		removeFileBtn.addEventListener('click', function(e) {
+			e.preventDefault();
+			fileInput.value = '';
+			fileInfo.style.display = 'none';
 			
-			if (tipo === 'success') {
-				successDiv.textContent = mensaje;
-				successDiv.style.display = 'block';
-			} else {
-				errorDiv.textContent = mensaje;
-				errorDiv.style.display = 'block';
+			// Restaurar estilo del área de subida
+			fileUploadArea.style.borderColor = '#ccc';
+			fileUploadArea.style.backgroundColor = '#f8f9fa';
+		});
+		
+		// Efectos de arrastrar y soltar
+		['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+			fileUploadArea.addEventListener(eventName, preventDefaults, false);
+		});
+		
+		function preventDefaults(e) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+		
+		['dragenter', 'dragover'].forEach(eventName => {
+			fileUploadArea.addEventListener(eventName, highlight, false);
+		});
+		
+		['dragleave', 'drop'].forEach(eventName => {
+			fileUploadArea.addEventListener(eventName, unhighlight, false);
+		});
+		
+		function highlight() {
+			fileUploadArea.classList.add('dragover');
+		}
+		
+		function unhighlight() {
+			fileUploadArea.classList.remove('dragover');
+		}
+		
+		fileUploadArea.addEventListener('drop', handleDrop, false);
+		
+		function handleDrop(e) {
+			const dt = e.dataTransfer;
+			const files = dt.files;
+			
+			if (files.length) {
+				fileInput.files = files;
+				fileInput.dispatchEvent(new Event('change'));
 			}
 		}
-	</script>
+		
+		// Función para formatear el tamaño del archivo
+		function formatFileSize(bytes) {
+			if (bytes === 0) return '0 Bytes';
+			
+			const k = 1024;
+			const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+			const i = Math.floor(Math.log(bytes) / Math.log(k));
+			
+			return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+		}
+	});
+</script>
 
-</body>
-
-</html>
+</body></html>
