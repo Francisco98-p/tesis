@@ -233,18 +233,18 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	
   // Generar badges para unidades
   $unidades_leidas = '<div class="badge-container">';
-  if ($row[6] == 'No especificada') {
-      $unidades_leidas .= '<span class="badge bg-light text-dark">'.$row[6].'</span>';
+  if ($row[7] == 'No especificada') {
+      $unidades_leidas .= '<span class="badge bg-light text-dark">'.$row[7].'</span>';
   } else {
-      $unidades_leidas .= '<span class="badge bg-primary">'.$row[6].'</span>';
-  }
-  
-  if ($row[7] > '') {
       $unidades_leidas .= '<span class="badge bg-primary">'.$row[7].'</span>';
   }
   
   if ($row[8] > '') {
       $unidades_leidas .= '<span class="badge bg-primary">'.$row[8].'</span>';
+  }
+  
+  if ($row[9] > '') {
+      $unidades_leidas .= '<span class="badge bg-primary">'.$row[9].'</span>';
   }
   $unidades_leidas .= '</div>';
 
@@ -252,16 +252,16 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
  
   // Generar badges para organizaciones
   $organizaciones_leidas = '<div class="badge-container">';
-  if ($row[9] > '') {
-      $organizaciones_leidas .= '<span class="badge bg-success">'.$row[9].'</span>';
-  }
-  
   if ($row[10] > '') {
       $organizaciones_leidas .= '<span class="badge bg-success">'.$row[10].'</span>';
   }
   
   if ($row[11] > '') {
       $organizaciones_leidas .= '<span class="badge bg-success">'.$row[11].'</span>';
+  }
+  
+  if ($row[12] > '') {
+      $organizaciones_leidas .= '<span class="badge bg-success">'.$row[12].'</span>';
   }
   $organizaciones_leidas .= '</div>';
 	
