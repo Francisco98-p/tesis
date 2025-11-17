@@ -100,6 +100,11 @@ $userID = $_SESSION['userID'];
 			min-width: 200px;
 		}
 
+		.form-col-third {
+			flex: 0 0 calc(33.333% - 13.333px);
+			min-width: 200px;
+		}
+
 		.control-label {
 			display: block;
 			margin-bottom: 8px;
@@ -220,7 +225,8 @@ $userID = $_SESSION['userID'];
 			}
 
 			.form-col,
-			.form-col-half {
+			.form-col-half,
+			.form-col-third {
 				flex: 1 1 100%;
 				min-width: auto;
 			}
@@ -309,6 +315,45 @@ $userID = $_SESSION['userID'];
 			outline: none !important;
 			border-color: var(--primary-color) !important;
 		}
+
+		/* Estilos para upload de archivos */
+		.file-upload-area {
+			border: 2px dashed var(--border-color);
+			border-radius: var(--border-radius);
+			padding: 30px;
+			text-align: center;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			background-color: var(--light-gray);
+		}
+
+		.file-upload-area:hover {
+			border-color: var(--primary-color);
+			background-color: var(--light-color);
+		}
+
+		.file-upload-area.dragover {
+			border-color: var(--success-color);
+			background-color: #e8f5e9;
+		}
+
+		.file-upload-icon {
+			font-size: 3rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+		}
+
+		.file-info {
+			margin-top: 15px;
+			padding: 15px;
+			border: 1px solid var(--border-color);
+			border-radius: var(--border-radius);
+			background-color: var(--light-gray);
+		}
+
+		.current-file-info .alert {
+			margin-bottom: 0;
+		}
 	</style>
 
 	<script type="text/javascript">
@@ -389,10 +434,7 @@ $userID = $_SESSION['userID'];
 </head>
 
 <body>
-	<div class="navbar navbar-fixed-top">
-		<div class="navbar-inner">
-		</div>
-	</div>
+	
 
 	<div class="container">
 		<div class="row">
@@ -419,6 +461,20 @@ $userID = $_SESSION['userID'];
 							$ubicacion_original = $ubicacion['UbicacionOriginal'];
 							$ubicacion_copia = $ubicacion['UbicacionCopia'];
 							$ubicacion_digital = $ubicacion['UbicacionDigital'];
+							
+							// Corrección automática: Si la ruta no termina en .pdf, agregarla
+							if (!empty($ubicacion_digital) && !preg_match('/\.pdf$/i', $ubicacion_digital)) {
+								// Verificar si existe el archivo con .pdf
+								if (file_exists($ubicacion_digital . '.pdf')) {
+									$ubicacion_digital = $ubicacion_digital . '.pdf';
+									// Actualizar en la base de datos
+									mysqli_query($conn, "UPDATE ubicacionarchivo SET UbicacionDigital='$ubicacion_digital' WHERE Id=" . $row['UbicacionArchivo_Id']);
+								}
+							}
+							
+							// Debug: Verificar qué contiene la variable
+							// echo "DEBUG - Ubicación digital en BD: " . $ubicacion_digital . "<br>";
+							// echo "DEBUG - Archivo existe: " . (file_exists($ubicacion_digital) ? 'SÍ' : 'NO') . "<br>";
 						}
 					}
 					
@@ -527,7 +583,7 @@ $userID = $_SESSION['userID'];
 						<h3>Actualizar datos de la Actividad</h3>
 					</blockquote>
 					
-					<form name="form1" id="form1" class="form-horizontal row-fluid" action="update-edit.php" method="POST">
+					<form name="form1" id="form1" class="form-horizontal row-fluid" action="update-edit.php" method="POST" enctype="multipart/form-data">
 						
 						<!-- Campo oculto para el ID -->
 						<input type="hidden" name="id" id="id" value="<?php echo $row['Id']; ?>">
@@ -977,26 +1033,94 @@ $userID = $_SESSION['userID'];
 							</div>
 							
 							<div class="form-row">
-								<div class="form-col">
-									<label class="control-label">Ubicación del Original</label>
+								<div class="form-col-half">
+									<label class="control-label"><i class="fas fa-file me-1"></i>Ubicación del Original</label>
 									<input type="text" name="ubicacion_original" id="ubicacion_original" 
 										value="<?php echo $ubicacion_original; ?>"
 										placeholder="Especifique la ubicación del archivo original" class="form-control">
+								</div>
+								
+								<div class="form-col-half">
+									<label class="control-label"><i class="fas fa-copy me-1"></i>Ubicación de la Copia</label>
+									<input type="text" name="ubicacion_copia" id="ubicacion_copia" 
+										value="<?php echo $ubicacion_copia; ?>"
+										placeholder="Especifique la ubicación de la copia" class="form-control">
 								</div>
 							</div>
 							
 							<div class="form-row">
 								<div class="form-col-half">
-									<label class="control-label">Ubicación de la Copia</label>
-									<input type="text" name="ubicacion_copia" id="ubicacion_copia" 
-										value="<?php echo $ubicacion_copia; ?>"
-										placeholder="Especifique la ubicación de la copia" class="form-control">
-								</div>
-								<div class="form-col-half">
-									<label class="control-label">Ubicación Digital</label>
-									<input type="text" name="ubicacion_digital" id="ubicacion_digital" 
-										value="<?php echo $ubicacion_digital; ?>"
-										placeholder="Especifique la ubicación digital" class="form-control">
+									<label class="control-label"><i class="fas fa-file-pdf me-1"></i>Ubicación Digital (Archivo PDF)</label>
+									
+									<?php if (!empty($ubicacion_digital)): ?>
+										<!-- Mostrar archivo actual -->
+										<div class="current-file-info mb-3">
+											<div class="alert alert-success" style="padding: 10px 15px; margin-bottom: 10px;">
+												<div>
+													<i class="fas fa-file-pdf" style="color: #dc3545; font-size: 1rem; margin-right: 8px;"></i>
+													<strong style="font-size: 0.9rem;">Archivo actual:</strong>
+												</div>
+												<div style="font-size: 0.85rem; color: #555; margin-top: 5px; margin-left: 24px;">
+													<?php echo basename($ubicacion_digital); ?>
+													<?php 
+													// Mostrar información de debug en pequeño
+													if (!file_exists($ubicacion_digital)) {
+														echo '<br><small style="color: #dc3545;">Ruta en BD: ' . htmlspecialchars($ubicacion_digital) . '</small>';
+													}
+													?>
+												</div>
+												<?php if (file_exists($ubicacion_digital)): ?>
+													<div style="display: flex; gap: 8px; margin-top: 10px; max-width: 300px;">
+														<a href="<?php echo $ubicacion_digital; ?>" target="_blank" class="btn btn-primary btn-sm" style="white-space: nowrap; flex: 1;">
+															<i class="fas fa-eye"></i> Ver PDF
+														</a>
+														<a href="<?php echo $ubicacion_digital; ?>" download class="btn btn-sm" style="background-color: #28a745; color: white; white-space: nowrap; flex: 1;">
+															<i class="fas fa-download"></i> Descargar
+														</a>
+													</div>
+												<?php else: ?>
+													<div style="margin-top: 8px;">
+														<span class="badge" style="background-color: #dc3545; padding: 5px 10px; font-size: 0.75rem;">Archivo no encontrado</span>
+													</div>
+												<?php endif; ?>
+											</div>
+										</div>
+									<?php else: ?>
+										<div class="alert alert-warning" style="padding: 8px 12px; margin-bottom: 10px; font-size: 0.85rem;">
+											<i class="fas fa-exclamation-triangle"></i> No hay un archivo PDF asociado actualmente.
+										</div>
+									<?php endif; ?>
+									
+									<!-- Área de subida de archivos -->
+									<div class="file-upload-area" id="fileUploadArea">
+										<div class="file-upload-icon">
+											<i class="fas fa-file-pdf"></i>
+										</div>
+										<p class="mb-2"><strong>Arrastre y suelte un nuevo PDF aquí</strong></p>
+										<p class="text-muted small mb-2">o haga clic para seleccionar un archivo</p>
+										<input type="file" id="ubicacion_digital_file" name="ubicacion_digital" accept=".pdf" style="display: none;">
+										<button type="button" class="btn btn-sm btn-primary" id="selectFileBtn">
+											<i class="fas fa-folder-open me-1"></i>Seleccionar Nuevo Archivo
+										</button>
+									</div>
+									
+									<!-- Información del archivo seleccionado -->
+									<div class="file-info" id="fileInfo" style="display: none;">
+										<div class="d-flex justify-content-between align-items-center">
+											<div>
+												<i class="fas fa-file-pdf me-2 text-danger"></i>
+												<span id="fileName">Nombre del archivo</span>
+												<small class="text-muted d-block" id="fileSize">Tamaño del archivo</small>
+											</div>
+											<button type="button" class="btn btn-sm btn-outline-danger" id="removeFileBtn">
+												<i class="fas fa-times"></i>
+											</button>
+										</div>
+									</div>
+									
+									<div class="form-text small mt-2">
+										<i class="fas fa-info-circle me-1"></i>Solo archivos PDF, máximo 10MB. Dejar vacío para mantener el archivo actual.
+									</div>
 								</div>
 							</div>
 						</div>
@@ -1246,6 +1370,95 @@ $userID = $_SESSION['userID'];
 				}
 			?>
 		});
+
+		// JavaScript para manejo de archivos PDF
+		const fileInput = document.getElementById('ubicacion_digital_file');
+		const fileUploadArea = document.getElementById('fileUploadArea');
+		const selectFileBtn = document.getElementById('selectFileBtn');
+		const fileInfo = document.getElementById('fileInfo');
+		const fileName = document.getElementById('fileName');
+		const fileSize = document.getElementById('fileSize');
+		const removeFileBtn = document.getElementById('removeFileBtn');
+
+		// Click en el botón para abrir selector de archivos
+		selectFileBtn.addEventListener('click', () => {
+			fileInput.click();
+		});
+
+		// Click en el área para abrir selector de archivos
+		fileUploadArea.addEventListener('click', (e) => {
+			if (e.target !== selectFileBtn) {
+				fileInput.click();
+			}
+		});
+
+		// Cuando se selecciona un archivo
+		fileInput.addEventListener('change', handleFileSelect);
+
+		// Drag and drop
+		fileUploadArea.addEventListener('dragover', (e) => {
+			e.preventDefault();
+			fileUploadArea.classList.add('dragover');
+		});
+
+		fileUploadArea.addEventListener('dragleave', () => {
+			fileUploadArea.classList.remove('dragover');
+		});
+
+		fileUploadArea.addEventListener('drop', (e) => {
+			e.preventDefault();
+			fileUploadArea.classList.remove('dragover');
+			
+			const files = e.dataTransfer.files;
+			if (files.length > 0) {
+				fileInput.files = files;
+				handleFileSelect();
+			}
+		});
+
+		// Función para manejar la selección de archivo
+		function handleFileSelect() {
+			const file = fileInput.files[0];
+			
+			if (file) {
+				// Validar que sea PDF
+				if (file.type !== 'application/pdf') {
+					alert('Por favor, seleccione un archivo PDF válido.');
+					fileInput.value = '';
+					return;
+				}
+				
+				// Validar tamaño (10MB máximo)
+				const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+				if (file.size > maxSize) {
+					alert('El archivo es demasiado grande. El tamaño máximo es 10MB.');
+					fileInput.value = '';
+					return;
+				}
+				
+				// Mostrar información del archivo
+				fileName.textContent = file.name;
+				fileSize.textContent = formatFileSize(file.size);
+				fileUploadArea.style.display = 'none';
+				fileInfo.style.display = 'block';
+			}
+		}
+
+		// Botón para remover archivo seleccionado
+		removeFileBtn.addEventListener('click', () => {
+			fileInput.value = '';
+			fileUploadArea.style.display = 'block';
+			fileInfo.style.display = 'none';
+		});
+
+		// Función helper para formatear tamaño de archivo
+		function formatFileSize(bytes) {
+			if (bytes === 0) return '0 Bytes';
+			const k = 1024;
+			const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+			const i = Math.floor(Math.log(bytes) / Math.log(k));
+			return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+		}
 	</script>
 
 </body>

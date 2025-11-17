@@ -7,7 +7,6 @@ include "conn.php";
 
 
 if(isset($_POST)){
-	echo "A C T U A L I Z A N D O !!!!";
 				$actividad = mysqli_real_escape_string($conn,(strip_tags($_POST['actividad'], ENT_QUOTES)));
 				$nro_convenio_marco  = mysqli_real_escape_string($conn,(strip_tags($_POST['nro_convenio_marco'], ENT_QUOTES)));
 				$nro_resolucion	= mysqli_real_escape_string($conn,(strip_tags($_POST['nro_resolucion'], ENT_QUOTES)));
@@ -58,16 +57,74 @@ if(isset($_POST)){
 				$monto_inversion_unidad=mysqli_real_escape_string($conn,(strip_tags($_POST['monto_inversion_unidad'], ENT_QUOTES)));
 				$nota_inversion_unidad=mysqli_real_escape_string($conn,(strip_tags($_POST['nota_inversion_unidad'], ENT_QUOTES)));
 				
-				// Nuevos campos: Ubicación del Archivo y Resolución Asociada
-				$ubicacion_id = intval($_POST['ubicacion_id']);
-				$ubicacion_original = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
-				$ubicacion_copia = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
-				$ubicacion_digital = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_digital'], ENT_QUOTES)));
-				$nro_resolucion_asociada = mysqli_real_escape_string($conn,(strip_tags($_POST['nro_resolucion_asociada'], ENT_QUOTES)));
+			// Nuevos campos: Ubicación del Archivo y Resolución Asociada
+			$ubicacion_id = intval($_POST['ubicacion_id']);
+			$ubicacion_original = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
+			$ubicacion_copia = mysqli_real_escape_string($conn,(strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
+			$nro_resolucion_asociada = mysqli_real_escape_string($conn,(strip_tags($_POST['nro_resolucion_asociada'], ENT_QUOTES)));
+			
+			// Procesar archivo PDF si se subió uno nuevo
+			$ubicacion_digital = ''; // Valor por defecto
+			
+			if (isset($_FILES['ubicacion_digital']) && $_FILES['ubicacion_digital']['error'] === UPLOAD_ERR_OK) {
+				// Se subió un nuevo archivo
+				$archivo = $_FILES['ubicacion_digital'];
 				
-				$id	= intval($_POST['id']);	
-                
-				// Actualizar o crear registro de ubicación del archivo
+				// Validar que sea PDF
+				$tipoArchivo = $archivo['type'];
+				$extension = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
+				
+				if ($tipoArchivo === 'application/pdf' && $extension === 'pdf') {
+					// Validar tamaño (10MB máximo)
+					$tamanoMaximo = 10 * 1024 * 1024; // 10MB en bytes
+					
+					if ($archivo['size'] <= $tamanoMaximo) {
+						// Crear directorio si no existe
+						$directorioDestino = 'uploads/pdfs/';
+						if (!file_exists($directorioDestino)) {
+							mkdir($directorioDestino, 0755, true);
+						}
+						
+						// Generar nombre único para el archivo
+						$nombreArchivo = 'actividad_' . date('Ymd_His') . '_' . uniqid() . '.pdf';
+						$rutaDestino = $directorioDestino . $nombreArchivo;
+						
+						// Mover archivo al directorio de destino
+						if (move_uploaded_file($archivo['tmp_name'], $rutaDestino)) {
+							$ubicacion_digital = $rutaDestino;
+							
+							// Si había un archivo anterior, eliminarlo
+							if ($ubicacion_id > 0) {
+								$query_old_file = mysqli_query($conn, "SELECT UbicacionDigital FROM ubicacionarchivo WHERE Id = $ubicacion_id");
+								if ($old_data = mysqli_fetch_assoc($query_old_file)) {
+									$old_file = $old_data['UbicacionDigital'];
+									if (!empty($old_file) && file_exists($old_file)) {
+										unlink($old_file);
+									}
+								}
+							}
+						} else {
+							echo '<div class="alert alert-danger">Error al subir el archivo PDF.</div>';
+						}
+					} else {
+						echo '<div class="alert alert-danger">El archivo PDF es demasiado grande. Máximo 10MB.</div>';
+					}
+				} else {
+					echo '<div class="alert alert-danger">Solo se permiten archivos PDF.</div>';
+				}
+			} else {
+				// No se subió un nuevo archivo, mantener el anterior
+				if ($ubicacion_id > 0) {
+					$query_current = mysqli_query($conn, "SELECT UbicacionDigital FROM ubicacionarchivo WHERE Id = $ubicacion_id");
+					if ($current_data = mysqli_fetch_assoc($query_current)) {
+						$ubicacion_digital = $current_data['UbicacionDigital'];
+					}
+				}
+			}
+			
+			$id	= intval($_POST['id']);
+			
+			// Actualizar o crear registro de ubicación del archivo
 				if ($ubicacion_id > 0) {
 					// Actualizar registro existente
 					mysqli_query($conn, "UPDATE ubicacionarchivo SET 
@@ -371,7 +428,7 @@ if(isset($_POST)){
 				}
 				
 				
-				echo "<script>	window.location = 'index.php' </script>";
+				echo "<script>	window.location = 'editar.php?id=$id' </script>";
 			           
 			
 			

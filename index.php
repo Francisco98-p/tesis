@@ -282,6 +282,10 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             background-color: var(--danger-color);
         }
         
+        .action-btn.pdf {
+            background-color: #dc3545;
+        }
+        
         .stats-card {
             text-align: center;
             padding: 20px;
@@ -484,14 +488,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                         <h3 style="color: var(--primary-color);">
                             <i class="fas fa-table me-2"></i>Registro de Actividades
                         </h3>
-                        <div class="d-flex">
-                            <button class="btn btn-outline-secondary me-2">
-                                <i class="fas fa-filter me-1"></i>Filtros
-                            </button>
-                            <button class="btn btn-outline-secondary">
-                                <i class="fas fa-download me-1"></i>Exportar
-                            </button>
-                        </div>
                     </div>
                     
                     <!-- Search Box -->

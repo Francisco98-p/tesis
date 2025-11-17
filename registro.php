@@ -1764,7 +1764,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 	<div class="modal-overlay" id="modalOverlay" onclick="closeModalOrganizacion()"></div>
 	<div class="modal-container" id="modalOrganizacion">
 		<div class="modal-header">
-			<h3>➕ Agregar Nueva Organización</h3>
+			<h3>Agregar Nueva Organización</h3>
 			<button type="button" class="modal-close" onclick="closeModalOrganizacion()">&times;</button>
 		</div>
 		<div class="modal-body">

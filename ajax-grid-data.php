@@ -36,7 +36,7 @@ if (!empty($requestData['search']['value']) ) {
 
 // getting total number records without any search
 $sql='';
-$sql="SELECT A.Id,A.NroResolucion,A.Fecha_inicio,A.Fecha_final,A.Resumen,A.Objetivo, ";
+$sql="SELECT A.Id,A.NroResolucion,A.Fecha_inicio,A.Fecha_final,A.Resumen,A.Objetivo,A.UbicacionArchivo_Id, ";
 $sql.="(Select B.Unidad as Unidad "; // busco la primer unidad ejecutora [6]
 $sql.="from detalleactividadunidad ";
 $sql.="inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id ";
@@ -136,7 +136,7 @@ $sql.=" ORDER BY Fecha_inicio DESC LIMIT ".$requestData['start']." ,".$requestDa
 	
 else {
 	// getting total number records without any search
-$sql="SELECT A.Id,A.NroResolucion,A.Fecha_inicio,A.Fecha_final,A.Resumen,A.Objetivo, ";
+$sql="SELECT A.Id,A.NroResolucion,A.Fecha_inicio,A.Fecha_final,A.Resumen,A.Objetivo,A.UbicacionArchivo_Id, ";
 $sql.="(Select B.Unidad as Unidad "; // busco la primer unidad ejecutora [6]
 $sql.="from detalleactividadunidad ";
 $sql.="inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id ";
@@ -187,18 +187,38 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	
 	$nestedData[] = $row["Id"];
 	
+	// Obtener ubicación digital del PDF
+	$ubicacion_digital = '';
+	if ($row['UbicacionArchivo_Id'] > 0) {
+		$query_ubicacion = mysqli_query($conn, "SELECT UbicacionDigital FROM ubicacionarchivo WHERE Id = " . $row['UbicacionArchivo_Id']);
+		if (mysqli_num_rows($query_ubicacion) > 0) {
+			$ubicacion = mysqli_fetch_assoc($query_ubicacion);
+			$ubicacion_digital = $ubicacion['UbicacionDigital'];
+		}
+	}
+	
 	//armo columna de acciones (ahora segunda columna)
-	$nestedData[] = '<div class="action-buttons">
+	$botones = '<div class="action-buttons">
 						<a href="ver_detalle.php?id='.$row['Id'].'" class="action-btn view" title="Ver">
 							<i class="fas fa-eye"></i>
 						</a>
 						<a href="editar.php?id='.$row['Id'].'" class="action-btn edit" title="Editar">
 							<i class="fas fa-edit"></i>
-						</a>
-						<a href="index.php?action=delete&id='.$row['Id'].'" onclick="return confirm(\'¿Está seguro de que desea eliminar esta actividad?\')" class="action-btn delete" title="Eliminar">
+						</a>';
+	
+	// Agregar botón de descarga de PDF si existe
+	if (!empty($ubicacion_digital) && file_exists($ubicacion_digital)) {
+		$botones .= '<a href="'.$ubicacion_digital.'" target="_blank" class="action-btn" style="background-color: #08069ada;" title="Ver PDF">
+							<i class="fas fa-file-pdf"></i>
+						 </a>';
+	}
+	
+	$botones .= '<a href="index.php?action=delete&id='.$row['Id'].'" onclick="return confirm(\'¿Está seguro de que desea eliminar esta actividad?\')" class="action-btn delete" title="Eliminar">
 							<i class="fas fa-trash"></i>
 						</a>
 					</div>';
+	
+	$nestedData[] = $botones;
 	
 	$fecha = strtotime($row["Fecha_inicio"]); 
 	$fecha= date("d-m-Y", $fecha);

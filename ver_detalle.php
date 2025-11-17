@@ -163,6 +163,32 @@
             margin-bottom: 15px;
         }
         
+        .btn-pdf {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-pdf:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+            color: white;
+        }
+        
+        .file-location-section {
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
         @media (max-width: 768px) {
             .section-card {
                 padding: 15px;
@@ -183,6 +209,21 @@
     }else{
         $row = mysqli_fetch_assoc($sql);
         $Fecha_inicio = $row['Fecha_inicio'];
+        
+        // Obtener datos de ubicación del archivo
+        $ubicacion_original = '';
+        $ubicacion_copia = '';
+        $ubicacion_digital = '';
+        
+        if ($row['UbicacionArchivo_Id'] > 0) {
+            $query_ubicacion = mysqli_query($conn, "SELECT * FROM ubicacionarchivo WHERE Id = " . $row['UbicacionArchivo_Id']);
+            if (mysqli_num_rows($query_ubicacion) > 0) {
+                $ubicacion = mysqli_fetch_assoc($query_ubicacion);
+                $ubicacion_original = $ubicacion['UbicacionOriginal'];
+                $ubicacion_copia = $ubicacion['UbicacionCopia'];
+                $ubicacion_digital = $ubicacion['UbicacionDigital'];
+            }
+        }
     }
     ?>
     
@@ -417,6 +458,56 @@
                                 <div class="info-group">
                                     <div class="info-label">Nota Aclaratoria</div>
                                     <div class="info-value"><?php echo $row['NotaInversionUnidad']; ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ubicaciones del Archivo -->
+                <div class="section-card">
+                    <h4 class="section-title"><i class="fas fa-folder-open me-2"></i>Ubicaciones del Archivo</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="info-group">
+                                <div class="info-label"><i class="fas fa-file me-1"></i>Ubicación Original</div>
+                                <div class="info-value">
+                                    <?php echo !empty($ubicacion_original) ? $ubicacion_original : '<span class="text-muted">No especificada</span>'; ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="info-group">
+                                <div class="info-label"><i class="fas fa-copy me-1"></i>Ubicación de la Copia</div>
+                                <div class="info-value">
+                                    <?php echo !empty($ubicacion_copia) ? $ubicacion_copia : '<span class="text-muted">No especificada</span>'; ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="info-group">
+                                <div class="info-label"><i class="fas fa-file-pdf me-1"></i>Archivo Digital</div>
+                                <div class="info-value">
+                                    <?php 
+                                    if (!empty($ubicacion_digital)) {
+                                        // Verificar si el archivo existe
+                                        $archivo_existe = file_exists($ubicacion_digital);
+                                        
+                                        if ($archivo_existe) {
+                                            echo '<a href="' . $ubicacion_digital . '" target="_blank" class="btn btn-sm btn-pdf">
+                                                    <i class="fas fa-file-pdf me-1"></i>Ver PDF
+                                                  </a>';
+                                            echo '<div class="text-muted mt-2" style="font-size: 0.85rem;"><i class="fas fa-check-circle text-success me-1"></i>' . basename($ubicacion_digital) . '</div>';
+                                        } else {
+                                            echo '<div class="text-warning"><i class="fas fa-exclamation-triangle me-1"></i>Archivo no encontrado</div>';
+                                            echo '<div class="text-muted mt-1" style="font-size: 0.85rem;">' . $ubicacion_digital . '</div>';
+                                        }
+                                    } else {
+                                        echo '<span class="text-muted">No especificada</span>';
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
