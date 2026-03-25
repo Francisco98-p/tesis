@@ -1,0 +1,14 @@
+# Permitir acceso solo a archivos PDF
+<FilesMatch "\.(pdf)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Denegar acceso a otros archivos
+<FilesMatch "\.(?!pdf$)[^.]+$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Denegar ejecución de PHP
+php_flag engine off

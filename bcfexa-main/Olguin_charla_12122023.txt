@@ -1,0 +1,27 @@
+Título-tema de la charla: Proyecto PDTS "Datos Populares"
+
+Resumen del tema: 
+Las Bibliotecas Populares de San Juan utilizan KOHA (DiGiBePe) para gestionar servicios y datos transaccionales. 
+La falta de procesamiento de los datos que genera KOHA dificulta demostrar el impacto de la biblioteca ante diversas audiencias. 
+Presentamos "el camino que estamos recorriendo" junto a la Biblioteca Popular Franklin para formar RRHH
+ capaces de obtener visualizaciones atractivas y efectivas sobre la evolución de los servicios, 
+ proporcionando información relevante sobre su actividad diaria.
+ 
+
+Área: Bibliotecas y Visualización de datos
+
+Breve biografía: 
+-Programador
+-Coordinador del Laboratorio de Bibliotecas Digitales en el IdeI. 
+- Participa activamente en tareas de divulgación en congresos y revistas acerca de la temática Automatización de Centros de Información.
+- Coordinador del Programa HUARPE para la automatización de las bibliotecas en la UNSJ
+- Responsable Técnico de la implementación del Repositorio Institucional de Acceso Abierto en la UNSJ
+- Especialista en software para bibliotecas (KOHA, Dspace, Urungi, WinIsis, MarcEdit, etc.)
+- Responsable del diseño e implementación del Digesto del Consejo Directivo de la FCEFN.
+- Responsable del diseño e implementación del buscador de Convenios de la Sec. de Extensión de la FCEFN
+
+Moderador: Mi amigo Dr. Pedro Daniel Zárate
+
+Público objetivo: Bibliotecarios y público en General interesados en la visualización de datos en bibliotecas
+
+Preguntas para hacerte: ..... 
