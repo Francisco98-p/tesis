@@ -141,6 +141,31 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
+        /* Dropdown styles */
+        .dropdown-menu-custom {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+        
+        .dropdown-item-custom {
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-item-custom:hover {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        .dropdown-item-custom i {
+            width: 20px;
+            margin-right: 8px;
+        }
+
         .btn-info-custom {
             background-color: var(--accent-color);
             border: none;
@@ -409,16 +434,24 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <div class="user-info">
-                            <i class="fas fa-user-circle"></i>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-info text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i>
                             <?php echo $username; ?>
-                        </div>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a href="logout_bcfexa.php" class="btn btn-sm btn-outline-light">
-                            <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item dropdown-item-custom" href="cambiar_password.php">
+                                    <i class="fas fa-key text-primary"></i> Cambiar Contraseña
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item dropdown-item-custom text-danger" href="logout_bcfexa.php">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
