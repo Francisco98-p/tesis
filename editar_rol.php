@@ -15,13 +15,15 @@ https://www.baulphp.com/llenar-select-html-con-mysql-php-ejemplos/
 	
     </head>
     <body>
-       <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
-                        <i class="icon-reorder shaded"></i></a><a class="brand" href="http://obedalvarado.pw/" target="_blank">Sistemas Web</a>
-                   
-                   
+       <div class="navbar navbar-fixed-top" style="background: linear-gradient(135deg, #1a4b8c, #2c6eb5); border-bottom: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <div class="navbar-inner" style="background: transparent; border: none; box-shadow: none;">
+                <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                    <a class="brand" href="index.php" style="color: white; font-weight: bold; text-shadow: none; font-size: 20px; float: none; padding: 0;">
+                        <i class="icon-university"></i> BCFEXA - Intranet
+                    </a>
+                    <a href="index.php" class="btn btn-info" style="color: white; padding: 10px 20px; font-weight: bold; border-radius: 5px;">
+                        <i class="icon-home" style="margin-right:5px;"></i> Volver al Menú Inicial
+                    </a>
                 </div>
             </div>
             

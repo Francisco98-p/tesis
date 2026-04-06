@@ -1,0 +1,1 @@
+[{"role":"user","content":[{"type":"text","text":"donde guarda los proyectos ccreado por defetcto el agente?"}],"ts":1774963577067},{"role":"assistant","content":[{"type":"text","text":"```tool\ngrep default_project|project.*path|save.*project|project.*dir in .\n```"}],"ts":1774963606964}]

@@ -46,10 +46,14 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
     $nestedData[] = $row["Id"];
 	$nestedData[] = $row["Nombre"]. ' ('.$row["Titulo"].')';
 	//armo última columna de acciones Editar Borrar Descargar
-    $nestedData[] = '<td><center><a href="editar_persona.php?id='.$row['Id'].'"  data-toggle="tooltip" title="Editar datos" class="btn btn-sm btn-info">
-                 	<i class="menu-icon icon-pencil"></i> </a>
-					</center>
-				 </td>';
+    $nestedData[] = '<div class="action-buttons d-flex justify-content-center">
+        <a href="editar_persona.php?id='.$row['Id'].'" class="action-btn edit" data-bs-toggle="tooltip" title="Editar">
+            <i class="fas fa-edit"></i>
+        </a>
+        <a href="alta_persona.php?action=delete&id='.$row['Id'].'" class="action-btn delete delete-link" data-bs-toggle="tooltip" title="Eliminar">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+    </div>';
 					 
 					 
 				 
