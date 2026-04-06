@@ -1,0 +1,12 @@
+https://www.youtube.com/watch?v=41HExhmyRaM&list=PLoRfWwOOv4jyR6jOLZY5biv5H0Qguq8Ea&index=4
+https://github.com/facultadautodidacta/datatable
+
+https://academy.leewayweb.com/construyendo-una-tabla-dinamica-con-php-mysql-datatables-y-ajax/
+https://github.com/leeway-academy/DataTables
+
+https://themewp.inform.click/es/como-usar-datatable-en-php/
+
+https://es.stackoverflow.com/questions/366363/c%C3%B3mo-oculto-una-columna-de-mi-datatable-sin-perder-sus-valores
+
+
+https://www.baulphp.com/como-usar-datatables-jquery-plugin/
