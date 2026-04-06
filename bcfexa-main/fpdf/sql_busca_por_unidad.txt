@@ -1,0 +1,78 @@
+SELECT T.Nombre, A.Fecha_inicio,A.Fecha_final,A.Resumen,A.NroResolucion,
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 0,1),  
+
+Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 0,1),  
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 1,1), 
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 2,1)
+
+FROM `unidadejecutora` U
+INNER JOIN detalleactividadunidad D on U.Id = D.UnidadEjecutora_Id
+INNER JOIN actividad A on D.Actividad_Id = A.Id
+INNER JOIN tipoactividad T on T.Id= A.TipoActividad_Id
+WHERE U.Id = 2;
+
+
+//////////////////////////////////////////////////////////
+
+Busca por Organizacion
+SELECT T.Nombre, A.Fecha_inicio,A.Fecha_final,A.Resumen,A.NroResolucion,
+(Select B.Unidad  
+from detalleactividadunidad
+inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id 
+where A.Id = Actividad_Id  limit 0,1),  
+(Select B.Unidad  
+from detalleactividadunidad
+inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id 
+where A.Id = Actividad_Id  limit 1,1),  
+(Select B.Unidad  
+from detalleactividadunidad
+inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id 
+where A.Id = Actividad_Id  limit 2,1)
+
+FROM `organizacion` U
+INNER JOIN detalleactividadorganizacion D on U.Id = D.Organizacion_Id
+INNER JOIN actividad A on D.Actividad_Id = A.Id
+INNER JOIN tipoactividad T on T.Id= A.TipoActividad_Id
+WHERE U.Id = 2;
+
+//////////////////////////////////////////////////////////
+Actividades que se deben renovar en el mes
+
+SELECT T.Nombre, A.Fecha_inicio,A.Fecha_final,A.Resumen,A.NroResolucion,
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 0,1),  
+
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 0,1),  
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 1,1), 
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 2,1),
+PlazoRenovacion,RenovacionAutomatica,date_format(date_add(Fecha_final, interval PlazoRenovacion month),"%d-%m-%Y"), date_format(now(),"%Y%m")
+
+FROM `unidadejecutora` U
+INNER JOIN detalleactividadunidad D on U.Id = D.UnidadEjecutora_Id
+INNER JOIN actividad A on D.Actividad_Id = A.Id
+INNER JOIN tipoactividad T on T.Id= A.TipoActividad_Id
+
+WHERE PlazoRenovacion > 0 and date_format(date_add(Fecha_final, interval PlazoRenovacion month),"%Y%m") <= date_format(now(),"%Y%m");
