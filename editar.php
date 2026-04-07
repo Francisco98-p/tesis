@@ -1056,34 +1056,48 @@ $userID = $_SESSION['userID'];
 									<?php if (!empty($ubicacion_digital)): ?>
 										<!-- Mostrar archivo actual -->
 										<div class="current-file-info mb-3">
-											<div class="alert alert-success" style="padding: 10px 15px; margin-bottom: 10px;">
-												<div>
-													<i class="fas fa-file-pdf" style="color: #dc3545; font-size: 1rem; margin-right: 8px;"></i>
-													<strong style="font-size: 0.9rem;">Archivo actual:</strong>
-												</div>
-												<div style="font-size: 0.85rem; color: #555; margin-top: 5px; margin-left: 24px;">
-													<?php echo basename($ubicacion_digital); ?>
-													<?php 
-													// Mostrar información de debug en pequeño
-													if (!file_exists($ubicacion_digital)) {
-														echo '<br><small style="color: #dc3545;">Ruta en BD: ' . htmlspecialchars($ubicacion_digital) . '</small>';
-													}
-													?>
-												</div>
-												<?php if (file_exists($ubicacion_digital)): ?>
-													<div style="display: flex; gap: 8px; margin-top: 10px; max-width: 300px;">
-														<a href="<?php echo $ubicacion_digital; ?>" target="_blank" class="btn btn-primary btn-sm" style="white-space: nowrap; flex: 1;">
-															<i class="fas fa-eye"></i> Ver PDF
-														</a>
-														<a href="<?php echo $ubicacion_digital; ?>" download class="btn btn-sm" style="background-color: #28a745; color: white; white-space: nowrap; flex: 1;">
-															<i class="fas fa-download"></i> Descargar
-														</a>
+											<?php 
+											$file_exists = file_exists($ubicacion_digital);
+											$alert_class = $file_exists ? 'alert-success' : 'alert-danger';
+											$bg_color = $file_exists ? '#d4edda' : '#f8d7da';
+											$text_color = $file_exists ? '#155724' : '#721c24';
+											?>
+											<div class="alert" style="padding: 15px; margin-bottom: 15px; background-color: <?php echo $bg_color; ?>; color: <?php echo $text_color; ?>; border-radius: 8px; border-left: 5px solid <?php echo $file_exists ? '#28a745' : '#dc3545'; ?>;">
+												<div style="display: flex; flex-direction: column; gap: 8px;">
+													<div style="display: flex; align-items: center; gap: 10px;">
+														<i class="fas fa-file-pdf" style="font-size: 1.2rem; color: #dc3545;"></i>
+														<strong style="font-size: 1rem;">Archivo Actual:</strong>
 													</div>
-												<?php else: ?>
-													<div style="margin-top: 8px;">
-														<span class="badge" style="background-color: #dc3545; padding: 5px 10px; font-size: 0.75rem;">Archivo no encontrado</span>
+													
+													<div style="padding-left: 30px;">
+														<div style="font-size: 0.95rem; margin-bottom: 4px; word-break: break-all;">
+															<span style="font-weight: 600;">Nombre:</span> <?php echo basename($ubicacion_digital); ?>
+														</div>
+														
+														<div style="font-size: 0.85rem; opacity: 0.8; word-break: break-all;">
+															<span style="font-weight: 600;">Ruta en BD:</span> <code style="background: rgba(0,0,0,0.05); padding: 2px 4px; border-radius: 3px; font-family: monospace;"><?php echo htmlspecialchars($ubicacion_digital); ?></code>
+														</div>
+														
+														<?php if (!$file_exists): ?>
+															<div style="margin-top: 10px;">
+																<span class="badge" style="background-color: #dc3545; color: white; padding: 6px 12px; font-size: 0.8rem; border-radius: 4px;">
+																	<i class="fas fa-exclamation-circle"></i> Archivo no encontrado en el servidor
+																</span>
+															</div>
+														<?php endif; ?>
 													</div>
-												<?php endif; ?>
+													
+													<?php if ($file_exists): ?>
+														<div style="display: flex; gap: 10px; margin-top: 10px; padding-left: 30px;">
+															<a href="<?php echo $ubicacion_digital; ?>" target="_blank" class="btn btn-primary btn-sm" style="margin: 0; padding: 6px 15px;">
+																<i class="fas fa-eye"></i> Ver
+															</a>
+															<a href="<?php echo $ubicacion_digital; ?>" download class="btn btn-sm" style="background-color: #28a745; color: white; margin: 0; padding: 6px 15px;">
+																<i class="fas fa-download"></i> Descargar
+															</a>
+														</div>
+													<?php endif; ?>
+												</div>
 											</div>
 										</div>
 									<?php else: ?>
