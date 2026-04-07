@@ -213,7 +213,7 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 						 </a>';
 	}
 	
-	$botones .= '<a href="index.php?action=delete&id='.$row['Id'].'" onclick="return confirm(\'¿Está seguro de que desea eliminar esta actividad?\')" class="action-btn delete" title="Eliminar">
+	$botones .= '<a href="javascript:void(0)" onclick="confirmDelete('.$row['Id'].')" class="action-btn delete" title="Eliminar">
 							<i class="fas fa-trash"></i>
 						</a>
 					</div>';

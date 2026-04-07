@@ -49,6 +49,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --primary-color: #1a4b8c;
@@ -202,7 +203,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             border-spacing: 0;
             width: 100%;
             border-radius: 10px;
-            overflow: hidden;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             font-size: 0.9rem;
         }
@@ -366,7 +366,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            white-space: normal;
         }
         
         .text-truncate-custom {
@@ -380,17 +380,17 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
         /* Anchos fijos para columnas específicas */
         .table-custom td:nth-child(7),
         .table-custom th:nth-child(7) {
-            max-width: 200px;
+            min-width: 180px;
         }
         
         .table-custom td:nth-child(8),
         .table-custom th:nth-child(8) {
-            max-width: 200px;
+            min-width: 220px;
         }
         
         .table-custom td:nth-child(9),
         .table-custom th:nth-child(9) {
-            max-width: 150px;
+            min-width: 200px;
         }
         
         @media (max-width: 768px) {
@@ -422,7 +422,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
+        <div class="container-fluid px-4">
             <a class="navbar-brand" href="#">
                 <i class="fas fa-university"></i>
                 <span>BCFEXA - Intranet</span>
@@ -458,10 +458,10 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container-fluid mt-4 px-4">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <div class="sidebar">
                     <h5 class="mb-3" style="color: var(--primary-color);">Acciones Rápidas</h5>
                     <div class="d-grid gap-2">
@@ -515,7 +515,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             </div>
             
             <!-- Main Content -->
-            <div class="col-lg-9">
+            <div class="col-lg-10">
                 <div class="main-content">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 style="color: var(--primary-color);">
@@ -596,7 +596,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
 
     <!-- Footer -->
     <footer class="footer-custom">
-        <div class="container">
+        <div class="container-fluid px-4">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
                     <p class="mb-0">
@@ -671,12 +671,40 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 dataTable.search(searchValue).draw();
             });
             
-            // Función para confirmar eliminación
-            $(document).on('click', '.delete-link', function(e) {
-                if(!confirm('¿Está seguro que desea eliminar esta actividad?')) {
-                    e.preventDefault();
-                }
-            });
+            // Función para confirmar eliminación con SweetAlert2
+            window.confirmDelete = function(id) {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede deshacer y eliminará la actividad permanentemente.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '<i class="fas fa-trash-alt me-2"></i>Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                    focusCancel: true,
+                    background: '#ffffff',
+                    customClass: {
+                        popup: 'animated fadeInDown faster',
+                        confirmButton: 'btn btn-danger-custom px-4',
+                        cancelButton: 'btn btn-secondary px-4'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Mostrar cargando antes de redireccionar
+                        Swal.fire({
+                            title: 'Eliminando...',
+                            html: 'Por favor espere un momento.',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                        window.location.href = 'index.php?action=delete&id=' + id;
+                    }
+                });
+            };
         });
     </script>
 </body>
