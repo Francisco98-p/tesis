@@ -49,7 +49,7 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
         <a href="editar_organizacion.php?id='.$row['Id'].'" class="action-btn edit" data-bs-toggle="tooltip" title="Editar">
             <i class="fas fa-edit"></i>
         </a>
-        <a href="alta_organizacion.php?action=delete&id='.$row['Id'].'" class="action-btn delete delete-link" data-bs-toggle="tooltip" title="Eliminar">
+        <a href="javascript:void(0)" onclick="confirmDelete('.$row['Id'].')" class="action-btn delete" data-bs-toggle="tooltip" title="Eliminar">
             <i class="fas fa-trash-alt"></i>
         </a>
     </div>';
