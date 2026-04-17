@@ -1,1 +1,0 @@
-[{"role":"user","content":[{"type":"text","text":"\"Levantame el proyecto en C:\\Users\\User\\Desktop\\Cursado 2025\\tesis\\bcfexa-remote y pasame la URL para entrar desde el navegador.\""}],"ts":1776441296761},{"role":"assistant","content":[{"type":"text","text":"@ls: bcfexa-remote\n\n{\n  \"type\": \"ls\",\n  \"path\": \"bcfexa-remote\"\n}"}],"ts":1776441576211}]
