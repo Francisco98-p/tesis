@@ -1,0 +1,35 @@
+SELECT A.Id,A.NroResolucion,A.Fecha_inicio,A.Fecha_final,A.Resumen,A.Objetivo, 
+from unidadejecutora as U
+detalleactividadunidad 
+inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id 
+where A.Id = Actividad_Id  limit 0,1), 
+
+(Select B.Unidad as Unidad  
+from detalleactividadunidad 
+inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id 
+where A.Id = Actividad_Id  limit 1,1), 
+
+(Select B.Unidad as Unidad  
+from detalleactividadunidad 
+inner join unidadejecutora as B on UnidadEjecutora_Id = B.Id 
+where A.Id = Actividad_Id  limit 2,1), 
+
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 0,1),  
+
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 1,1), 
+(Select B.Nombre  
+from detalleactividadorganizacion 
+inner join organizacion as B on Organizacion_Id = B.Id 
+where A.Id = Actividad_Id  limit 2,1),
+
+T.Nombre as Tipo 
+FROM actividad as A 
+INNER JOIN tipoactividad as T on TipoActividad_Id = T.Id 
+WHERE TipoActividad_Id = 1
+ORDER BY Fecha_inicio DESC 

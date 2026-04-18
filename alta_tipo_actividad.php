@@ -20,6 +20,28 @@ if(isset($_GET['action']) && $_GET['action'] == 'delete') {
     }
 }
 
+// Insertar nuevo tipo de actividad con verificación de duplicados
+if (isset($_POST['input'])) {
+    $tipo_actividad = mysqli_real_escape_string($conn, strip_tags($_POST['tipo_actividad'], ENT_QUOTES));
+
+    // Verificar duplicados
+    $check_query = "SELECT COUNT(*) as count FROM tipoactividad WHERE tipo_actividad = '$tipo_actividad'";
+    $check_result = mysqli_query($conn, $check_query);
+    $check_row = mysqli_fetch_assoc($check_result);
+
+    if ($check_row['count'] > 0) {
+        echo '<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>El tipo de actividad ya existe en el sistema.</div>';
+    } else {
+        $insert = mysqli_query($conn, "INSERT INTO tipoactividad (tipo_actividad) VALUES ('$tipo_actividad')");
+        if ($insert) {
+            echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Tipo de actividad agregado correctamente.</div>';
+            header("Location: alta_tipo_actividad.php");
+        } else {
+            echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error al agregar el tipo de actividad.</div>';
+        }
+    }
+}
+
 // Consultas para estadísticas
 $query_total = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad");
 $total_actividades = mysqli_fetch_assoc($query_total)['total'];

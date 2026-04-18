@@ -1,0 +1,78 @@
+<select class="form-control" name="actividad" >
+											<option value="">Seleccione:</option>
+												<?php
+											include "conn.php";
+											$query = mysqli_query($conn,"SELECT * FROM tipoactividad");
+											var_dump (mysqli_num_rows($query));
+												if(mysqli_num_rows($query) == 0){
+													echo "no sale nada";
+												}else{
+												   while ($valores = mysqli_fetch_array($query)) {
+													if ($valores['Id']==$row['TipoActividad_Id']) { ?> 
+													
+													 <option value="<?php echo $valores['Id'];?>" selected>
+													 <?php echo $valores['Nombre'];?></option>
+													 
+													 <?php }
+												    else { ?>
+														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']; ?> </option>
+														<?php 
+														}
+													
+													  }
+												}
+													
+													?>
+													
+												</select>
+												
+												
+												<select class="form-control" name="organizacion1" id="organizacion1" required style="width:400px;background-color:#DDFFFF"">
+											<option value="">Seleccione la organización que figura en la resolución:</option>
+										<?php
+		//leo datos de la tabla detalleactividadorganizacion para extraer la PRIMER organizacion
+									
+								        	include "conn.php";
+											$query_org='SELECT Organizacion_Id,Nombre FROM detalleactividadorganizacion 
+											JOIN organizacion on (Organizacion_Id=Organizacion.Id) WHERE Actividad_Id='.$row[Id].' limit 0,1';
+											 $query = mysqli_query($conn,$query_org);
+											 if(mysqli_num_rows($query) == 0){
+													echo "no sale nada";
+													$organizacion1_leida="antes del while dio 0 la busqeuda=".mysqli_num_rows($query);
+													
+												} else
+													$organizacion1_leida="antes del while";
+												   while ($valores = mysqli_fetch_array($query)) {
+													$organizacion1_leida= $valores['Organizacion_Id'];
+													echo $organizacion1_leida;
+												   }
+												 
+												
+							// Select para Organizacion 1, 2, 3
+										
+											$query = mysqli_query($conn,"SELECT  * FROM organizacion");
+											
+												if(mysqli_num_rows($query) == 0){
+													echo "no sale nada";
+												}else{
+												   while ($valores = mysqli_fetch_array($query)) {
+													 if ($valores['Id']==$organizacion1_leida) { 
+									   ?> 
+													
+													 <option value="<?php echo $valores['Id'];?>" selected>
+													 <?php echo $valores['Nombre']; ?></option>
+													 
+													 <?php }
+												     else { 
+													?>
+														<option value="<?php echo $valores['Id'];?>"><?php echo $valores['Nombre']?> </option>
+														<?php 
+														}
+													
+													  }
+												}
+													
+													?>
+													
+												</select>
+												

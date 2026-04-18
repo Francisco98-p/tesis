@@ -1,0 +1,5 @@
+Notas al editar/cargar actividades
+1) OJO: en los combos se debe VALIDAR	que no se repitan los datos en los 3 comos ( o dos)
+Diseñar un javascript de validación que compare los campos box seleccionados, Si se repiten, no avanzar
+
+Al actualizar las tablas de organización etc (SELECT) primero leer la bbdd como se hizo en editar

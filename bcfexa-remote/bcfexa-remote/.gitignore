@@ -1,0 +1,36 @@
+# Archivos temporales de PHP
+*.tmp
+*.log
+
+# Archivos de configuración específicos del entorno
+config_local.php
+
+# Archivos de backup automáticos
+*.bak
+*~
+
+# Directorios de uploads temporales
+uploads/temp/
+
+# Archivos de IDEs
+.vscode/settings.json
+*.code-workspace
+
+# Archivos de sistema
+Thumbs.db
+.DS_Store
+
+# Logs de errores
+error_log
+php_errors.log
+
+# Archivos de sesión
+sessions/
+
+# Cache
+cache/
+temp/
+
+# Archivos de base de datos (backups automáticos)
+*.sql.backup
+*.dump

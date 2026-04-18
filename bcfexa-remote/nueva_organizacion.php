@@ -37,19 +37,25 @@ include "conn.php";
 			if(isset($_POST['input'])){
 				
 				$nombre	= mysqli_real_escape_string($conn,(strip_tags($_POST['nombre'], ENT_QUOTES)));
-					
 				
-		
-				$insert = mysqli_query($conn, "INSERT INTO organizacion(Id, Nombre) VALUES(NULL,'$nombre')"); 
-															
-															
-						if($insert){
-							echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Bien hecho Luis Olguin, los datos han sido agregados correctamente.</div>';
-						    header("Location: alta_organizacion.php");
-						}else{
-							echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error, no se pudo registrar los datos.</div>';
-						}
+				// Normalizar nombre para comparación
+				$nombre_normalizado = strtolower(trim($nombre));
 				
+				// Verificar si la organización ya existe (case-insensitive, trimmed)
+				$check = mysqli_query($conn, "SELECT * FROM organizacion WHERE LOWER(TRIM(Nombre)) = '$nombre_normalizado'");
+				if(mysqli_num_rows($check) > 0){
+					echo '<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>La organización ya existe en el sistema.</div>';
+					exit;
+				} else {
+					$insert = mysqli_query($conn, "INSERT INTO organizacion(Id, Nombre) VALUES(NULL,'$nombre')"); 
+					if($insert){
+						echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Bien hecho Luis Olguin, los datos han sido agregados correctamente.</div>';
+						header("Location: alta_organizacion.php");
+						exit;
+					}else{
+						echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error, no se pudo registrar los datos.</div>';
+					}
+				}
 			}
 			?>
             

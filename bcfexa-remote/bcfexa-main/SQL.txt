@@ -1,0 +1,5 @@
+SELECT A.Id,A.NroResolucion,A.Fecha_inicio,A.Fecha_final,B.*,C.*, D.*, E.* FROM actividad A
+inner join organizacion B on (A.Organizacion_Id=B.Id)
+inner join tipoactividad C on (C.Id=A.TipoActividad_Id)
+inner join detalleactividadunidad D on (D.Actividad_Id=A.Id)
+inner join unidadejecutora E on (E.Id=D.UnidadEjecutora_Id)

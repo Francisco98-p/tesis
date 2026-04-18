@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>jQuery Slide Popup</title>
+<style>
+  
+.popup {
+    background-color: #ffffff;
+    color: #888888;
+    height: 245px;
+    left: 100%;
+    padding: 20px;
+    position: fixed;
+    right: 30%;
+    top: 25%;
+    width: 550px;
+    z-index: 101;
+    -moz-box-shadow: 0px 0px 10px 1px #888888;
+    -webkit-box-shadow: 0px 0px 10px 1px #888888;
+    box-shadow: 0px 0px 10px 1px #888888;
+    border-radius:10px;
+    -moz-border-radius:10px;
+}
+
+.overlay {
+    background: #000000;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 100;
+    opacity:0.5;
+}
+
+a.close {
+    background: url("https://www.jose-aguilar.com/scripts/jquery/slide-popup/cancel.png") repeat scroll left top transparent;
+    cursor: pointer;
+    float: right;
+    height: 26px;
+    left: 32px;
+    position: relative;
+    top: -33px;
+    width: 26px;
+}
+  </style>
+<script type="text/javascript">
+function openDialog() {
+	$('#overlay').fadeIn('fast', function() {
+		$('#popup').css('display','block');
+        $('#popup').animate({'left':'30%'},500);
+    });
+}
+
+function closeDialog(id) {
+	$('#'+id).css('position','absolute');
+	$('#'+id).animate({'left':'-100%'}, 500, function() {
+		$('#'+id).css('position','fixed');
+		$('#'+id).css('left','100%');
+		$('#overlay').fadeOut('fast');
+	});
+}
+</script>
+</head>
+
+<body onload="openDialog();">
+<div id="content">
+<div id="overlay" class="overlay"></div>
+<a onclick="openDialog();">Mostrar publicidad</a>
+<div id="popup" class="popup">
+	<a onclick="closeDialog('popup');" class="close"></a>
+	<div>
+      <table class="tg"><thead><tr><td style="background-color:#fffc9e;border-color:black;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:top;word-break:normal"><h2>Es bueno sentir que NAVIDAD es el tiempo ideal para creer más en nostros mismos y en un mundo mejor para todos.</h2>
+        <img src="https://i0.wp.com/exactas.unsj.edu.ar/wp-content/uploads/2012/12/membrete-idei.png"  width="250" height="250"
+        </td><td style="background-color:#fffc9e;border-color:#f8a102;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;text-align:left;vertical-align:top;word-break:normal">  
+       <img src="https://www.gifsanimados.org/data/media/357/arbol-de-navidad-imagen-animada-0276.gif"  width="200" height="200" alt="Girl in a jacket"> </td></tr></thead></table>
+      <center>
+      
+      
+      </center>
+	</div>
+</div>
+</div>
+</body>
+</html>

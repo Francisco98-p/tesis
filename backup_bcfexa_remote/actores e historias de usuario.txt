@@ -1,0 +1,40 @@
+
+
+### Actores del Sistema
+
+Los principales actores que interactuarán con el sistema son:
+
+* [cite_start]**Personal Administrativo:** Responsable de la carga y gestión diaria de los documentos y normativas[cite: 171].
+* [cite_start]**Decanos y Consejeros:** Toman decisiones de alto nivel sobre expedientes y documentos presentados para su aprobación[cite: 180].
+* [cite_start]**Secretaría de Extensión:** La entidad principal que coordina el registro y la gestión de las resoluciones[cite: 192].
+* [cite_start]**Estudiantes y Egresados:** Usuarios externos que consultan documentos de acceso público[cite: 186].
+* [cite_start]**Usuario Root (Raíz):** El administrador principal del sistema, con control total sobre los usuarios y la configuración[cite: 167].
+
+---
+
+### Historias de Usuario
+
+A continuación se detallan las historias de usuario para cada uno de los actores:
+
+**Personal Administrativo**
+* [cite_start]Como personal administrativo, quiero cargar y actualizar resoluciones, ordenanzas y otros documentos para mantener un registro centralizado y actualizado[cite: 171, 174].
+* [cite_start]Como personal administrativo, quiero utilizar herramientas de búsqueda avanzada para encontrar documentos específicos de forma rápida y eficiente[cite: 177].
+* [cite_start]Como personal administrativo, quiero que los cambios realizados en los documentos se registren con un historial de versiones[cite: 176].
+
+**Decanos y Consejeros**
+* [cite_start]Como decano o consejero, quiero recibir notificaciones sobre expedientes y actas que me han sido enviados para su aprobación o rechazo[cite: 180].
+* [cite_start]Como decano o consejero, quiero poder aprobar o rechazar expedientes y actas a través del sistema[cite: 183].
+
+**Secretaría de Extensión**
+* [cite_start]Como secretario/a de extensión, quiero poder dar de alta las resoluciones solicitadas de manera formal y organizada[cite: 192].
+
+**Estudiantes y Egresados**
+* [cite_start]Como estudiante o egresado, quiero poder acceder a información pública sobre convenios, actas y resoluciones relevantes para mi área de estudio[cite: 186].
+* [cite_start]Como estudiante o egresado, quiero poder realizar consultas sobre documentos específicos a través de un formulario de consulta[cite: 189, 190].
+
+**Usuario Root (Raíz)**
+* [cite_start]Como usuario root, quiero gestionar el acceso de todos los usuarios (Personal Administrativo, Decanos, Consejeros, Estudiantes y Secretarios) para garantizar la seguridad del sistema[cite: 168, 170].
+* [cite_start]Como usuario root, quiero tener la capacidad de gestionar los temas de publicación (altas, modificaciones y eliminación)[cite: 205, 207].
+
+---
+
