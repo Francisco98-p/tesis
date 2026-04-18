@@ -453,6 +453,9 @@ if (isset($_POST['input'])) {
                 <div class="sidebar">
                     <h5 class="mb-3" style="color: var(--primary-color);">Acciones Rápidas</h5>
                     <div class="d-grid gap-2">
+                        <a href="index.php" class="btn btn-secondary btn-responsive">
+                            <i class="fas fa-home me-2"></i>Menú Principal
+                        </a>
                         <a href="registro.php" class="btn btn-success-custom btn-responsive">
                             <i class="fas fa-plus-circle me-2"></i>Ingresar Nueva Actividad
                         </a>

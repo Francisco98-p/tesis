@@ -471,6 +471,9 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 <div class="sidebar">
                     <h5 class="mb-3" style="color: var(--primary-color);">Acciones Rápidas</h5>
                     <div class="d-grid gap-2">
+                        <a href="index.php" class="btn btn-secondary btn-responsive">
+                            <i class="fas fa-home me-2"></i>Menú Principal
+                        </a>
                         <a href="registro.php" class="btn btn-success-custom btn-responsive">
                             <i class="fas fa-plus-circle me-2"></i>Ingresar Nueva Actividad
                         </a>
@@ -529,7 +532,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                         </h3>
                     </div>
 
-                    <!-- Search Box -->
                     <div class="search-box">
                         <h5><i class="fas fa-search me-2"></i>Búsqueda Avanzada</h5>
                         <div class="mb-3">
@@ -569,27 +571,38 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                         </div>
                     </div>
 
-                    <!-- Data Table -->
                     <div class="table-responsive">
-                        <table id="lookup" class="table table-custom table-hover">
+                        <table id="lookup" class="table table-custom table-hover dataTable no-footer" role="grid"
+                            aria-describedby="lookup_info">
                             <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Acciones</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
-                                    <th>Tipo de Actividad</th>
-                                    <th>Nro Resolución</th>
-                                    <th>Unidad Ejecutora</th>
-                                    <th>Organización Solicitante</th>
-                                    <th>Resumen</th>
+                                <tr role="row">
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="display:none;">Id</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1">Acciones</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Fecha Inicio: activate to sort column ascending">Fecha Inicio</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Fecha Fin: activate to sort column ascending">Fecha Fin</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Tipo de Actividad: activate to sort column ascending">Tipo de
+                                        Actividad</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Nro Resolución: activate to sort column ascending">Nro Resolución
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Unidad Ejecutora: activate to sort column ascending">Unidad
+                                        Ejecutora</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Organización Solicitante: activate to sort column ascending">
+                                        Organización Solicitante</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Resumen: activate to sort column ascending">Resumen</th>
                                 </tr>
                             </thead>
                             <tbody>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>Id</th>
+                                    <th style="display:none;">Id</th>
                                     <th>Acciones</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
@@ -605,7 +618,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 </div>
             </div>
         </div>
-    </div>
+    </div>div>
 
     <!-- Footer -->
     <footer class="footer-custom">
@@ -614,7 +627,8 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 <div class="col-md-6 text-center text-md-start">
                     <p class="mb-0">
                         <b class="copyright">
-                            <a href="#" class="text-white">IdeI</a> &copy; <?php echo date("Y"); ?> ...
+                            <a href="#" class="text-white">IdeI</a> &copy;
+                            <?php echo date("Y"); ?> ...
                         </b>
                     </p>
                 </div>
@@ -687,6 +701,9 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                     }
                 }
             });
+
+            // Ocultar el buscador pequeño por defecto de DataTables
+            $('#lookup_filter').hide();
 
             // Conectar los inputs de búsqueda personalizados con DataTable
             $('.dataTables_filter_input').on('keyup', function () {
