@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php include "conn.php";
 include 'session_bcfexa.php';
 $username = $_SESSION['username'];
@@ -1956,3 +1957,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
    </body>
 >>>>>>> c75371212b3772fad208f167beaa9ae6c325fc52
+=======
+﻿<?php
+// This is a basic setup for the editar.php file
+// Include necessary files
+include 'conn.php';
+
+// Function to edit an organization
+function editOrganization($id, $data)
+{
+	// Code to update organization in the database
+}
+
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$id = $_POST['id'];
+	$data = $_POST['data'];
+	editOrganization($id, $data);
+	echo "Organization updated successfully.";
+}
+?>
+>>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068

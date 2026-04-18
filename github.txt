@@ -1,3 +1,7 @@
 https://github.com/Francisco98-p2/bcfexa/tree/main
 
+<<<<<<< HEAD
 https://github.com/Francisco98-p/tesis
+=======
+https://github.com/Francisco98-p/tesis 
+>>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068

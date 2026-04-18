@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 include "conn.php";
 include 'session_bcfexa.php';
@@ -2168,6 +2169,8 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 </body></html>
 =======
+=======
+>>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068
 ﻿<?php 
 include "conn.php";
 include 'session_dafexa.php';
@@ -2684,4 +2687,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>    
 
     </body>
+<<<<<<< HEAD
 >>>>>>> c75371212b3772fad208f167beaa9ae6c325fc52
+=======
+>>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068
