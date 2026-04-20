@@ -1,32 +1,42 @@
+<!-- el manejo simple de sesiones es tomado de 
+https://www.sourcecodessite.com/create-login-crud-system-using-php-mysql/
+-->
 <?php
-include 'conn.php';
+include "conn.php";
 include 'session_bcfexa.php';
 $username = $_SESSION['username'];
 $userID = $_SESSION['userID'];
 
-if (isset($_POST['input'])) {
-    $nombre = mysqli_real_escape_string($conn, (strip_tags($_POST['nombre'], ENT_QUOTES)));
-
-    $check_duplicate = mysqli_query($conn, "SELECT * FROM unidadejecutora WHERE Nombre = '$nombre'");
-    if (mysqli_num_rows($check_duplicate) > 0) {
-        echo '<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>La unidad ejecutora ya existe en el sistema.</div>';
+// borro registro
+if (isset($_GET['action']) && $_GET['action'] == 'delete') {
+    $id_delete = intval($_GET['id']);
+    $query = mysqli_query($conn, "SELECT * FROM actividad WHERE Id='$id_delete'");
+    if (mysqli_num_rows($query) == 0) {
+        echo '<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> No se encontraron datos.</div>';
     } else {
-        $insert = mysqli_query($conn, "INSERT INTO unidadejecutora(Id, Nombre) VALUES(NULL,'$nombre')");
-        if ($insert) {
-            echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Bien hecho, los datos han sido agregados correctamente.</div>';
-            header("Location: alta_unidad_ejecutora.php");
+        $delete = mysqli_query($conn, "DELETE FROM actividad WHERE Id='$id_delete'");
+        if ($delete) {
+            echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> La actividad ha sido eliminada correctamente.</div>';
         } else {
-            echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error, no se pudo registrar los datos.</div>';
+            echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Error, no se pudo eliminar la actividad.</div>';
         }
     }
 }
+
 // Consultas para estadísticas
+// Total de actividades
 $query_total = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad");
 $total_actividades = mysqli_fetch_assoc($query_total)['total'];
+
+// Actividades de este mes
 $query_mes = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad WHERE MONTH(Fecha_inicio) = MONTH(CURRENT_DATE()) AND YEAR(Fecha_inicio) = YEAR(CURRENT_DATE())");
 $actividades_mes = mysqli_fetch_assoc($query_mes)['total'];
+
+// Actividades completadas (donde Fecha_final < hoy)
 $query_completadas = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad WHERE Fecha_final < CURDATE()");
 $actividades_completadas = mysqli_fetch_assoc($query_completadas)['total'];
+
+// Actividades en proceso (donde Fecha_inicio <= hoy AND Fecha_final >= hoy)
 $query_proceso = mysqli_query($conn, "SELECT COUNT(*) as total FROM actividad WHERE Fecha_inicio <= CURDATE() AND Fecha_final >= CURDATE()");
 $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
 ?>
@@ -133,6 +143,31 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
+        /* Dropdown styles */
+        .dropdown-menu-custom {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        .dropdown-item-custom {
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .dropdown-item-custom:hover {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+
+        .dropdown-item-custom i {
+            width: 20px;
+            margin-right: 8px;
+        }
+
         .btn-info-custom {
             background-color: var(--accent-color);
             border: none;
@@ -169,7 +204,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             border-spacing: 0;
             width: 100%;
             border-radius: 10px;
-            overflow: hidden;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             font-size: 0.9rem;
         }
@@ -234,31 +268,6 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             font-weight: 500;
             display: flex;
             align-items: center;
-        }
-
-        /* Dropdown styles */
-        .dropdown-menu-custom {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-        }
-
-        .dropdown-item-custom {
-            border-radius: 6px;
-            padding: 8px 15px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .dropdown-item-custom:hover {
-            background-color: var(--light-color);
-            color: var(--primary-color);
-        }
-
-        .dropdown-item-custom i {
-            width: 20px;
-            margin-right: 8px;
         }
 
         .user-info i {
@@ -358,7 +367,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            white-space: normal;
         }
 
         .text-truncate-custom {
@@ -372,17 +381,17 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
         /* Anchos fijos para columnas específicas */
         .table-custom td:nth-child(7),
         .table-custom th:nth-child(7) {
-            max-width: 200px;
+            min-width: 180px;
         }
 
         .table-custom td:nth-child(8),
         .table-custom th:nth-child(8) {
-            max-width: 200px;
+            min-width: 220px;
         }
 
         .table-custom td:nth-child(9),
         .table-custom th:nth-child(9) {
-            max-width: 150px;
+            min-width: 200px;
         }
 
         @media (max-width: 768px) {
@@ -415,7 +424,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
+        <div class="container-fluid px-4">
             <a class="navbar-brand" href="#">
                 <i class="fas fa-university"></i>
                 <span>BCFEXA - Intranet</span>
@@ -455,10 +464,10 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container-fluid mt-4 px-4">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <div class="sidebar">
                     <h5 class="mb-3" style="color: var(--primary-color);">Acciones Rápidas</h5>
                     <div class="d-grid gap-2">
@@ -514,56 +523,137 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 </div>
             </div>
 
-
             <!-- Main Content -->
-            <div class="col-lg-9">
+            <div class="col-lg-10">
                 <div class="main-content">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 style="color: var(--primary-color);">
-                            <i class="fas fa-building me-2"></i>Alta de Unidad Ejecutora
+                            <i class="fas fa-table me-2"></i>Registro de Actividades
                         </h3>
-                        <a href="nueva_unidadejecutora.php" class="btn btn-primary-custom">
-                            <i class="fas fa-plus-circle me-2"></i>Nueva Unidad Ejecutora
-                        </a>
                     </div>
 
                     <div class="search-box">
-                        <h5><i class="fas fa-search me-2"></i>Búsqueda</h5>
-                        <div class="input-group">
-                            <input type="text" class="form-control dataTables_filter_input"
-                                placeholder="Buscar por texto...">
-                            <button class="btn btn-primary-custom" type="button"
-                                onclick="$('.dataTables_filter_input').trigger('keyup')">
-                                <i class="fas fa-search"></i>
-                            </button>
+                        <h5><i class="fas fa-search me-2"></i>Búsqueda Avanzada</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Buscar por TEXTO COMPLETO:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control dataTables_filter_input"
+                                    placeholder="Ingrese al menos 3 letras...">
+                                <button class="btn btn-primary-custom" type="button"
+                                    onclick="$('.dataTables_filter_input').trigger('keyup')">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Filtrar por FECHA DE INICIO:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">FI</span>
+                                    <input type="text" class="form-control dataTables_filter_input"
+                                        placeholder="Ej: FI2023">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Filtrar por FECHA DE FIN:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">FF</span>
+                                    <input type="text" class="form-control dataTables_filter_input"
+                                        placeholder="Ej: FF2025">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>Presione ENTER para buscar después de ingresar los
+                            criterios. Para búsqueda por texto completo, ingrese al menos 3 letras. Para filtrar por
+                            FECHA DE INICIO, ingrese <b>FI</b> seguido del año (ej. FI2022). Para filtrar por FECHA DE
+                            FIN, ingrese <b>FF</b> seguido del año (ej. FF2025).
                         </div>
                     </div>
 
                     <div class="table-responsive">
-                        <table id="lookup" class="table table-custom table-hover">
+                        <table id="lookup" class="table table-custom table-hover dataTable no-footer" role="grid"
+                            aria-describedby="lookup_info">
                             <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Unidad Ejecutora</th>
-                                    <th class="text-center" style="width: 120px;">Acciones</th>
+                                <tr role="row">
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="display:none;">Id</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1">Acciones</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Fecha Inicio: activate to sort column ascending">Fecha Inicio</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Fecha Fin: activate to sort column ascending">Fecha Fin</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Tipo de Actividad: activate to sort column ascending">Tipo de
+                                        Actividad</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Nro Resolución: activate to sort column ascending">Nro Resolución
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Unidad Ejecutora: activate to sort column ascending">Unidad
+                                        Ejecutora</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Organización Solicitante: activate to sort column ascending">
+                                        Organización Solicitante</th>
+                                    <th class="sorting" tabindex="0" aria-controls="lookup" rowspan="1" colspan="1"
+                                        aria-label="Resumen: activate to sort column ascending">Resumen</th>
                                 </tr>
                             </thead>
                             <tbody>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="display:none;">Id</th>
+                                    <th>Acciones</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Tipo de Actividad</th>
+                                    <th>Nro Resolución</th>
+                                    <th>Unidad Ejecutora</th>
+                                    <th>Organización Solicitante</th>
+                                    <th>Resumen</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
             </div>
-        </div> <!-- End row from top part -->
-    </div> <!-- End container from top part -->
+        </div>
+    </div>div>
+
+    <!-- Modal Detalle de Actividad -->
+    <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border-radius: 10px 10px 0 0;">
+                    <h5 class="modal-title" id="detalleModalLabel"><i class="fas fa-eye me-2"></i>Detalles de Actividad</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Div donde se cargará el contenido por AJAX -->
+                <div class="modal-body" id="detalleModalBody" style="background-color: #f5f7fa; padding: 20px;">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2" style="color: var(--primary-color);">Cargando detalles...</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0" style="background-color: #f5f7fa;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <!-- Puedes agregar botones adicionales si es necesario (e.g. Editar) -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer-custom">
-        <div class="container">
+        <div class="container-fluid px-4">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
                     <p class="mb-0">
                         <b class="copyright">
-                            <a href="#" class="text-white">IdeI</a> &copy; <?php echo date("Y"); ?> ...
+                            <a href="#" class="text-white">IdeI</a> &copy;
+                            <?php echo date("Y"); ?> ...
                         </b>
                     </p>
                 </div>
@@ -617,15 +707,28 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                     "visible": false
                 }],
                 "ajax": {
-                    url: "ajax-unidad-ejecutora.php", // json datasource
+                    url: "ajax-grid-data.php", // json datasource
                     type: "post",  // method, by default get
                     error: function () {  // error handling
                         $(".lookup-error").html("");
                         $("#lookup").append('<tbody class="employee-grid-error"><tr><th colspan="9">No hay datos disponibles</th></tr></tbody>');
                         $("#lookup_processing").css("display", "none");
                     }
+                },
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).data().length;
+                    var total = api.data().length;
+                    if (total <= api.page.len()) {
+                        $(api.table().container()).find('.dataTables_length').hide();
+                    } else {
+                        $(api.table().container()).find('.dataTables_length').show();
+                    }
                 }
             });
+
+            // Ocultar el buscador pequeño por defecto de DataTables
+            $('#lookup_filter').hide();
 
             // Conectar los inputs de búsqueda personalizados con DataTable
             $('.dataTables_filter_input').on('keyup', function () {
@@ -637,7 +740,7 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
             window.confirmDelete = function (id) {
                 Swal.fire({
                     title: '¿Estás seguro?',
-                    text: "Esta acción no se puede deshacer y eliminará el registro permanentemente.",
+                    text: "Esta acción no se puede deshacer y eliminará la actividad permanentemente.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#dc3545',
@@ -663,7 +766,37 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                                 Swal.showLoading()
                             }
                         });
-                        window.location.href = 'alta_unidad_ejecutora.php?action=delete&id=' + id;
+                        window.location.href = 'index.php?action=delete&id=' + id;
+                    }
+                });
+            };
+            // Función para abrir el modal de detalles
+            window.verDetalleModal = function(id) {
+                // Mostrar spinner
+                $('#detalleModalBody').html(`
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2" style="color: var(--primary-color);">Cargando detalles...</p>
+                    </div>
+                `);
+
+                // Abrir modal
+                var myModal = new bootstrap.Modal(document.getElementById('detalleModal'), {
+                    keyboard: true
+                });
+                myModal.show();
+
+                // Cargar contenido por AJAX
+                $.ajax({
+                    url: 'ver_detalle_modal.php?id=' + id,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#detalleModalBody').html(response);
+                    },
+                    error: function() {
+                        $('#detalleModalBody').html('<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error al cargar los detalles de la actividad.</div>');
                     }
                 });
             };

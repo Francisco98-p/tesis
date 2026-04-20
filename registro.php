@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 <?php
 include "conn.php";
 include 'session_bcfexa.php';
@@ -167,7 +165,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 		}
 
 		.control-label {
-			
+
 			margin-bottom: 8px;
 			font-weight: 600;
 			color: #555;
@@ -250,7 +248,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 		.btn-primary:hover {
 			background: linear-gradient(135deg, var(--primary-hover) 0%, #1f4e6b 100%);
-			
+
 			box-shadow: 0 5px 15px rgba(51, 122, 183, 0.3);
 		}
 
@@ -261,7 +259,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 		.btn-danger:hover {
 			background: linear-gradient(135deg, #c9302c 0%, #ac2925 100%);
-			
+
 			box-shadow: 0 5px 15px rgba(217, 83, 79, 0.3);
 		}
 
@@ -412,7 +410,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 		/* Botón de agregar rápido (+) */
 		.btn-add-quick {
-			background-color:  #50449dff ;
+			background-color: #50449dff;
 			color: white;
 			border: none;
 			border-radius: 50%;
@@ -425,12 +423,12 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 			align-items: center;
 			justify-content: center;
 			transition: all 0.3s ease;
-			box-shadow: 0  rgba(0, 0, 0, 0.2);
+			box-shadow: 0 rgba(0, 0, 0, 0.2);
 			margin-left: 15px;
 		}
 
 		.btn-add-quick:hover {
-			background-color:  #4a35cfff;
+			background-color: #4a35cfff;
 			transform: scale(1.1);
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 		}
@@ -537,6 +535,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 			from {
 				opacity: 0;
 			}
+
 			to {
 				opacity: 1;
 			}
@@ -547,6 +546,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 				transform: translate(-50%, -60%);
 				opacity: 0;
 			}
+
 			to {
 				transform: translate(-50%, -50%);
 				opacity: 1;
@@ -783,10 +783,10 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 					<?php
 					// var_dump($_POST);	
 					if (isset($_POST['actividad'])) {
-						
+
 						// Array para almacenar errores de validación
 						$errores = array();
-						
+
 						// Validaciones del lado del servidor
 						if (empty($_POST['actividad']) || $_POST['actividad'] == '0') {
 							$errores[] = "Debe seleccionar un Tipo de Actividad.";
@@ -840,7 +840,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 								$errores[] = "El archivo es demasiado grande. El tamaño máximo permitido es 10MB.";
 							}
 						}
-						
+
 						// Si hay errores, mostrarlos
 						if (!empty($errores)) {
 							echo '<div class="alert alert-danger"><ul>';
@@ -850,218 +850,223 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 							echo '</ul></div>';
 						} else {
 							// Si no hay errores, proceder con la inserción
+					
 
+							$actividad = mysqli_real_escape_string($conn, (strip_tags($_POST['actividad'], ENT_QUOTES)));
+							$nro_convenio_marco = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_convenio_marco'], ENT_QUOTES)));
+							$nro_resolucion = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_resolucion'], ENT_QUOTES)));
+							$nro_expediente = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_expediente'], ENT_QUOTES)));
 
-						$actividad = mysqli_real_escape_string($conn, (strip_tags($_POST['actividad'], ENT_QUOTES)));
-						$nro_convenio_marco = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_convenio_marco'], ENT_QUOTES)));
-						$nro_resolucion = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_resolucion'], ENT_QUOTES)));
-						$nro_expediente = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_expediente'], ENT_QUOTES)));
+							$organizacion1 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion1'], ENT_QUOTES)));
+							$organizacion2 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion2'], ENT_QUOTES)));
+							$organizacion3 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion3'], ENT_QUOTES)));
 
-						$organizacion1 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion1'], ENT_QUOTES)));
-						$organizacion2 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion2'], ENT_QUOTES)));
-						$organizacion3 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion3'], ENT_QUOTES)));
+							$responsable_org1 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org1'], ENT_QUOTES)));
+							$responsable_org2 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org2'], ENT_QUOTES)));
+							$responsable_org3 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org3'], ENT_QUOTES)));
 
-						$responsable_org1 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org1'], ENT_QUOTES)));
-						$responsable_org2 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org2'], ENT_QUOTES)));
-						$responsable_org3 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org3'], ENT_QUOTES)));
+							$resumen = mysqli_real_escape_string($conn, (strip_tags($_POST['resumen'], ENT_QUOTES)));
+							$objetivo = mysqli_real_escape_string($conn, (strip_tags($_POST['objetivo'], ENT_QUOTES)));
 
-						$resumen = mysqli_real_escape_string($conn, (strip_tags($_POST['resumen'], ENT_QUOTES)));
-						$objetivo = mysqli_real_escape_string($conn, (strip_tags($_POST['objetivo'], ENT_QUOTES)));
+							$unidad1 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad1'], ENT_QUOTES)));
+							$unidad2 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad2'], ENT_QUOTES)));
+							$unidad3 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad3'], ENT_QUOTES)));
 
-						$unidad1 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad1'], ENT_QUOTES)));
-						$unidad2 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad2'], ENT_QUOTES)));
-						$unidad3 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad3'], ENT_QUOTES)));
+							$responsable_unidad1 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad1'], ENT_QUOTES)));
+							$responsable_unidad2 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad2'], ENT_QUOTES)));
+							$responsable_unidad3 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad3'], ENT_QUOTES)));
 
-						$responsable_unidad1 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad1'], ENT_QUOTES)));
-						$responsable_unidad2 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad2'], ENT_QUOTES)));
-						$responsable_unidad3 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad3'], ENT_QUOTES)));
+							$fecha_inicio = mysqli_real_escape_string($conn, (strip_tags($_POST['fecha_inicio'], ENT_QUOTES)));
+							$fecha_fin = mysqli_real_escape_string($conn, (strip_tags($_POST['fecha_fin'], ENT_QUOTES)));
 
-						$fecha_inicio = mysqli_real_escape_string($conn, (strip_tags($_POST['fecha_inicio'], ENT_QUOTES)));
-						$fecha_fin = mysqli_real_escape_string($conn, (strip_tags($_POST['fecha_fin'], ENT_QUOTES)));
+							$plazo_renovacion = mysqli_real_escape_string($conn, (strip_tags($_POST['plazo_renovacion'], ENT_QUOTES)));
+							$renovacion_automatica = mysqli_real_escape_string($conn, (strip_tags($_POST['renovacion_automatica'], ENT_QUOTES)));
 
-						$plazo_renovacion = mysqli_real_escape_string($conn, (strip_tags($_POST['plazo_renovacion'], ENT_QUOTES)));
-						$renovacion_automatica = mysqli_real_escape_string($conn, (strip_tags($_POST['renovacion_automatica'], ENT_QUOTES)));
+							$moneda_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['moneda_organizacion'], ENT_QUOTES)));
+							$monto_inversion_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['monto_inversion_organizacion'], ENT_QUOTES)));
+							$nota_inversion_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['nota_inversion_organizacion'], ENT_QUOTES)));
 
-						$moneda_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['moneda_organizacion'], ENT_QUOTES)));
-						$monto_inversion_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['monto_inversion_organizacion'], ENT_QUOTES)));
-						$nota_inversion_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['nota_inversion_organizacion'], ENT_QUOTES)));
+							$moneda_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['moneda_unidad'], ENT_QUOTES)));
+							$monto_inversion_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['monto_inversion_unidad'], ENT_QUOTES)));
+							$nota_inversion_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['nota_inversion_unidad'], ENT_QUOTES)));
 
-						$moneda_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['moneda_unidad'], ENT_QUOTES)));
-						$monto_inversion_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['monto_inversion_unidad'], ENT_QUOTES)));
-						$nota_inversion_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['nota_inversion_unidad'], ENT_QUOTES)));
-
-						// Manejar campos de moneda: si están vacíos, buscar o crear una moneda por defecto
-						if (empty($moneda_organizacion) || $moneda_organizacion == '') {
-							// Buscar si existe una moneda "Sin especificar" o similar
-							$query_moneda_default = mysqli_query($conn, "SELECT Id FROM monedadeinversion WHERE Nombre LIKE '%sin especificar%' OR Nombre LIKE '%no aplica%' LIMIT 1");
-							if (mysqli_num_rows($query_moneda_default) > 0) {
-								$row = mysqli_fetch_array($query_moneda_default);
-								$moneda_organizacion = $row['Id'];
-							} else {
-								// Si no existe, crear una entrada por defecto
-								$insert_moneda_default = mysqli_query($conn, "INSERT INTO monedadeinversion (Nombre) VALUES ('Sin especificar')");
-								$moneda_organizacion = mysqli_insert_id($conn);
-							}
-						}
-						if (empty($moneda_unidad) || $moneda_unidad == '') {
-							// Buscar si existe una moneda "Sin especificar" o similar
-							$query_moneda_default = mysqli_query($conn, "SELECT Id FROM monedadeinversion WHERE Nombre LIKE '%sin especificar%' OR Nombre LIKE '%no aplica%' LIMIT 1");
-							if (mysqli_num_rows($query_moneda_default) > 0) {
-								$row = mysqli_fetch_array($query_moneda_default);
-								$moneda_unidad = $row['Id'];
-							} else {
-								// Si no existe, usar la misma que se creó arriba o crear otra
-								if (isset($insert_moneda_default)) {
-									$moneda_unidad = $moneda_organizacion; // Usar la misma que se creó
+							// Manejar campos de moneda: si están vacíos, buscar o crear una moneda por defecto
+							if (empty($moneda_organizacion) || $moneda_organizacion == '') {
+								// Buscar si existe una moneda "Sin especificar" o similar
+								$query_moneda_default = mysqli_query($conn, "SELECT Id FROM monedadeinversion WHERE Nombre LIKE '%sin especificar%' OR Nombre LIKE '%no aplica%' LIMIT 1");
+								if (mysqli_num_rows($query_moneda_default) > 0) {
+									$row = mysqli_fetch_array($query_moneda_default);
+									$moneda_organizacion = $row['Id'];
 								} else {
+									// Si no existe, crear una entrada por defecto
 									$insert_moneda_default = mysqli_query($conn, "INSERT INTO monedadeinversion (Nombre) VALUES ('Sin especificar')");
-									$moneda_unidad = mysqli_insert_id($conn);
+									$moneda_organizacion = mysqli_insert_id($conn);
 								}
 							}
-						}
-						
-						// Manejar campos de monto: si están vacíos, asignar 0
-						if (empty($monto_inversion_organizacion) || $monto_inversion_organizacion == '') {
-							$monto_inversion_organizacion = 0;
-						}
-						if (empty($monto_inversion_unidad) || $monto_inversion_unidad == '') {
-							$monto_inversion_unidad = 0;
-						}
+							if (empty($moneda_unidad) || $moneda_unidad == '') {
+								// Buscar si existe una moneda "Sin especificar" o similar
+								$query_moneda_default = mysqli_query($conn, "SELECT Id FROM monedadeinversion WHERE Nombre LIKE '%sin especificar%' OR Nombre LIKE '%no aplica%' LIMIT 1");
+								if (mysqli_num_rows($query_moneda_default) > 0) {
+									$row = mysqli_fetch_array($query_moneda_default);
+									$moneda_unidad = $row['Id'];
+								} else {
+									// Si no existe, usar la misma que se creó arriba o crear otra
+									if (isset($insert_moneda_default)) {
+										$moneda_unidad = $moneda_organizacion; // Usar la misma que se creó
+									} else {
+										$insert_moneda_default = mysqli_query($conn, "INSERT INTO monedadeinversion (Nombre) VALUES ('Sin especificar')");
+										$moneda_unidad = mysqli_insert_id($conn);
+									}
+								}
+							}
 
-					$ubicacion_original = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
-					$ubicacion_copia = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
+							// Manejar campos de monto: si están vacíos, asignar 0
+							if (empty($monto_inversion_organizacion) || $monto_inversion_organizacion == '') {
+								$monto_inversion_organizacion = 0;
+							}
+							if (empty($monto_inversion_unidad) || $monto_inversion_unidad == '') {
+								$monto_inversion_unidad = 0;
+							}
+
+							$ubicacion_original = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
+							$ubicacion_copia = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
+
+							// Procesar archivo PDF para ubicacion_digital
+							$ubicacion_digital = '';
+							if (!empty($_FILES['ubicacion_digital']['name'])) {
+								// Crear carpeta para almacenar PDFs si no existe
+								$upload_dir = 'uploads/pdfs/';
+								if (!file_exists($upload_dir)) {
+									mkdir($upload_dir, 0777, true);
+								}
+
+								// Generar nombre único para el archivo
+								$file_extension = pathinfo($_FILES['ubicacion_digital']['name'], PATHINFO_EXTENSION);
+								$new_filename = 'actividad_' . date('Ymd_His') . '_' . uniqid() . '.' . $file_extension;
+								$upload_path = $upload_dir . $new_filename;
+
+								// Mover el archivo subido
+								if (move_uploaded_file($_FILES['ubicacion_digital']['tmp_name'], $upload_path)) {
+									$ubicacion_digital = $upload_path;
+								} else {
+									$errores[] = "Error al subir el archivo PDF.";
+								}
+							}
+
+							// Si los campos de ubicación están vacíos, asignar 'Sin especificar'
+							if (empty($ubicacion_original))
+								$ubicacion_original = 'Sin especificar';
+							if (empty($ubicacion_copia))
+								$ubicacion_copia = 'Sin especificar';
+							if (empty($ubicacion_digital))
+								$ubicacion_digital = 'Sin especificar';
+
+							// Almaceno datos en tabla Actividad
 					
-					// Procesar archivo PDF para ubicacion_digital
-					$ubicacion_digital = '';
-					if (!empty($_FILES['ubicacion_digital']['name'])) {
-						// Crear carpeta para almacenar PDFs si no existe
-						$upload_dir = 'uploads/pdfs/';
-						if (!file_exists($upload_dir)) {
-							mkdir($upload_dir, 0777, true);
-						}
-						
-						// Generar nombre único para el archivo
-						$file_extension = pathinfo($_FILES['ubicacion_digital']['name'], PATHINFO_EXTENSION);
-						$new_filename = 'actividad_' . date('Ymd_His') . '_' . uniqid() . '.' . $file_extension;
-						$upload_path = $upload_dir . $new_filename;
-						
-						// Mover el archivo subido
-						if (move_uploaded_file($_FILES['ubicacion_digital']['tmp_name'], $upload_path)) {
-							$ubicacion_digital = $upload_path;
-						} else {
-							$errores[] = "Error al subir el archivo PDF.";
-						}
-					}
-
-					// Si los campos de ubicación están vacíos, asignar 'Sin especificar'
-					if (empty($ubicacion_original)) $ubicacion_original = 'Sin especificar';
-					if (empty($ubicacion_copia)) $ubicacion_copia = 'Sin especificar';
-					if (empty($ubicacion_digital)) $ubicacion_digital = 'Sin especificar';
-
-						// Almaceno datos en tabla Actividad
-					
-						// Primero insertar en tabla ubicacionarchivo
-						$insert_ubicacion = mysqli_query($conn, "INSERT INTO ubicacionarchivo (UbicacionOriginal, UbicacionCopia, UbicacionDigital) 
+							// Primero insertar en tabla ubicacionarchivo
+							$insert_ubicacion = mysqli_query($conn, "INSERT INTO ubicacionarchivo (UbicacionOriginal, UbicacionCopia, UbicacionDigital) 
 												VALUES('$ubicacion_original', '$ubicacion_copia', '$ubicacion_digital')")
-							or die(mysqli_error($conn));
-						$ubicacion_id = mysqli_insert_id($conn);
+								or die(mysqli_error($conn));
+							$ubicacion_id = mysqli_insert_id($conn);
 
-						$insert = mysqli_query($conn, "INSERT INTO actividad (NroResolucion, NroExpediente,NroConvenioMarco,Fecha_inicio,Fecha_final,Resumen,Objetivo,TipoActividad_Id,PlazoRenovacion,
+							$insert = mysqli_query($conn, "INSERT INTO actividad (NroResolucion, NroExpediente,NroConvenioMarco,Fecha_inicio,Fecha_final,Resumen,Objetivo,TipoActividad_Id,PlazoRenovacion,
 				   RenovacionAutomatica,UbicacionArchivo_Id,Informe_Id,MonedaOrganizacion_Id,InversionOrganizacion,NotaInversionOrganizacion,MonedaUnidad_Id,InversionUnidad,NotaInversionUnidad) 
 			VALUES('$nro_resolucion','$nro_expediente','$nro_convenio_marco','$fecha_inicio','$fecha_fin','$resumen','$objetivo','$actividad','$plazo_renovacion',
 		        	$renovacion_automatica,$ubicacion_id,1,'$moneda_organizacion','$monto_inversion_organizacion','$nota_inversion_organizacion','$moneda_unidad','$monto_inversion_unidad','$nota_inversion_unidad')")
-							or die(mysqli_error($conn));
-						$ultimo_id = mysqli_insert_id($conn);
-						// var_dump($ultimo_id);				
+								or die(mysqli_error($conn));
+							$ultimo_id = mysqli_insert_id($conn);
+							// var_dump($ultimo_id);				
 					
-						// Detecto el número del último Id generado en tabla Actividad para actualizar tablas relacionadas
-						//	$ultimo_i=  mysqli_query($conn,"SELECT MAX(Id) AS Id FROM actividad limit 1");
-						//	$registro = mysqli_fetch_array($ultimo_i);
-						//	while ($valores = mysqli_fetch_array($registro)) 
-						//	{
-						//		$ultimo_id=$valores['Id'];
-						//		var_dump($ultimo_id);
-						//	}
+							// Detecto el número del último Id generado en tabla Actividad para actualizar tablas relacionadas
+							//	$ultimo_i=  mysqli_query($conn,"SELECT MAX(Id) AS Id FROM actividad limit 1");
+							//	$registro = mysqli_fetch_array($ultimo_i);
+							//	while ($valores = mysqli_fetch_array($registro)) 
+							//	{
+							//		$ultimo_id=$valores['Id'];
+							//		var_dump($ultimo_id);
+							//	}
 					
 
 
-						// Actualizo tabla "detalleactividadorganizacion" 
-						if ($organizacion1 <> "") {
-							mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion1','$ultimo_id')");
-						}
+							// Actualizo tabla "detalleactividadorganizacion" 
+							if ($organizacion1 <> "") {
+								mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion1','$ultimo_id')");
+							}
 
-						if ($organizacion2 <> "") {
-							mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion2','$ultimo_id')");
-						}
+							if ($organizacion2 <> "") {
+								mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion2','$ultimo_id')");
+							}
 
-						if ($organizacion3 <> "") {
-							mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion3','$ultimo_id')");
-						}
+							if ($organizacion3 <> "") {
+								mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion3','$ultimo_id')");
+							}
 
-						// Actualizo tabla "detalleactividadunidad" 
-						if ($unidad1 <> "") {
+							// Actualizo tabla "detalleactividadunidad" 
+							if ($unidad1 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad1','$ultimo_id')");
-						}
-						if ($unidad2 <> "") {
+								mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad1','$ultimo_id')");
+							}
+							if ($unidad2 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad2','$ultimo_id')");
-						}
-						if ($unidad3 <> "") {
+								mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad2','$ultimo_id')");
+							}
+							if ($unidad3 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad3','$ultimo_id')");
-						}
+								mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad3','$ultimo_id')");
+							}
 
-						// Actualizo tabla "detallepersonactividad" 
-						// El campo Org_o_Uni debe tener 1 si es $responsable_org1
-						// El campo Org_o_Uni debe tener 2 si es $responsable_unidad1
-						// El campos Rol_Id siempre almacena un 2 (al menos en esta primer versión)
+							// Actualizo tabla "detallepersonactividad" 
+							// El campo Org_o_Uni debe tener 1 si es $responsable_org1
+							// El campo Org_o_Uni debe tener 2 si es $responsable_unidad1
+							// El campos Rol_Id siempre almacena un 2 (al menos en esta primer versión)
 					
-						if ($responsable_unidad1 <> "") {
+							if ($responsable_unidad1 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+								mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
 				                                                   VALUES('$ultimo_id','$responsable_unidad1','2','2')");
-						}
-						if ($responsable_unidad2 <> "") {
+							}
+							if ($responsable_unidad2 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+								mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
 				                                                   VALUES('$ultimo_id','$responsable_unidad2','2','2')");
-						}
+							}
 
-						if ($responsable_unidad3 <> "") {
+							if ($responsable_unidad3 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+								mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
 			                                               VALUES('$ultimo_id','$responsable_unidad3','2','2')");
-						}
+							}
 
 
-						if ($responsable_org1 <> "") {
+							if ($responsable_org1 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+								mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
 				                                                   VALUES('$ultimo_id','$responsable_org1','1','2')");
-						}
-						if ($responsable_org2 <> "") {
+							}
+							if ($responsable_org2 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+								mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
 				                                                   VALUES('$ultimo_id','$responsable_org2','1','2')");
-						}
+							}
 
-						if ($responsable_org3 <> "") {
+							if ($responsable_org3 <> "") {
 
-							mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+								mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
 			                                               VALUES('$ultimo_id','$responsable_org3','1','2')");
-						}
+							}
 
-						// Listo!, todo almacenado ahora vovemos a la página ppal	
-						header("Location: index.php");
+							// Listo!, todo almacenado ahora vovemos a la página ppal	
+							header("Location: index.php");
 						} // Cierre del else (no hay errores)
 					} // Cierre del if (isset($_POST['actividad']))
 					?>
 
-				<blockquote>
-					<h3> Agregar Detalles de Actividades</h3>
-				</blockquote>
-				<form name="form1" id="form1" class="form-horizontal row-fluid d-flex justify-content-center" action="registro.php" method="POST" enctype="multipart/form-data">						<!-- Sección 1: Tipo de Actividad -->
+					<blockquote>
+						<h3> Agregar Detalles de Actividades</h3>
+					</blockquote>
+					<form name="form1" id="form1" class="form-horizontal row-fluid d-flex justify-content-center"
+						action="registro.php" method="POST" enctype="multipart/form-data">
+						<!-- Sección 1: Tipo de Actividad -->
 						<div class="section-card">
 							<div class="section-header">
 
@@ -1112,7 +1117,8 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 						<div class="section-card">
 							<div class="section-header">
 								<h4 class="section-title">Organizaciones Participantes</h4>
-								<button type="button" class="btn-add-quick" onclick="openModalOrganizacion()" title="Agregar nueva organización">
+								<button type="button" class="btn-add-quick" onclick="openModalOrganizacion()"
+									title="Agregar nueva organización">
 									+
 								</button>
 							</div>
@@ -1195,10 +1201,10 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 
 							<div class="form-row">
 								<div class="form-col">
-									<label class="control-label">Objetivo <span
-											style="color: red;">*</span></label>
+									<label class="control-label">Objetivo <span style="color: red;">*</span></label>
 									<textarea name="objetivo" id="objetivo" class="form-control"
-										placeholder="Describa los objetivos de la actividad" rows="3" required></textarea>
+										placeholder="Describa los objetivos de la actividad" rows="3"
+										required></textarea>
 								</div>
 							</div>
 						</div>
@@ -1206,7 +1212,8 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 						<div class="section-card">
 							<div class="section-header">
 								<h4 class="section-title">Unidades Ejecutoras</h4>
-								<button type="button" class="btn-add-quick" onclick="openModalUnidad()" title="Agregar nueva unidad ejecutora">
+								<button type="button" class="btn-add-quick" onclick="openModalUnidad()"
+									title="Agregar nueva unidad ejecutora">
 									+
 								</button>
 							</div>
@@ -1401,7 +1408,8 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 									<label class="control-label">Ubicación del Original <span
 											style="color: red;">*</span></label>
 									<input type="text" name="ubicacion_original" id="ubicacion_original"
-										placeholder="Especifique la ubicación del archivo original" class="form-control" required>
+										placeholder="Especifique la ubicación del archivo original" class="form-control"
+										required>
 								</div>
 							</div>
 
@@ -1410,12 +1418,13 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 									<label class="control-label">Ubicación de la Copia<span
 											style="color: red;">*</span></label>
 									<input type="text" name="ubicacion_copia" id="ubicacion_copia"
-										placeholder="Especifique la ubicación de la copia" class="form-control" required>
+										placeholder="Especifique la ubicación de la copia" class="form-control"
+										required>
 								</div>
 								<div class="form-col-half">
 									<label class="control-label">Ubicación Digital (Archivo PDF)<span
 											style="color: red;">*</span></label>
-									
+
 									<!-- Área de subida de archivos -->
 									<div class="file-upload-area" id="fileUploadArea">
 										<div class="file-upload-icon">
@@ -1423,26 +1432,29 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 										</div>
 										<p class="mb-2"><strong>Arrastre y suelte su archivo PDF aquí</strong></p>
 										<p class="text-muted small mb-2">o haga clic para seleccionar un archivo</p>
-										<input type="file" id="ubicacion_digital" name="ubicacion_digital" accept=".pdf" style="display: none;" required>
+										<input type="file" id="ubicacion_digital" name="ubicacion_digital" accept=".pdf"
+											style="display: none;" required>
 										<button type="button" class="btn btn-sm btn-primary" id="selectFileBtn">
 											<i class="fas fa-folder-open me-1"></i>Seleccionar Archivo
 										</button>
 									</div>
-									
+
 									<!-- Información del archivo seleccionado -->
 									<div class="file-info" id="fileInfo" style="display: none;">
 										<div class="d-flex justify-content-between align-items-center">
 											<div>
 												<i class="fas fa-file-pdf me-2 text-danger"></i>
 												<span id="fileName">Nombre del archivo</span>
-												<small class="text-muted d-block" id="fileSize">Tamaño del archivo</small>
+												<small class="text-muted d-block" id="fileSize">Tamaño del
+													archivo</small>
 											</div>
-											<button type="button" class="btn btn-sm btn-outline-danger" id="removeFileBtn">
+											<button type="button" class="btn btn-sm btn-outline-danger"
+												id="removeFileBtn">
 												<i class="fas fa-times"></i>
 											</button>
 										</div>
 									</div>
-									
+
 									<div class="form-text small mt-2">
 										<i class="fas fa-info-circle me-1"></i>Solo archivos PDF, máximo 10MB.
 									</div>
@@ -1454,10 +1466,10 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 						<div class="form-actions">
 							<button type="button" name="input" id="input" onclick="valida_envia()"
 								class="btn btn-primary">
-								 Registrar Actividad
+								Registrar Actividad
 							</button>
 							<a href="index.php" class="btn btn-danger">
-								 Cancelar
+								Cancelar
 							</a>
 						</div>
 
@@ -1666,7 +1678,7 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 		<style>
 			/* Estilos adicionales para efectos */
 			.hover-effect {
-				
+
 				box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2) !important;
 			}
 
@@ -1762,932 +1774,927 @@ https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404
 			}
 		</style>
 
-	<!-- Modal para agregar nueva organización -->
-	<div class="modal-overlay" id="modalOverlay" onclick="closeModalOrganizacion()"></div>
-	<div class="modal-container" id="modalOrganizacion">
-		<div class="modal-header">
-			<h3>Agregar Nueva Organización</h3>
-			<button type="button" class="modal-close" onclick="closeModalOrganizacion()">&times;</button>
-		</div>
-		<div class="modal-body">
-			<div class="modal-message success" id="modalMessageSuccess"></div>
-			<div class="modal-message error" id="modalMessageError"></div>
-			
-			<form id="formNuevaOrganizacion" onsubmit="return guardarNuevaOrganizacion(event)">
-				<div class="form-group">
-					<label class="control-label">Nombre de la Organización <span style="color: red;">*</span></label>
-					<input type="text" class="form-control" id="modal_org_nombre" name="nombre" required 
-						   placeholder="Ej.: Cámara Minera de San Juan">
-					<small style="color: #666; display: block; margin-top: 5px;">Ingrese el nombre completo de la organización participante</small>
-				</div>
-				
-				<div class="form-group">
-					<label class="control-label">País</label>
-					<input type="text" class="form-control" id="modal_org_pais" name="pais" 
-						   placeholder="País de origen (opcional)">
-				</div>
-				
-				<div class="form-group">
-					<label class="control-label">Ciudad</label>
-					<input type="text" class="form-control" id="modal_org_ciudad" name="ciudad" 
-						   placeholder="Ciudad (opcional)">
-				</div>
-				
-				<div class="form-group">
-					<label class="control-label">Dirección</label>
-					<input type="text" class="form-control" id="modal_org_direccion" name="direccion" 
-						   placeholder="Dirección completa (opcional)">
-				</div>
-				
-				<div class="form-group">
-					<label class="control-label">Teléfono</label>
-					<input type="text" class="form-control" id="modal_org_telefono" name="telefono" 
-						   placeholder="Teléfono de contacto (opcional)">
-				</div>
-				
-				<div class="form-group">
-					<label class="control-label">Email</label>
-					<input type="email" class="form-control" id="modal_org_email" name="email" 
-						   placeholder="correo@ejemplo.com (opcional)">
-				</div>
-				
-				<div class="form-group">
-					<label class="control-label">Sitio Web</label>
-					<input type="text" class="form-control" id="modal_org_web" name="web" 
-						   placeholder="https://www.ejemplo.com (opcional)">
-				</div>
-			</form>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-danger" onclick="closeModalOrganizacion()">Cancelar</button>
-			<button type="button" class="btn btn-primary" onclick="guardarNuevaOrganizacion(event)">💾 Guardar</button>
-		</div>
-	</div>
+		<!-- Modal para agregar nueva organización -->
+		<div class="modal-overlay" id="modalOverlay" onclick="closeModalOrganizacion()"></div>
+		<div class="modal-container" id="modalOrganizacion">
+			<div class="modal-header">
+				<h3>Agregar Nueva Organización</h3>
+				<button type="button" class="modal-close" onclick="closeModalOrganizacion()">&times;</button>
+			</div>
+			<div class="modal-body">
+				<div class="modal-message success" id="modalMessageSuccess"></div>
+				<div class="modal-message error" id="modalMessageError"></div>
 
-	<!-- Modal para agregar nueva unidad ejecutora -->
-	<div class="modal-overlay" id="modalOverlayUnidad" onclick="closeModalUnidad()"></div>
-	<div class="modal-container" id="modalUnidad">
-		<div class="modal-header">
-			<h3>➕ Agregar Nueva Unidad Ejecutora</h3>
-			<button type="button" class="modal-close" onclick="closeModalUnidad()">&times;</button>
-		</div>
-		<div class="modal-body">
-			<div class="modal-message success" id="modalMessageSuccessUnidad"></div>
-			<div class="modal-message error" id="modalMessageErrorUnidad"></div>
-			
-			<form id="formNuevaUnidad" onsubmit="return guardarNuevaUnidad(event)">
-				<div class="form-group">
-					<label class="control-label">Nombre de la Unidad Ejecutora <span style="color: red;">*</span></label>
-					<input type="text" class="form-control" id="modal_unidad_nombre" name="unidad" required 
-						   placeholder="Ej.: Departamento de Ciencias Exactas">
-					<small style="color: #666; display: block; margin-top: 5px;">Ingrese el nombre de la unidad ejecutora de la FCEFN</small>
-				</div>
-			</form>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-danger" onclick="closeModalUnidad()">Cancelar</button>
-			<button type="button" class="btn btn-primary" onclick="guardarNuevaUnidad(event)">💾 Guardar</button>
-		</div>
-	</div>
+				<form id="formNuevaOrganizacion" onsubmit="return guardarNuevaOrganizacion(event)">
+					<div class="form-group">
+						<label class="control-label">Nombre de la Organización <span
+								style="color: red;">*</span></label>
+						<input type="text" class="form-control" id="modal_org_nombre" name="nombre" required
+							placeholder="Ej.: Cámara Minera de San Juan">
+						<small style="color: #666; display: block; margin-top: 5px;">Ingrese el nombre completo de la
+							organización participante</small>
+					</div>
 
-	<script>
-		// Funciones para el modal de organización
-		function openModalOrganizacion() {
-			document.getElementById('modalOverlay').style.display = 'block';
-			document.getElementById('modalOrganizacion').style.display = 'block';
-			document.body.style.overflow = 'hidden'; // Prevenir scroll del body
-		}
+					<div class="form-group">
+						<label class="control-label">País</label>
+						<input type="text" class="form-control" id="modal_org_pais" name="pais"
+							placeholder="País de origen (opcional)">
+					</div>
 
-		function closeModalOrganizacion() {
-			document.getElementById('modalOverlay').style.display = 'none';
-			document.getElementById('modalOrganizacion').style.display = 'none';
-			document.body.style.overflow = 'auto';
-			// Limpiar formulario
-			document.getElementById('formNuevaOrganizacion').reset();
-			// Ocultar mensajes
-			document.getElementById('modalMessageSuccess').style.display = 'none';
-			document.getElementById('modalMessageError').style.display = 'none';
-		}
+					<div class="form-group">
+						<label class="control-label">Ciudad</label>
+						<input type="text" class="form-control" id="modal_org_ciudad" name="ciudad"
+							placeholder="Ciudad (opcional)">
+					</div>
 
-		function guardarNuevaOrganizacion(event) {
-			if (event) event.preventDefault();
-			
-			// Validar que el nombre no esté vacío
-			var nombre = document.getElementById('modal_org_nombre').value.trim();
-			if (nombre === '') {
-				mostrarMensajeModal('error', 'El nombre de la organización es obligatorio');
+					<div class="form-group">
+						<label class="control-label">Dirección</label>
+						<input type="text" class="form-control" id="modal_org_direccion" name="direccion"
+							placeholder="Dirección completa (opcional)">
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Teléfono</label>
+						<input type="text" class="form-control" id="modal_org_telefono" name="telefono"
+							placeholder="Teléfono de contacto (opcional)">
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Email</label>
+						<input type="email" class="form-control" id="modal_org_email" name="email"
+							placeholder="correo@ejemplo.com (opcional)">
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Sitio Web</label>
+						<input type="text" class="form-control" id="modal_org_web" name="web"
+							placeholder="https://www.ejemplo.com (opcional)">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" onclick="closeModalOrganizacion()">Cancelar</button>
+				<button type="button" class="btn btn-primary" onclick="guardarNuevaOrganizacion(event)">💾
+					Guardar</button>
+			</div>
+		</div>
+
+		<!-- Modal para agregar nueva unidad ejecutora -->
+		<div class="modal-overlay" id="modalOverlayUnidad" onclick="closeModalUnidad()"></div>
+		<div class="modal-container" id="modalUnidad">
+			<div class="modal-header">
+				<h3>➕ Agregar Nueva Unidad Ejecutora</h3>
+				<button type="button" class="modal-close" onclick="closeModalUnidad()">&times;</button>
+			</div>
+			<div class="modal-body">
+				<div class="modal-message success" id="modalMessageSuccessUnidad"></div>
+				<div class="modal-message error" id="modalMessageErrorUnidad"></div>
+
+				<form id="formNuevaUnidad" onsubmit="return guardarNuevaUnidad(event)">
+					<div class="form-group">
+						<label class="control-label">Nombre de la Unidad Ejecutora <span
+								style="color: red;">*</span></label>
+						<input type="text" class="form-control" id="modal_unidad_nombre" name="unidad" required
+							placeholder="Ej.: Departamento de Ciencias Exactas">
+						<small style="color: #666; display: block; margin-top: 5px;">Ingrese el nombre de la unidad
+							ejecutora de la FCEFN</small>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" onclick="closeModalUnidad()">Cancelar</button>
+				<button type="button" class="btn btn-primary" onclick="guardarNuevaUnidad(event)">💾 Guardar</button>
+			</div>
+		</div>
+
+		<script>
+			// Funciones para el modal de organización
+			function openModalOrganizacion() {
+				document.getElementById('modalOverlay').style.display = 'block';
+				document.getElementById('modalOrganizacion').style.display = 'block';
+				document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+			}
+
+			function closeModalOrganizacion() {
+				document.getElementById('modalOverlay').style.display = 'none';
+				document.getElementById('modalOrganizacion').style.display = 'none';
+				document.body.style.overflow = 'auto';
+				// Limpiar formulario
+				document.getElementById('formNuevaOrganizacion').reset();
+				// Ocultar mensajes
+				document.getElementById('modalMessageSuccess').style.display = 'none';
+				document.getElementById('modalMessageError').style.display = 'none';
+			}
+
+			function guardarNuevaOrganizacion(event) {
+				if (event) event.preventDefault();
+
+				// Validar que el nombre no esté vacío
+				var nombre = document.getElementById('modal_org_nombre').value.trim();
+				if (nombre === '') {
+					mostrarMensajeModal('error', 'El nombre de la organización es obligatorio');
+					return false;
+				}
+
+				// Recoger datos del formulario
+				var formData = new FormData();
+				formData.append('nombre', nombre);
+				formData.append('pais', document.getElementById('modal_org_pais').value);
+				formData.append('ciudad', document.getElementById('modal_org_ciudad').value);
+				formData.append('direccion', document.getElementById('modal_org_direccion').value);
+				formData.append('telefono', document.getElementById('modal_org_telefono').value);
+				formData.append('email', document.getElementById('modal_org_email').value);
+				formData.append('web', document.getElementById('modal_org_web').value);
+
+				// Deshabilitar botón mientras se procesa
+				var btnGuardar = event.target;
+				var textoOriginal = btnGuardar.innerHTML;
+				btnGuardar.disabled = true;
+				btnGuardar.innerHTML = '⏳ Guardando...';
+
+				// Enviar por AJAX
+				fetch('ajax-nueva-organizacion.php', {
+					method: 'POST',
+					body: formData
+				})
+					.then(response => response.json())
+					.then(data => {
+						btnGuardar.disabled = false;
+						btnGuardar.innerHTML = textoOriginal;
+
+						if (data.success) {
+							mostrarMensajeModal('success', '✓ Organización "' + data.nombre + '" creada exitosamente');
+
+							// Agregar la nueva opción a los select de organizaciones
+							var nuevaOpcion = new Option(data.nombre, data.id, true, true);
+							$('#organizacion1').append(nuevaOpcion).trigger('change');
+
+							// También agregarla a los otros selects (pero sin seleccionarla)
+							$('#organizacion2').append(new Option(data.nombre, data.id, false, false));
+							$('#organizacion3').append(new Option(data.nombre, data.id, false, false));
+
+							// Cerrar modal después de 1.5 segundos
+							setTimeout(function () {
+								closeModalOrganizacion();
+							}, 1500);
+						} else {
+							mostrarMensajeModal('error', 'Error: ' + (data.message || 'No se pudo guardar la organización'));
+						}
+					})
+					.catch(error => {
+						btnGuardar.disabled = false;
+						btnGuardar.innerHTML = textoOriginal;
+						mostrarMensajeModal('error', 'Error de conexión: ' + error.message);
+					});
+
 				return false;
 			}
 
-			// Recoger datos del formulario
-			var formData = new FormData();
-			formData.append('nombre', nombre);
-			formData.append('pais', document.getElementById('modal_org_pais').value);
-			formData.append('ciudad', document.getElementById('modal_org_ciudad').value);
-			formData.append('direccion', document.getElementById('modal_org_direccion').value);
-			formData.append('telefono', document.getElementById('modal_org_telefono').value);
-			formData.append('email', document.getElementById('modal_org_email').value);
-			formData.append('web', document.getElementById('modal_org_web').value);
+			function mostrarMensajeModal(tipo, mensaje) {
+				var successDiv = document.getElementById('modalMessageSuccess');
+				var errorDiv = document.getElementById('modalMessageError');
 
-			// Deshabilitar botón mientras se procesa
-			var btnGuardar = event.target;
-			var textoOriginal = btnGuardar.innerHTML;
-			btnGuardar.disabled = true;
-			btnGuardar.innerHTML = '⏳ Guardando...';
+				// Ocultar ambos mensajes primero
+				successDiv.style.display = 'none';
+				errorDiv.style.display = 'none';
 
-			// Enviar por AJAX
-			fetch('ajax-nueva-organizacion.php', {
-				method: 'POST',
-				body: formData
-			})
-			.then(response => response.json())
-			.then(data => {
-				btnGuardar.disabled = false;
-				btnGuardar.innerHTML = textoOriginal;
-				
-				if (data.success) {
-					mostrarMensajeModal('success', '✓ Organización "' + data.nombre + '" creada exitosamente');
-					
-					// Agregar la nueva opción a los select de organizaciones
-					var nuevaOpcion = new Option(data.nombre, data.id, true, true);
-					$('#organizacion1').append(nuevaOpcion).trigger('change');
-					
-					// También agregarla a los otros selects (pero sin seleccionarla)
-					$('#organizacion2').append(new Option(data.nombre, data.id, false, false));
-					$('#organizacion3').append(new Option(data.nombre, data.id, false, false));
-					
-					// Cerrar modal después de 1.5 segundos
-					setTimeout(function() {
-						closeModalOrganizacion();
-					}, 1500);
+				if (tipo === 'success') {
+					successDiv.textContent = mensaje;
+					successDiv.style.display = 'block';
 				} else {
-					mostrarMensajeModal('error', 'Error: ' + (data.message || 'No se pudo guardar la organización'));
+					errorDiv.textContent = mensaje;
+					errorDiv.style.display = 'block';
 				}
-			})
-			.catch(error => {
-				btnGuardar.disabled = false;
-				btnGuardar.innerHTML = textoOriginal;
-				mostrarMensajeModal('error', 'Error de conexión: ' + error.message);
+			}
+
+			// Cerrar modal con tecla ESC
+			document.addEventListener('keydown', function (event) {
+				if (event.key === 'Escape') {
+					closeModalOrganizacion();
+					closeModalUnidad();
+				}
 			});
 
-			return false;
-		}
-
-		function mostrarMensajeModal(tipo, mensaje) {
-			var successDiv = document.getElementById('modalMessageSuccess');
-			var errorDiv = document.getElementById('modalMessageError');
-			
-			// Ocultar ambos mensajes primero
-			successDiv.style.display = 'none';
-			errorDiv.style.display = 'none';
-			
-			if (tipo === 'success') {
-				successDiv.textContent = mensaje;
-				successDiv.style.display = 'block';
-			} else {
-				errorDiv.textContent = mensaje;
-				errorDiv.style.display = 'block';
+			// Funciones para el modal de unidad ejecutora
+			function openModalUnidad() {
+				document.getElementById('modalOverlayUnidad').style.display = 'block';
+				document.getElementById('modalUnidad').style.display = 'block';
+				document.body.style.overflow = 'hidden';
 			}
-		}
 
-		// Cerrar modal con tecla ESC
-		document.addEventListener('keydown', function(event) {
-			if (event.key === 'Escape') {
-				closeModalOrganizacion();
-				closeModalUnidad();
+			function closeModalUnidad() {
+				document.getElementById('modalOverlayUnidad').style.display = 'none';
+				document.getElementById('modalUnidad').style.display = 'none';
+				document.body.style.overflow = 'auto';
+				// Limpiar formulario
+				document.getElementById('formNuevaUnidad').reset();
+				// Ocultar mensajes
+				document.getElementById('modalMessageSuccessUnidad').style.display = 'none';
+				document.getElementById('modalMessageErrorUnidad').style.display = 'none';
 			}
-		});
 
-		// Funciones para el modal de unidad ejecutora
-		function openModalUnidad() {
-			document.getElementById('modalOverlayUnidad').style.display = 'block';
-			document.getElementById('modalUnidad').style.display = 'block';
-			document.body.style.overflow = 'hidden';
-		}
+			function guardarNuevaUnidad(event) {
+				if (event) event.preventDefault();
 
-		function closeModalUnidad() {
-			document.getElementById('modalOverlayUnidad').style.display = 'none';
-			document.getElementById('modalUnidad').style.display = 'none';
-			document.body.style.overflow = 'auto';
-			// Limpiar formulario
-			document.getElementById('formNuevaUnidad').reset();
-			// Ocultar mensajes
-			document.getElementById('modalMessageSuccessUnidad').style.display = 'none';
-			document.getElementById('modalMessageErrorUnidad').style.display = 'none';
-		}
+				// Validar que el nombre no esté vacío
+				var unidad = document.getElementById('modal_unidad_nombre').value.trim();
+				if (unidad === '') {
+					mostrarMensajeModalUnidad('error', 'El nombre de la unidad ejecutora es obligatorio');
+					return false;
+				}
 
-		function guardarNuevaUnidad(event) {
-			if (event) event.preventDefault();
-			
-			// Validar que el nombre no esté vacío
-			var unidad = document.getElementById('modal_unidad_nombre').value.trim();
-			if (unidad === '') {
-				mostrarMensajeModalUnidad('error', 'El nombre de la unidad ejecutora es obligatorio');
+				// Recoger datos del formulario
+				var formData = new FormData();
+				formData.append('unidad', unidad);
+
+				// Deshabilitar botón mientras se procesa
+				var btnGuardar = event.target;
+				var textoOriginal = btnGuardar.innerHTML;
+				btnGuardar.disabled = true;
+				btnGuardar.innerHTML = '⏳ Guardando...';
+
+				// Enviar por AJAX
+				fetch('ajax-nueva-unidad.php', {
+					method: 'POST',
+					body: formData
+				})
+					.then(response => response.json())
+					.then(data => {
+						btnGuardar.disabled = false;
+						btnGuardar.innerHTML = textoOriginal;
+
+						if (data.success) {
+							mostrarMensajeModalUnidad('success', '✓ Unidad Ejecutora "' + data.unidad + '" creada exitosamente');
+
+							// Agregar la nueva opción a los select de unidades
+							var nuevaOpcion = new Option(data.unidad, data.id, true, true);
+							$('#unidad1').append(nuevaOpcion).trigger('change');
+
+							// También agregarla a los otros selects (pero sin seleccionarla)
+							$('#unidad2').append(new Option(data.unidad, data.id, false, false));
+							$('#unidad3').append(new Option(data.unidad, data.id, false, false));
+
+							// Cerrar modal después de 1.5 segundos
+							setTimeout(function () {
+								closeModalUnidad();
+							}, 1500);
+						} else {
+							mostrarMensajeModalUnidad('error', 'Error: ' + (data.message || 'No se pudo guardar la unidad ejecutora'));
+						}
+					})
+					.catch(error => {
+						btnGuardar.disabled = false;
+						btnGuardar.innerHTML = textoOriginal;
+						mostrarMensajeModalUnidad('error', 'Error de conexión: ' + error.message);
+					});
+
 				return false;
 			}
 
-			// Recoger datos del formulario
-			var formData = new FormData();
-			formData.append('unidad', unidad);
+			function mostrarMensajeModalUnidad(tipo, mensaje) {
+				var successDiv = document.getElementById('modalMessageSuccessUnidad');
+				var errorDiv = document.getElementById('modalMessageErrorUnidad');
 
-			// Deshabilitar botón mientras se procesa
-			var btnGuardar = event.target;
-			var textoOriginal = btnGuardar.innerHTML;
-			btnGuardar.disabled = true;
-			btnGuardar.innerHTML = '⏳ Guardando...';
+				// Ocultar ambos mensajes primero
+				successDiv.style.display = 'none';
+				errorDiv.style.display = 'none';
 
-			// Enviar por AJAX
-			fetch('ajax-nueva-unidad.php', {
-				method: 'POST',
-				body: formData
-			})
-			.then(response => response.json())
-			.then(data => {
-				btnGuardar.disabled = false;
-				btnGuardar.innerHTML = textoOriginal;
-				
-				if (data.success) {
-					mostrarMensajeModalUnidad('success', '✓ Unidad Ejecutora "' + data.unidad + '" creada exitosamente');
-					
-					// Agregar la nueva opción a los select de unidades
-					var nuevaOpcion = new Option(data.unidad, data.id, true, true);
-					$('#unidad1').append(nuevaOpcion).trigger('change');
-					
-					// También agregarla a los otros selects (pero sin seleccionarla)
-					$('#unidad2').append(new Option(data.unidad, data.id, false, false));
-					$('#unidad3').append(new Option(data.unidad, data.id, false, false));
-					
-					// Cerrar modal después de 1.5 segundos
-					setTimeout(function() {
-						closeModalUnidad();
-					}, 1500);
+				if (tipo === 'success') {
+					successDiv.textContent = mensaje;
+					successDiv.style.display = 'block';
 				} else {
-					mostrarMensajeModalUnidad('error', 'Error: ' + (data.message || 'No se pudo guardar la unidad ejecutora'));
+					errorDiv.textContent = mensaje;
+					errorDiv.style.display = 'block';
 				}
-			})
-			.catch(error => {
-				btnGuardar.disabled = false;
-				btnGuardar.innerHTML = textoOriginal;
-				mostrarMensajeModalUnidad('error', 'Error de conexión: ' + error.message);
+			}
+		</script>
+
+		<!-- Script para manejo de carga de archivos PDF -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const fileInput = document.getElementById('ubicacion_digital');
+				const fileUploadArea = document.getElementById('fileUploadArea');
+				const selectFileBtn = document.getElementById('selectFileBtn');
+				const fileInfo = document.getElementById('fileInfo');
+				const fileName = document.getElementById('fileName');
+				const fileSize = document.getElementById('fileSize');
+				const removeFileBtn = document.getElementById('removeFileBtn');
+
+				// Abrir selector de archivos al hacer clic en el botón o en el área
+				selectFileBtn.addEventListener('click', function (e) {
+					e.preventDefault();
+					fileInput.click();
+				});
+
+				fileUploadArea.addEventListener('click', function (e) {
+					if (e.target !== selectFileBtn && !e.target.closest('#selectFileBtn')) {
+						fileInput.click();
+					}
+				});
+
+				// Manejar la selección de archivos
+				fileInput.addEventListener('change', function () {
+					if (this.files && this.files[0]) {
+						const file = this.files[0];
+
+						// Validar tipo de archivo
+						if (file.type !== 'application/pdf') {
+							alert('Error: Solo se permiten archivos PDF.');
+							this.value = '';
+							return;
+						}
+
+						// Validar tamaño del archivo (10MB máximo)
+						if (file.size > 10 * 1024 * 1024) {
+							alert('Error: El archivo es demasiado grande. El tamaño máximo permitido es 10MB.');
+							this.value = '';
+							return;
+						}
+
+						// Mostrar información del archivo
+						fileName.textContent = file.name;
+						fileSize.textContent = formatFileSize(file.size);
+						fileInfo.style.display = 'block';
+
+						// Cambiar estilo del área de subida
+						fileUploadArea.style.borderColor = '#28a745';
+						fileUploadArea.style.backgroundColor = '#f0fff4';
+					}
+				});
+
+				// Eliminar archivo seleccionado
+				removeFileBtn.addEventListener('click', function (e) {
+					e.preventDefault();
+					fileInput.value = '';
+					fileInfo.style.display = 'none';
+
+					// Restaurar estilo del área de subida
+					fileUploadArea.style.borderColor = '#ccc';
+					fileUploadArea.style.backgroundColor = '#f8f9fa';
+				});
+
+				// Efectos de arrastrar y soltar
+				['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+					fileUploadArea.addEventListener(eventName, preventDefaults, false);
+				});
+
+				function preventDefaults(e) {
+					e.preventDefault();
+					e.stopPropagation();
+				}
+
+				['dragenter', 'dragover'].forEach(eventName => {
+					fileUploadArea.addEventListener(eventName, highlight, false);
+				});
+
+				['dragleave', 'drop'].forEach(eventName => {
+					fileUploadArea.addEventListener(eventName, unhighlight, false);
+				});
+
+				function highlight() {
+					fileUploadArea.classList.add('dragover');
+				}
+
+				function unhighlight() {
+					fileUploadArea.classList.remove('dragover');
+				}
+
+				fileUploadArea.addEventListener('drop', handleDrop, false);
+
+				function handleDrop(e) {
+					const dt = e.dataTransfer;
+					const files = dt.files;
+
+					if (files.length) {
+						fileInput.files = files;
+						fileInput.dispatchEvent(new Event('change'));
+					}
+				}
+
+				// Función para formatear el tamaño del archivo
+				function formatFileSize(bytes) {
+					if (bytes === 0) return '0 Bytes';
+
+					const k = 1024;
+					const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+					const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+					return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+				}
 			});
+		</script>
 
-			return false;
-		}
+</body>
 
-		function mostrarMensajeModalUnidad(tipo, mensaje) {
-			var successDiv = document.getElementById('modalMessageSuccessUnidad');
-			var errorDiv = document.getElementById('modalMessageErrorUnidad');
-			
-		// Ocultar ambos mensajes primero
-		successDiv.style.display = 'none';
-		errorDiv.style.display = 'none';
-		
-		if (tipo === 'success') {
-			successDiv.textContent = mensaje;
-			successDiv.style.display = 'block';
-		} else {
-			errorDiv.textContent = mensaje;
-			errorDiv.style.display = 'block';
-		}
-	}
-</script>
+</html>
 
-<!-- Script para manejo de carga de archivos PDF -->
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const fileInput = document.getElementById('ubicacion_digital');
-		const fileUploadArea = document.getElementById('fileUploadArea');
-		const selectFileBtn = document.getElementById('selectFileBtn');
-		const fileInfo = document.getElementById('fileInfo');
-		const fileName = document.getElementById('fileName');
-		const fileSize = document.getElementById('fileSize');
-		const removeFileBtn = document.getElementById('removeFileBtn');
-		
-		// Abrir selector de archivos al hacer clic en el botón o en el área
-		selectFileBtn.addEventListener('click', function(e) {
-			e.preventDefault();
-			fileInput.click();
-		});
-		
-		fileUploadArea.addEventListener('click', function(e) {
-			if (e.target !== selectFileBtn && !e.target.closest('#selectFileBtn')) {
-				fileInput.click();
-			}
-		});
-		
-		// Manejar la selección de archivos
-		fileInput.addEventListener('change', function() {
-			if (this.files && this.files[0]) {
-				const file = this.files[0];
-				
-				// Validar tipo de archivo
-				if (file.type !== 'application/pdf') {
-					alert('Error: Solo se permiten archivos PDF.');
-					this.value = '';
-					return;
-				}
-				
-				// Validar tamaño del archivo (10MB máximo)
-				if (file.size > 10 * 1024 * 1024) {
-					alert('Error: El archivo es demasiado grande. El tamaño máximo permitido es 10MB.');
-					this.value = '';
-					return;
-				}
-				
-				// Mostrar información del archivo
-				fileName.textContent = file.name;
-				fileSize.textContent = formatFileSize(file.size);
-				fileInfo.style.display = 'block';
-				
-				// Cambiar estilo del área de subida
-				fileUploadArea.style.borderColor = '#28a745';
-				fileUploadArea.style.backgroundColor = '#f0fff4';
-			}
-		});
-		
-		// Eliminar archivo seleccionado
-		removeFileBtn.addEventListener('click', function(e) {
-			e.preventDefault();
-			fileInput.value = '';
-			fileInfo.style.display = 'none';
-			
-			// Restaurar estilo del área de subida
-			fileUploadArea.style.borderColor = '#ccc';
-			fileUploadArea.style.backgroundColor = '#f8f9fa';
-		});
-		
-		// Efectos de arrastrar y soltar
-		['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-			fileUploadArea.addEventListener(eventName, preventDefaults, false);
-		});
-		
-		function preventDefaults(e) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
-		
-		['dragenter', 'dragover'].forEach(eventName => {
-			fileUploadArea.addEventListener(eventName, highlight, false);
-		});
-		
-		['dragleave', 'drop'].forEach(eventName => {
-			fileUploadArea.addEventListener(eventName, unhighlight, false);
-		});
-		
-		function highlight() {
-			fileUploadArea.classList.add('dragover');
-		}
-		
-		function unhighlight() {
-			fileUploadArea.classList.remove('dragover');
-		}
-		
-		fileUploadArea.addEventListener('drop', handleDrop, false);
-		
-		function handleDrop(e) {
-			const dt = e.dataTransfer;
-			const files = dt.files;
-			
-			if (files.length) {
-				fileInput.files = files;
-				fileInput.dispatchEvent(new Event('change'));
-			}
-		}
-		
-		// Función para formatear el tamaño del archivo
-		function formatFileSize(bytes) {
-			if (bytes === 0) return '0 Bytes';
-			
-			const k = 1024;
-			const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-			const i = Math.floor(Math.log(bytes) / Math.log(k));
-			
-			return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-		}
-	});
-</script>
+<div style="text-align:center; margin:30px 0;">
+	<button type="button" class="btn btn-lg btn-info"
+		onclick="document.getElementById('informacion_adicional').style.display = document.getElementById('informacion_adicional').style.display == 'none' ? 'block' : 'none'">
+		🔍 Información Adicional
+	</button>
+</div>
 
-</body></html>
-=======
-=======
->>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068
-﻿<?php 
-include "conn.php";
-include 'session_dafexa.php';
-$username = $_SESSION['username'];
-$userID = $_SESSION['userID'];
- ?>
- 
-<!DOCTYPE html>
+<div id="informacion_adicional" style="display:none;">
+	<!--
+	   <div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+						<i class="icon-reorder shaded"></i></a><a class="brand" href="http://obedalvarado.pw/" target="_blank">DAFEXA</a>
+				   
+				   
+				</div>
+			</div>
+			 
 
-<html lang="en">
-<head>
-    <head>
-	<style type="text/css">
-	#campos_adicionales {
-	display:none;
-    }
-    </style>
-	 <script>
-         function valida_archivo() {
-			 alert("OJO!, entroF");
-	        valor = document.getElementById('archivo');
-           if( valor == null || valor.length == 0 || /^\s+$/.test(valor) ) {
-			   alert("OJO!, falta indicar cual es el PDF");
-            return false;
-		  }
-      </script>
-	
-	
-        <?php include("head.php");?>
-    
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-	  <!-- select2 css -->
-        <link href='./buscador/assets/select2v410/css/select2.min.css' rel='stylesheet' type='text/css'>
-
-        <!-- select2 script -->
-        <script src='./buscador/assets/select2v410/js/select2.min.js'></script>
-        <!-- Libreria español -->
-        <script src="./buscador/assets/select2v410/js/i18n/es.js"></script>
-
-	</head>
-    <body>
-<!--
-       <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
-                        <i class="icon-reorder shaded"></i></a><a class="brand" href="http://obedalvarado.pw/" target="_blank">DAFEXA</a>
-                   
-                   
-                </div>
-            </div>
-             
-
-        </div><br />
+		</div><br />
 -->
-            <div class="container">
-                <div class="row">
-                    <div class="span12">
-                        <div class="content">
-                            <?php
-			if(isset($_POST['input'])){
-				
-				$tipo_objeto	= mysqli_real_escape_string($conn,(strip_tags($_POST['tipo_objeto'], ENT_QUOTES)));
-				$numero_objeto  	= mysqli_real_escape_string($conn,(strip_tags($_POST['numero_objeto'], ENT_QUOTES)));
-				$anio_objeto 		= mysqli_real_escape_string($conn,(strip_tags($_POST['anio_objeto'], ENT_QUOTES)));
-				$extracto  = mysqli_real_escape_string($conn,(strip_tags($_POST['extracto'], ENT_QUOTES)));
-				$estado_objeto=mysqli_real_escape_string($conn,(strip_tags($_POST['estado_objeto'], ENT_QUOTES)));
-				$texto_completo  = mysqli_real_escape_string($conn,(strip_tags($_POST['texto_completo'], ENT_QUOTES)));
-				$archivo=mysqli_real_escape_string($conn,(strip_tags($_POST['archivo'], ENT_QUOTES)));
-				$expediente=mysqli_real_escape_string($conn,(strip_tags($_POST['expediente'], ENT_QUOTES)));
-			//	$palabras_claves=mysqli_real_escape_string($conn,(strip_tags($_POST['palabras_claves'], ENT_QUOTES)));
-			    $palabra_clave1=mysqli_real_escape_string($conn,(strip_tags($_POST['palabra_clave1'], ENT_QUOTES)));
-				$palabra_clave2=mysqli_real_escape_string($conn,(strip_tags($_POST['palabra_clave2'], ENT_QUOTES)));
-				$palabra_clave3=mysqli_real_escape_string($conn,(strip_tags($_POST['palabra_clave3'], ENT_QUOTES)));
-				$palabra_clave4=mysqli_real_escape_string($conn,(strip_tags($_POST['palabra_clave4'], ENT_QUOTES)));
-				$palabras_claves= $palabra_clave1.",".$palabra_clave2.",".$palabra_clave3.",".$palabra_clave4;
-			
-				$modifica_interpreta_a=mysqli_real_escape_string($conn,(strip_tags($_POST['modifica_interpreta_a'], ENT_QUOTES)));
-				$modificada_interpretada_por=mysqli_real_escape_string($conn,(strip_tags($_POST['modificada_interpretada_por'], ENT_QUOTES)));
-				$deroga_a=mysqli_real_escape_string($conn,(strip_tags($_POST['deroga_a'], ENT_QUOTES)));
-				$derogada_por=mysqli_real_escape_string($conn,(strip_tags($_POST['derogada_por'], ENT_QUOTES)));
-				$suspende_a=mysqli_real_escape_string($conn,(strip_tags($_POST['suspende_a'], ENT_QUOTES)));
-				$suspendida_por=mysqli_real_escape_string($conn,(strip_tags($_POST['suspendida_por'], ENT_QUOTES)));
-				$ratifica_a=mysqli_real_escape_string($conn,(strip_tags($_POST['ratifica_a'], ENT_QUOTES)));
-				$ratificada_por=mysqli_real_escape_string($conn,(strip_tags($_POST['ratificada_por'], ENT_QUOTES)));
-				$relacionada_con=mysqli_real_escape_string($conn,(strip_tags($_POST['relacionada_con'], ENT_QUOTES)));
-				$emisor=mysqli_real_escape_string($conn,(strip_tags($_POST['emisor'], ENT_QUOTES)));
-					
-	
-		
-				$insert = mysqli_query($conn, "INSERT INTO digesto(id, tipo_objeto, numero_objeto, anio_objeto, extracto, estado_objeto,texto_completo, archivo, expediente, palabras_claves, modifica_interpreta_a, modificada_interpretada_por, deroga_a, derogada_por, suspende_a, suspendida_por, ratifica_a, ratificada_por, relacionada_con, emisor
-				)		VALUES(NULL,'$tipo_objeto', '$numero_objeto', '$anio_objeto', '$extracto',  '$estado_objeto', '$texto_completo', '$archivo', '$expediente', '$palabras_claves', '$modifica_interpreta_a', '$modificada_interpretada_por', '$deroga_a', '$derogada_por', '$suspende_a', '$suspendida_por', '$ratifica_a', '$ratificada_por', '$relacionada_con', '$emisor')") 
-															
-															or die(mysqli_error());
-						if($insert){
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<div class="content">
+					<?php
+					if (isset($_POST['input'])) {
+
+						$tipo_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['tipo_objeto'], ENT_QUOTES)));
+						$numero_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['numero_objeto'], ENT_QUOTES)));
+						$anio_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['anio_objeto'], ENT_QUOTES)));
+						$extracto = mysqli_real_escape_string($conn, (strip_tags($_POST['extracto'], ENT_QUOTES)));
+						$estado_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['estado_objeto'], ENT_QUOTES)));
+						$texto_completo = mysqli_real_escape_string($conn, (strip_tags($_POST['texto_completo'], ENT_QUOTES)));
+						$archivo = mysqli_real_escape_string($conn, (strip_tags($_POST['archivo'], ENT_QUOTES)));
+						$expediente = mysqli_real_escape_string($conn, (strip_tags($_POST['expediente'], ENT_QUOTES)));
+						//	$palabras_claves=mysqli_real_escape_string($conn,(strip_tags($_POST['palabras_claves'], ENT_QUOTES)));
+						$palabra_clave1 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave1'], ENT_QUOTES)));
+						$palabra_clave2 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave2'], ENT_QUOTES)));
+						$palabra_clave3 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave3'], ENT_QUOTES)));
+						$palabra_clave4 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave4'], ENT_QUOTES)));
+						$palabras_claves = $palabra_clave1 . "," . $palabra_clave2 . "," . $palabra_clave3 . "," . $palabra_clave4;
+
+						$modifica_interpreta_a = mysqli_real_escape_string($conn, (strip_tags($_POST['modifica_interpreta_a'], ENT_QUOTES)));
+						$modificada_interpretada_por = mysqli_real_escape_string($conn, (strip_tags($_POST['modificada_interpretada_por'], ENT_QUOTES)));
+						$deroga_a = mysqli_real_escape_string($conn, (strip_tags($_POST['deroga_a'], ENT_QUOTES)));
+						$derogada_por = mysqli_real_escape_string($conn, (strip_tags($_POST['derogada_por'], ENT_QUOTES)));
+						$suspende_a = mysqli_real_escape_string($conn, (strip_tags($_POST['suspende_a'], ENT_QUOTES)));
+						$suspendida_por = mysqli_real_escape_string($conn, (strip_tags($_POST['suspendida_por'], ENT_QUOTES)));
+						$ratifica_a = mysqli_real_escape_string($conn, (strip_tags($_POST['ratifica_a'], ENT_QUOTES)));
+						$ratificada_por = mysqli_real_escape_string($conn, (strip_tags($_POST['ratificada_por'], ENT_QUOTES)));
+						$relacionada_con = mysqli_real_escape_string($conn, (strip_tags($_POST['relacionada_con'], ENT_QUOTES)));
+						$emisor = mysqli_real_escape_string($conn, (strip_tags($_POST['emisor'], ENT_QUOTES)));
+
+
+
+						$insert = mysqli_query($conn, "INSERT INTO digesto(id, tipo_objeto, numero_objeto, anio_objeto, extracto, estado_objeto,texto_completo, archivo, expediente, palabras_claves, modifica_interpreta_a, modificada_interpretada_por, deroga_a, derogada_por, suspende_a, suspendida_por, ratifica_a, ratificada_por, relacionada_con, emisor
+				)		VALUES(NULL,'$tipo_objeto', '$numero_objeto', '$anio_objeto', '$extracto',  '$estado_objeto', '$texto_completo', '$archivo', '$expediente', '$palabras_claves', '$modifica_interpreta_a', '$modificada_interpretada_por', '$deroga_a', '$derogada_por', '$suspende_a', '$suspendida_por', '$ratifica_a', '$ratificada_por', '$relacionada_con', '$emisor')")
+
+							or die(mysqli_error());
+						if ($insert) {
 							echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Bien hecho Luis Olguin, los datos han sido agregados correctamente.</div>';
-						    header("Location: index.php");
-						}else{
+							header("Location: index.php");
+						} else {
 							echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error, no se pudo registrar los datos.</div>';
 						}
-				
-			}
-			?>
-            
-            <blockquote>
-            <h3>Agregar Normativa al Digesto de Exactas</h3>
-            </blockquote>
-                         <form name="form1" id="form1" class="form-horizontal row-fluid"  action="registro.php"  method="POST" >
-										<div class="control-group">
-											<label class="control-label" for="emisor">Emisor</label>
-											<div class="controls">
-		                										
-                                                <input type="radio" class="form-check-input" name="emisor" value="Consejo Directivo" checked> Consejo Directivo
-		                                       
-										</div>
-										</div>
-										
-                                      <div class="control-group">
-											<label class="control-label" for="tipo_objeto">Normativa</label>
-											<div class="controls">
-		                										
-        <input type="radio" class="form-check-input" onchange='add();' id="tipo_objeto" name="tipo_objeto" value="Ordenanza" checked> Ordenanza
-		<input type="radio" name="tipo_objeto" onchange='add();' value="Resolución"> Resolución<br>
-          										
-										</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label" for="numero_objeto">Número de la Normativa</label>
-											<div class="controls">
-												<input type="text" name="numero_objeto" onchange='add();' id="numero_objeto" placeholder="ingrese SOLO el número" class="form-control span8 tip" required>
-											</div>
-										</div>
 
-										<div class="control-group">
-											<label class="control-label" for="anio_objeto">Fecha de la Normativa</label>
-											<div class="controls">
-												<input name="anio_objeto" id="anio_objeto" onchange='add();' class="form-control span8 tip" type="date" placeholder="Ingrese SOLO el año"  required />
-											</div>
-										</div>
+					}
+					?>
 
-										<div class="control-group">
-											<label class="control-label" for="extracto">Extracto</label>
-											<div class="controls">
-												<input name="extracto" id="extracto" class=" form-control span8 tip"   type="text" placeholder="Extracto que describe el objeto" required />
-											</div>
-										</div>
-									  
-                                            <div class="control-group">
-											<label class="control-label" for="estado_objeto">Estado de la Normativa</label>
-											<div class="controls">
-											 <input type="radio" name="estado_objeto" value="Vigente" checked> Vigente
-		                                     <input type="radio" name="estado_objeto" value="No vigente"> No Vigente<br>
-       											
-											</div>
-										</div>
-										´
-							           <div class="control-group">
-                                          <label class="control-label" for="texto_completo">Texto Completo </label>
-                                        <div class="controls">
-										<input type="textarea" name="texto_completo" id="texto_completo" class=" form-control span8 tip" placeholder="Copie el text completo del original" rows="3"></textarea>
-                                        </div>
-										</div>
-										
-										 <div class="control-group">
-                                          <label class="control-label" for="archivo">Archivo PDF asociado</label>
-                                        <div class="controls">
-										<input type="text" name="archivo" id="archivo" class=" form-control span8 tip" placeholder="">
-                                        </div>
-								<!--			
+					<blockquote>
+						<h3>Agregar Normativa al Digesto de Exactas</h3>
+					</blockquote>
+					<form name="form1" id="form1" class="form-horizontal row-fluid" action="registro.php" method="POST">
+						<div class="control-group">
+							<label class="control-label" for="emisor">Emisor</label>
+							<div class="controls">
+
+								<input type="radio" class="form-check-input" name="emisor" value="Consejo Directivo"
+									checked> Consejo Directivo
+
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="tipo_objeto">Normativa</label>
+							<div class="controls">
+
+								<input type="radio" class="form-check-input" onchange='add();' id="tipo_objeto"
+									name="tipo_objeto" value="Ordenanza" checked> Ordenanza
+								<input type="radio" name="tipo_objeto" onchange='add();' value="Resolución">
+								Resolución<br>
+
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="numero_objeto">Número de la Normativa</label>
+							<div class="controls">
+								<input type="text" name="numero_objeto" onchange='add();' id="numero_objeto"
+									placeholder="ingrese SOLO el número" class="form-control span8 tip" required>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="anio_objeto">Fecha de la Normativa</label>
+							<div class="controls">
+								<input name="anio_objeto" id="anio_objeto" onchange='add();'
+									class="form-control span8 tip" type="date" placeholder="Ingrese SOLO el año"
+									required />
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="extracto">Extracto</label>
+							<div class="controls">
+								<input name="extracto" id="extracto" class=" form-control span8 tip" type="text"
+									placeholder="Extracto que describe el objeto" required />
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="estado_objeto">Estado de la Normativa</label>
+							<div class="controls">
+								<input type="radio" name="estado_objeto" value="Vigente" checked> Vigente
+								<input type="radio" name="estado_objeto" value="No vigente"> No Vigente<br>
+
+							</div>
+						</div>
+						´
+						<div class="control-group">
+							<label class="control-label" for="texto_completo">Texto Completo </label>
+							<div class="controls">
+								<input type="textarea" name="texto_completo" id="texto_completo"
+									class=" form-control span8 tip" placeholder="Copie el text completo del original"
+									rows="3"></textarea>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="archivo">Archivo PDF asociado</label>
+							<div class="controls">
+								<input type="text" name="archivo" id="archivo" class=" form-control span8 tip"
+									placeholder="">
+							</div>
+							<!--			
 									  <div class="control-group">	
 										<label class="control-label" for="archivo">Archivo PDF </label>
 									 <div class="controls">
 										<input name="archivo" id="archivo" placeholder="Seleccione el PDF asociado" type="file" />
-                                        </div>
 										</div>
-                            -->
+										</div>
+							-->
 
- 
- <center> <button type="button" class="btn btn-success" id="mostrar_campos_adicionales">Mostrar/ocultar Campos Adicionales.</button> </center>
-<div id="campos_adicionales">
-                                        <div class="control-group">
-											<label class="control-label" for="expediente">Expediente / Oficio</label>
-											<div class="controls">
-												<input name="expediente" id="expediente" class=" form-control span8 tip" type="text" placeholder="Ingrese el número de expediente(s) relacionados con el objeto" />
-											</div>
-										</div>
-										
-										<div class="control-group">
-										
 
-										<label class="control-label" for="extracto">Palabras Claves</label>
-										
-										
-											<div class="controls">
-											
-								<select id='palabra_clave1' name='palabra_clave1' style='width: 300px;' lang="es">
-                                    
-                                </select>
-								
-								  <select id='palabra_clave2' name='palabra_clave2' style='width: 300px;' lang="es">
-                                    <option value='0'>- Buscar Palabritas -</option>
-                                </select>
-								<br>
-								 </select>
-								  <select id='palabra_clave3' name='palabra_clave3' style='width: 300px;' lang="es">
-                                    <option value='0'>- Buscar Palabritas -</option>
-                                </select>
-								 </select>
-								  <select id='palabra_clave4' name='palabra_clave4' style='width: 300px;' lang="es">
-                                    <option value='0'>- Buscar Palabritas -</option>
-                                </select>
-								
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Modifica o Interpreta a:</label>
-											<div class="controls">
-												<input name="modifica_interpreta_a" id="modifica_interpreta_a" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que modifican o interpretan al que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Modificada o Interpretada por:</label>
-											<div class="controls">
-												<input name="modificada_interpretada_por" id="modificada_interpretada_por" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que modificaron o interpretaron al que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Deroga a:</label>
-											<div class="controls">
-												<input name="deroga_a" id="deroga_a" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que fueron derogados por el que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Derogada por:</label>
-											<div class="controls">
-												<input name="derogada_por" id="derogada_por" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que derogaron al que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Suspende a:</label>
-											<div class="controls">
-												<input name="suspende_a" id="suspende_a" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que suspenden al que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Suspendida por:</label>
-											<div class="controls">
-												<input name="suspendida_por" id="suspendida_por" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que suspendieron al que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Ratifica a:</label>
-											<div class="controls">
-												<input name="ratifica_a" id="ratifica_a" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que ratifican al que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Ratificada por:</label>
-											<div class="controls">
-												<input name="ratificada_por" id="ratificada_por" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que ratificaron al que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-										<div class="control-group">
-											<label class="control-label" for="extracto">Relacionada con:</label>
-											<div class="controls">
-												<input name="relacionada_con" id="relacionada_con" class=" form-control span8 tip" 
-												type="text" placeholder="Indique los números de los objetos que se relacionan con el que está ingresando (separados por punto) "/>
-											</div>
-										</div>
-										
-</div> <!-- fin div muestra oculta-->
-										<div class="control-group">
-											<div class="controls">
-												<button type="submit" name="input"  id="input" class="btn btn-sm btn-primary">Registrar</button>
-                                               <a href="index.php" class="btn btn-sm btn-danger">Cancelar</a>
-											</div>
-										</div>
-                                    
-									</form>
-                        </div>
-                        <!--/.content-->
-                    </div>
-                    <!--/.span9-->
-                </div>
-            </div>
-            <!--/.container-->
-        
-        <!--/.wrapper--><br />
-        <div class="footer span-12">
-            <div class="container">
-              <center> <b class="copyright"> DAFEXA - IdeI &copy; <?php echo date("Y")?> </b></center>
-            </div>
-        </div>
+							<center> <button type="button" class="btn btn-success"
+									id="mostrar_campos_adicionales">Mostrar/ocultar Campos Adicionales.</button>
+							</center>
+							<div id="campos_adicionales">
+								<div class="control-group">
+									<label class="control-label" for="expediente">Expediente / Oficio</label>
+									<div class="controls">
+										<input name="expediente" id="expediente" class=" form-control span8 tip"
+											type="text"
+											placeholder="Ingrese el número de expediente(s) relacionados con el objeto" />
+									</div>
+								</div>
 
-        <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-		
-		<!-- Maneja el div para carga de opcionales
+								<div class="control-group">
+
+
+									<label class="control-label" for="extracto">Palabras Claves</label>
+
+
+									<div class="controls">
+
+										<select id='palabra_clave1' name='palabra_clave1' style='width: 300px;'
+											lang="es">
+
+										</select>
+
+										<select id='palabra_clave2' name='palabra_clave2' style='width: 300px;'
+											lang="es">
+											<option value='0'>- Buscar Palabritas -</option>
+										</select>
+										<br>
+										</select>
+										<select id='palabra_clave3' name='palabra_clave3' style='width: 300px;'
+											lang="es">
+											<option value='0'>- Buscar Palabritas -</option>
+										</select>
+										</select>
+										<select id='palabra_clave4' name='palabra_clave4' style='width: 300px;'
+											lang="es">
+											<option value='0'>- Buscar Palabritas -</option>
+										</select>
+
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Modifica o Interpreta a:</label>
+									<div class="controls">
+										<input name="modifica_interpreta_a" id="modifica_interpreta_a"
+											class=" form-control span8 tip" type="text"
+											placeholder="Indique los números de los objetos que modifican o interpretan al que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Modificada o Interpretada
+										por:</label>
+									<div class="controls">
+										<input name="modificada_interpretada_por" id="modificada_interpretada_por"
+											class=" form-control span8 tip" type="text"
+											placeholder="Indique los números de los objetos que modificaron o interpretaron al que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Deroga a:</label>
+									<div class="controls">
+										<input name="deroga_a" id="deroga_a" class=" form-control span8 tip" type="text"
+											placeholder="Indique los números de los objetos que fueron derogados por el que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Derogada por:</label>
+									<div class="controls">
+										<input name="derogada_por" id="derogada_por" class=" form-control span8 tip"
+											type="text"
+											placeholder="Indique los números de los objetos que derogaron al que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Suspende a:</label>
+									<div class="controls">
+										<input name="suspende_a" id="suspende_a" class=" form-control span8 tip"
+											type="text"
+											placeholder="Indique los números de los objetos que suspenden al que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Suspendida por:</label>
+									<div class="controls">
+										<input name="suspendida_por" id="suspendida_por" class=" form-control span8 tip"
+											type="text"
+											placeholder="Indique los números de los objetos que suspendieron al que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Ratifica a:</label>
+									<div class="controls">
+										<input name="ratifica_a" id="ratifica_a" class=" form-control span8 tip"
+											type="text"
+											placeholder="Indique los números de los objetos que ratifican al que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Ratificada por:</label>
+									<div class="controls">
+										<input name="ratificada_por" id="ratificada_por" class=" form-control span8 tip"
+											type="text"
+											placeholder="Indique los números de los objetos que ratificaron al que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="extracto">Relacionada con:</label>
+									<div class="controls">
+										<input name="relacionada_con" id="relacionada_con"
+											class=" form-control span8 tip" type="text"
+											placeholder="Indique los números de los objetos que se relacionan con el que está ingresando (separados por punto) " />
+									</div>
+								</div>
+
+							</div> <!-- fin div muestra oculta-->
+							<div class="control-group">
+								<div class="controls">
+									<button type="submit" name="input" id="input"
+										class="btn btn-sm btn-primary">Registrar</button>
+									<a href="index.php" class="btn btn-sm btn-danger">Cancelar</a>
+								</div>
+							</div>
+
+					</form>
+				</div>
+				<!--/.content-->
+			</div>
+			<!--/.span9-->
+		</div>
+	</div>
+	<!--/.container-->
+
+	<!--/.wrapper--><br />
+	<div class="footer span-12">
+		<div class="container">
+			<center> <b class="copyright"> DAFEXA - IdeI &copy; <?php echo date("Y") ?> </b></center>
+		</div>
+	</div>
+
+	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+	<!-- Maneja el div para carga de opcionales
 		https://tutobasico.com/activar-boton-o-enlace-con-jquery/
 		-->
-		<script>
-          $( "#mostrar_campos_adicionales" ).click( function() {
-          $( "#campos_adicionales" ).toggle();
-          });
-        </script>
-	
-		<!-- Controla que no se omita el archivo PDF
+	<script>
+		$("#mostrar_campos_adicionales").click(function () {
+			$("#campos_adicionales").toggle();
+		});
+	</script>
+
+	<!-- Controla que no se omita el archivo PDF
 		 https://es.stackoverflow.com/questions/375508/validar-input-con-javascript
-		-->	
-		<script>
-		$(document).ready(function() {
-         $('#form1').on('submit', function(event) {
-            var $searchValue = $('#archivo').val();
-            if ($searchValue === "") {
-               event.preventDefault();
-                  alert('ATENCIÓN: Falta nombre archivo PDF');
-                           }
-         });
-      });
-     </script>
-	
-<script type="text/javascript">
-	function add() {
-	 // pERMITE validar que no se dupliquen registros en la BBDD 
-    let tipo = $('input[name="tipo_objeto"]:checked').val().substr(0,1);
-    let numero = document.getElementById("numero_objeto").value;
-    if (numero < 10) numero = '0' + numero;
-    let anio = document.getElementById("anio_objeto").value.substr(0,4);
+		-->
+	<script>
+		$(document).ready(function () {
+			$('#form1').on('submit', function (event) {
+				var $searchValue = $('#archivo').val();
+				if ($searchValue === "") {
+					event.preventDefault();
+					alert('ATENCIÓN: Falta nombre archivo PDF');
+				}
+			});
+		});
+	</script>
 
-    let archivo = tipo + numero + '-' + anio + '-CD-FCEFN_OCR.pdf';
-    document.getElementById('archivo').value = archivo;
+	<script type="text/javascript">
+		function add() {
+			// pERMITE validar que no se dupliquen registros en la BBDD 
+			let tipo = $('input[name="tipo_objeto"]:checked').val().substr(0, 1);
+			let numero = document.getElementById("numero_objeto").value;
+			if (numero < 10) numero = '0' + numero;
+			let anio = document.getElementById("anio_objeto").value.substr(0, 4);
 
-    // Obtener referencia al botón submit
-    let submitBtn = document.getElementById('input');
-    
-    // Verificación por AJAX
-    $.ajax({
-        url: 'validar_objeto_duplicado2.php',
-        type: 'GET',
-        data: { 
-            numero: numero, 
-            tipo: tipo, 
-            anio: anio 
-        },
-        success: function(response) {
-            try {
-                // Intenta parsear manualmente para mejor manejo de errores
-                let data = typeof response === 'string' ? JSON.parse(response) : response;
-                
-                if (data.error) {
-                    alert("Error: " + data.error);
-                    // Mostrar botón por si acaso
-                    $(submitBtn).show();
-                } else if (data.existe) {
-                    alert("Este registro ya existe en la base de datos.");
-                    document.getElementById("numero_objeto").focus();
-                    // Ocultar botón submit
-                    $(submitBtn).hide();
-                } else {
-                    // Mostrar botón submit si no está duplicado
-                    $(submitBtn).show();
-                }
-            } catch (e) {
-                console.error("Respuesta inválida:", response);
-                alert("Error al procesar la respuesta del servidor");
-                // Mostrar botón por si acaso
-                $(submitBtn).show();
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Error AJAX:", xhr.responseText);
-            alert("Error al verificar existencia. Ver consola para detalles.");
-            // Mostrar botón por si acaso
-            $(submitBtn).show();
-        }
-    });
-}
-</script>
+			let archivo = tipo + numero + '-' + anio + '-CD-FCEFN_OCR.pdf';
+			document.getElementById('archivo').value = archivo;
+
+			// Obtener referencia al botón submit
+			let submitBtn = document.getElementById('input');
+
+			// Verificación por AJAX
+			$.ajax({
+				url: 'validar_objeto_duplicado2.php',
+				type: 'GET',
+				data: {
+					numero: numero,
+					tipo: tipo,
+					anio: anio
+				},
+				success: function (response) {
+					try {
+						// Intenta parsear manualmente para mejor manejo de errores
+						let data = typeof response === 'string' ? JSON.parse(response) : response;
+
+						if (data.error) {
+							alert("Error: " + data.error);
+							// Mostrar botón por si acaso
+							$(submitBtn).show();
+						} else if (data.existe) {
+							alert("Este registro ya existe en la base de datos.");
+							document.getElementById("numero_objeto").focus();
+							// Ocultar botón submit
+							$(submitBtn).hide();
+						} else {
+							// Mostrar botón submit si no está duplicado
+							$(submitBtn).show();
+						}
+					} catch (e) {
+						console.error("Respuesta inválida:", response);
+						alert("Error al procesar la respuesta del servidor");
+						// Mostrar botón por si acaso
+						$(submitBtn).show();
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error("Error AJAX:", xhr.responseText);
+					alert("Error al verificar existencia. Ver consola para detalles.");
+					// Mostrar botón por si acaso
+					$(submitBtn).show();
+				}
+			});
+		}
+	</script>
 
 
-    <script>
-        $(document).ready(function() {
+	<script>
+		$(document).ready(function () {
 
-            $("#palabra_clave1,#palabra_clave2,#palabra_clave3,#palabra_clave4").select2({
-                ajax: {
-                    url: "buscador/registro_palabras_claves.php",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                },
-				
-				 minimumInputLength: 3
-            });
-        });
-    </script>
+			$("#palabra_clave1,#palabra_clave2,#palabra_clave3,#palabra_clave4").select2({
+				ajax: {
+					url: "buscador/registro_palabras_claves.php",
+					type: "post",
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							searchTerm: params.term // search term
+						};
+					},
+					processResults: function (response) {
+						return {
+							results: response
+						};
+					},
+					cache: true
+				},
 
-<script>
-// VLAIDADOR  de entrada de campos donde se almacena las relaciones con otros docuemntos GRACIAS DEEPSEEK Y CLAUDE!!
-// Esperar a que todo el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    // Función de validación mejorada
-    function validarYFormatear(inputValue, campoId) {
-        const pattern = /\b(O|R)(0*)([1-9][0-9]{0,2})\/(.+)\b/;
-        const items = inputValue.split(",").map(item => item.trim());
-        const formattedItems = [];
-        
-        for (let item of items) {
-            if (!item) continue;
-            
-            const matches = item.match(pattern);
-            if (matches) {
-                const letra = matches[1];
-                const numero = matches[3]; // Ignoramos los ceros iniciales
-                const numeroFormateado = numero.padStart(numero.length > 2 ? numero.length : 2, "0");
-                const resto = matches[4];
-                formattedItems.push(`${letra}${numeroFormateado}/${resto}`);
-            } else {
-                return { 
-                    success: false, 
-                    message: `Entrada inválida: "${item}". Formato: (O|R)(número)/(...)`
-                };
-            }
-        }
-        
-        return {
-            success: true,
-            message: "Entrada válida",
-            result: formattedItems.join(",")
-        };
-    }
+				minimumInputLength: 3
+			});
+		});
+	</script>
 
-    // Manejador de eventos robusto
-    function manejarValidacion(event) {
-        event.stopImmediatePropagation();
-        event.preventDefault();
-        
-        const inputElement = event.target;
-        const inputValue = inputElement.value.trim();
-        
-        // Limpiar estado previo
-        inputElement.classList.remove('error');
-        
-        if (!inputValue) return true;
-        
-        const resultado = validarYFormatear(inputValue, inputElement.id);
-        
-        if (!resultado.success) {
-            inputElement.classList.add('error');
-            alert(resultado.message);
-            setTimeout(() => {
-                inputElement.focus();
-                inputElement.select();
-            }, 0);
-            return false;
-        } else {
-            inputElement.value = resultado.result;
-            return true;
-        }
-    }
+	<script>
+		// VLAIDADOR  de entrada de campos donde se almacena las relaciones con otros docuemntos GRACIAS DEEPSEEK Y CLAUDE!!
+		// Esperar a que todo el DOM esté listo
+		document.addEventListener('DOMContentLoaded', function () {
+			// Función de validación mejorada
+			function validarYFormatear(inputValue, campoId) {
+				const pattern = /\b(O|R)(0*)([1-9][0-9]{0,2})\/(.+)\b/;
+				const items = inputValue.split(",").map(item => item.trim());
+				const formattedItems = [];
 
-    // Asignación de eventos segura
-    const camposValidar = [
-        'ratificada_por','relacionada_con','ratifica_a',
-        'suspendida_por','suspende_a','derogada_por',
-        'deroga_a','modificada_interpretada_por','modifica_interpreta_a'
-    ];
-    
-    camposValidar.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            // Eliminar event listeners previos para evitar duplicados
-            element.removeEventListener('blur', manejarValidacion);
-            element.removeEventListener('input', manejarValidacion);
-            
-            // Agregar nuestros listeners
-            element.addEventListener('blur', manejarValidacion, true); // Usar captura
-            element.addEventListener('input', function() {
-                this.classList.remove('error');
-            });
-        }
-    });
-});
-</script>    
+				for (let item of items) {
+					if (!item) continue;
 
-    </body>
-<<<<<<< HEAD
->>>>>>> c75371212b3772fad208f167beaa9ae6c325fc52
-=======
->>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068
+					const matches = item.match(pattern);
+					if (matches) {
+						const letra = matches[1];
+						const numero = matches[3]; // Ignoramos los ceros iniciales
+						const numeroFormateado = numero.padStart(numero.length > 2 ? numero.length : 2, "0");
+						const resto = matches[4];
+						formattedItems.push(`${letra}${numeroFormateado}/${resto}`);
+					} else {
+						return {
+							success: false,
+							message: `Entrada inválida: "${item}". Formato: (O|R)(número)/(...)`
+						};
+					}
+				}
+
+				return {
+					success: true,
+					message: "Entrada válida",
+					result: formattedItems.join(",")
+				};
+			}
+
+			// Manejador de eventos robusto
+			function manejarValidacion(event) {
+				event.stopImmediatePropagation();
+				event.preventDefault();
+
+				const inputElement = event.target;
+				const inputValue = inputElement.value.trim();
+
+				// Limpiar estado previo
+				inputElement.classList.remove('error');
+
+				if (!inputValue) return true;
+
+				const resultado = validarYFormatear(inputValue, inputElement.id);
+
+				if (!resultado.success) {
+					inputElement.classList.add('error');
+					alert(resultado.message);
+					setTimeout(() => {
+						inputElement.focus();
+						inputElement.select();
+					}, 0);
+					return false;
+				} else {
+					inputElement.value = resultado.result;
+					return true;
+				}
+			}
+
+			// Asignación de eventos segura
+			const camposValidar = [
+				'ratificada_por', 'relacionada_con', 'ratifica_a',
+				'suspendida_por', 'suspende_a', 'derogada_por',
+				'deroga_a', 'modificada_interpretada_por', 'modifica_interpreta_a'
+			];
+
+			camposValidar.forEach(id => {
+				const element = document.getElementById(id);
+				if (element) {
+					// Eliminar event listeners previos para evitar duplicados
+					element.removeEventListener('blur', manejarValidacion);
+					element.removeEventListener('input', manejarValidacion);
+
+					// Agregar nuestros listeners
+					element.addEventListener('blur', manejarValidacion, true); // Usar captura
+					element.addEventListener('input', function () {
+						this.classList.remove('error');
+					});
+				}
+			});
+		});
+	</script>
+
+	</body>

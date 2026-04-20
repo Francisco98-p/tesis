@@ -1,0 +1,2877 @@
+<<<<<<< HEAD <<<<<<< HEAD <?php
+include "conn.php";
+include 'session_bcfexa.php';
+$username = $_SESSION['username'];
+$userID = $_SESSION['userID'];
+
+/*
+ATENCIÓN: PROBAR https://danisanchez.net/crear-un-select-con-buscador-integrado-gracias-a-select2/ para mejorar los SELECT
+
+ATENCIÓN2: Con este ejemplo se puede mejorar el Alta en los SELECT ... probar
+
+https://getbootstrap.esdocu.com/docs/5.1/utilities/background/ Colores de Fondo
+
+https://www.colorhexa.com/color-names Paleta de Colores para los div
+
+https://www.forosdelweb.com/f18/aceptar-solamente-numeros-formulario-php-1013404/ para controlar que solo se carguen numeros en montos
+*/
+?>
+
+	<!DOCTYPE html>
+
+	<html lang="en">
+
+	<head>
+
+		<style type="text/css">
+			/* Variables CSS para consistencia */
+			:root {
+				--primary-color: #337ab7;
+				--primary-hover: #286090;
+				--success-color: #5cb85c;
+				--warning-color: #f0ad4e;
+				--info-color: #5bc0de;
+				--light-gray: #f8f9fa;
+				--border-color: #e1e8ed;
+				--shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+				--border-radius: 6px;
+			}
+
+			body {
+				background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+				font-family: 'Open Sans', sans-serif;
+				color: #333;
+			}
+
+			.container {
+				background: white;
+				border-radius: var(--border-radius);
+				box-shadow: var(--shadow);
+				margin: 20px auto;
+				padding: 0;
+				overflow: hidden;
+			}
+
+			.content {
+				padding: 30px;
+			}
+
+			#campos_adicionales {
+				display: none;
+			}
+
+			/* Estilos modernos para las secciones */
+			.section-card {
+				background: white;
+				border-radius: var(--border-radius);
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+				margin-bottom: 25px;
+				padding: 25px;
+				border-left: 4px solid var(--primary-color);
+				transition: all 0.3s ease;
+			}
+
+			.section-card:hover {
+				box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+				transform: translateY(-2px);
+			}
+
+			.section-header {
+				display: flex;
+				align-items: center;
+				margin-bottom: 20px;
+				padding-bottom: 15px;
+				border-bottom: 2px solid #f0f0f0;
+			}
+
+			.section-icon {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-right: 15px;
+				font-size: 18px;
+			}
+
+			.section-title {
+				font-size: 18px;
+				font-weight: 600;
+				color: #333;
+				margin: 0;
+			}
+
+			/* Colores específicos para cada sección */
+			.div-1 {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+			}
+
+			.div-1 .section-card {
+				border-left-color: #667eea;
+			}
+
+			.div-1 .section-icon {
+				background: #667eea;
+				color: white;
+			}
+
+			.div-2 {
+				background: linear-gradient(135deg, #96c93d 0%, #00b09b 100%);
+				color: white;
+			}
+
+			.div-2 .section-card {
+				border-left-color: #96c93d;
+			}
+
+			.div-2 .section-icon {
+				background: #96c93d;
+				color: white;
+			}
+
+			.div-3 {
+				background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+				color: white;
+			}
+
+			.div-3 .section-card {
+				border-left-color: #f093fb;
+			}
+
+			.div-3 .section-icon {
+				background: #f093fb;
+				color: white;
+			}
+
+			.div-4 {
+				background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+				color: white;
+			}
+
+			.div-4 .section-card {
+				border-left-color: #4facfe;
+			}
+
+			.div-4 .section-icon {
+				background: #4facfe;
+				color: white;
+			}
+
+			/* Estilos para formularios */
+			.form-group {
+				margin-bottom: 20px;
+			}
+
+			.control-label {
+
+				margin-bottom: 8px;
+				font-weight: 600;
+				color: #555;
+				font-size: 14px;
+				width: 100% !important;
+				text-align: left !important;
+				padding-right: 15px;
+			}
+
+			.form-control {
+				width: 100%;
+				padding: 12px 15px;
+				border: 2px solid var(--border-color);
+				border-radius: var(--border-radius);
+				font-size: 14px;
+				transition: all 0.3s ease;
+				background: white;
+				box-sizing: border-box;
+			}
+
+			.form-control:focus {
+				outline: none;
+				border-color: var(--primary-color);
+				box-shadow: 0 0 0 3px rgba(51, 122, 183, 0.1);
+			}
+
+			.form-control.span8 {
+				width: 100%;
+				max-width: 500px;
+			}
+
+			textarea.form-control {
+				min-height: 100px;
+				resize: vertical;
+			}
+
+			/* Estilos específicos para inputs de Información Documental */
+			input {
+				height: 38px !important;
+				padding: 15px 20px;
+				font-size: 16px;
+				font-weight: 500;
+			}
+
+			/* Estilos para inputs con colores específicos */
+			input[style*="background-color:#fff55b"] {
+				background-color: #fff3cd !important;
+				border-color: #f0ad4e;
+			}
+
+			input[style*="background-color:#DDFFFF"] {
+				background-color: #e7f3ff !important;
+				border-color: #5bc0de;
+			}
+
+			input[style*="background-color:#faebd7"] {
+				background-color: #faebd7 !important;
+				border-color: #4facfe;
+			}
+
+			/* Botones modernos */
+			.btn {
+				display: inline-block;
+				padding: 12px 24px;
+				font-size: 14px;
+				font-weight: 600;
+				text-align: center;
+				border: none;
+				border-radius: var(--border-radius);
+				cursor: pointer;
+				transition: all 0.3s ease;
+				text-decoration: none;
+				margin: 5px;
+			}
+
+			.btn-primary {
+				background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+				color: white;
+			}
+
+			.btn-primary:hover {
+				background: linear-gradient(135deg, var(--primary-hover) 0%, #1f4e6b 100%);
+
+				box-shadow: 0 5px 15px rgba(51, 122, 183, 0.3);
+			}
+
+			.btn-danger {
+				background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
+				color: white;
+			}
+
+			.btn-danger:hover {
+				background: linear-gradient(135deg, #c9302c 0%, #ac2925 100%);
+
+				box-shadow: 0 5px 15px rgba(217, 83, 79, 0.3);
+			}
+
+			.btn-sm {
+				padding: 8px 16px;
+				font-size: 12px;
+			}
+
+			/* Header del formulario */
+			blockquote {
+				background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+				color: white;
+				padding: 25px 30px;
+				margin: -30px -30px 30px -30px;
+				border-left: none;
+				border-radius: var(--border-radius) var(--border-radius) 0 0;
+			}
+
+			blockquote h3 {
+				margin: 0;
+				font-weight: 600;
+				font-size: 24px;
+				text-align: center;
+			}
+
+			/* Estilos para Select2 mejorados */
+			.select2-container--default .select2-selection--single {
+				background-color: white !important;
+				border: 2px solid var(--border-color) !important;
+				border-radius: var(--border-radius) !important;
+				height: 42px !important;
+				line-height: 42px !important;
+				transition: all 0.3s ease !important;
+			}
+
+			.select2-container--default .select2-selection--single:hover {
+				border-color: var(--primary-color) !important;
+			}
+
+			.select2-container--default.select2-container--focus .select2-selection--single {
+				border-color: var(--primary-color) !important;
+				box-shadow: 0 0 0 3px rgba(51, 122, 183, 0.1) !important;
+			}
+
+			.select2-container--default .select2-selection--single .select2-selection__rendered {
+				color: #333 !important;
+				line-height: 38px !important;
+				padding-left: 15px !important;
+			}
+
+			.select2-container--default .select2-selection--single .select2-selection__arrow {
+				height: 38px !important;
+				right: 10px !important;
+			}
+
+			.select2-container {
+				width: 100% !important;
+				max-width: 400px !important;
+			}
+
+			/* Estilos específicos para selects de diferentes secciones */
+			.select2-container.unidad-select .select2-selection--single {
+				background-color: #f0f8ff !important;
+				border-color: #4facfe !important;
+			}
+
+			.select2-container.persona-org-select .select2-selection--single {
+				background-color: #f0fff0 !important;
+				border-color: #96c93d !important;
+			}
+
+			.select2-container.persona-unidad-select .select2-selection--single {
+				background-color: #f0f8ff !important;
+				border-color: #4facfe !important;
+			}
+
+			/* Dropdown mejorado */
+			.select2-dropdown {
+				border: 2px solid var(--border-color) !important;
+				border-radius: var(--border-radius) !important;
+				box-shadow: var(--shadow) !important;
+			}
+
+			.select2-container--default .select2-results__option--highlighted[aria-selected] {
+				background-color: var(--primary-color) !important;
+			}
+
+			/* Grid de campos */
+			.form-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 20px;
+				margin-bottom: 20px;
+			}
+
+			.form-col {
+				flex: 1;
+				min-width: 250px;
+			}
+
+			.form-col-half {
+				flex: 0 0 calc(50% - 10px);
+				min-width: 200px;
+			}
+
+			/* Footer con botones */
+			.form-actions {
+				background: #f8f9fa;
+				padding: 25px 30px;
+				margin: 30px -30px -30px -30px;
+				border-top: 1px solid #e1e8ed;
+				text-align: center;
+				border-radius: 0 0 var(--border-radius) var(--border-radius);
+			}
+
+			/* Anular el padding-left de Bootstrap para form-horizontal .form-actions */
+			.form-horizontal .form-actions {
+				padding-left: 20px !important;
+			}
+
+			/* Responsive */
+			@media (max-width: 768px) {
+				.container {
+					margin: 10px;
+				}
+
+				.content {
+					padding: 20px;
+				}
+
+				.form-col,
+				.form-col-half {
+					flex: 1 1 100%;
+					min-width: auto;
+				}
+
+				.select2-container {
+					max-width: 100% !important;
+				}
+			}
+
+			/* Animaciones sutiles */
+			.section-card,
+			.form-control,
+			.btn {
+				transition: all 0.3s ease;
+			}
+
+			/* Botón de agregar rápido (+) */
+			.btn-add-quick {
+				background-color: #50449dff;
+				color: white;
+				border: none;
+				border-radius: 50%;
+				width: 35px;
+				height: 35px;
+				font-size: 20px;
+				font-weight: bold;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.3s ease;
+				box-shadow: 0 rgba(0, 0, 0, 0.2);
+				margin-left: 15px;
+			}
+
+			.btn-add-quick:hover {
+				background-color: #4a35cfff;
+				transform: scale(1.1);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+			}
+
+			.btn-add-quick .icon-plus {
+				font-style: normal;
+				line-height: 1;
+			}
+
+			/* Modal styles */
+			.modal-overlay {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.6);
+				z-index: 9998;
+				animation: fadeIn 0.3s ease;
+			}
+
+			.modal-container {
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: white;
+				border-radius: var(--border-radius);
+				box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+				z-index: 9999;
+				max-width: 600px;
+				width: 90%;
+				max-height: 90vh;
+				overflow-y: auto;
+				animation: slideIn 0.3s ease;
+			}
+
+			.modal-header {
+				background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+				color: white;
+				padding: 20px 25px;
+				border-radius: var(--border-radius) var(--border-radius) 0 0;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.modal-header h3 {
+				margin: 0;
+				font-size: 20px;
+				font-weight: 600;
+			}
+
+			.modal-close {
+				background: transparent;
+				border: none;
+				color: white;
+				font-size: 28px;
+				cursor: pointer;
+				line-height: 1;
+				padding: 0;
+				width: 30px;
+				height: 30px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				transition: all 0.3s ease;
+			}
+
+			.modal-close:hover {
+				background: rgba(255, 255, 255, 0.2);
+				transform: rotate(90deg);
+			}
+
+			.modal-body {
+				padding: 25px;
+			}
+
+			.modal-body .form-group {
+				margin-bottom: 20px;
+			}
+
+			.modal-body .form-control {
+				width: 100%;
+			}
+
+			.modal-footer {
+				padding: 15px 25px;
+				background: #f8f9fa;
+				border-top: 1px solid #e1e8ed;
+				text-align: right;
+				border-radius: 0 0 var(--border-radius) var(--border-radius);
+			}
+
+			.modal-footer .btn {
+				margin: 0 5px;
+			}
+
+			/* Animaciones */
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+
+				to {
+					opacity: 1;
+				}
+			}
+
+			@keyframes slideIn {
+				from {
+					transform: translate(-50%, -60%);
+					opacity: 0;
+				}
+
+				to {
+					transform: translate(-50%, -50%);
+					opacity: 1;
+				}
+			}
+
+			/* Mensajes de éxito/error en modal */
+			.modal-message {
+				padding: 12px 15px;
+				border-radius: 4px;
+				margin-bottom: 15px;
+				display: none;
+			}
+
+			.modal-message.success {
+				background: #d4edda;
+				border: 1px solid #c3e6cb;
+				color: #155724;
+			}
+
+			.modal-message.error {
+				background: #f8d7da;
+				border: 1px solid #f5c6cb;
+				color: #721c24;
+			}
+
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.section-card {
+				animation: fadeInUp 0.6s ease forwards;
+			}
+
+			.section-card:nth-child(2) {
+				animation-delay: 0.1s;
+			}
+
+			.section-card:nth-child(3) {
+				animation-delay: 0.2s;
+			}
+
+			.section-card:nth-child(4) {
+				animation-delay: 0.3s;
+			}
+
+			.section-card:nth-child(5) {
+				animation-delay: 0.4s;
+			}
+		</style>
+
+		<script type="text/javascript">
+			function valida_envia() {
+				// Validar Tipo de Actividad (obligatorio)
+				if (document.form1.actividad.value == '' || document.form1.actividad.value == 0) {
+					alert("OJO!, no ha indicado el TIPO DE ACTIVIDAD")
+					document.form1.actividad.focus()
+					return false;
+				}
+
+				// Validar Número de Resolución (obligatorio)
+				if (document.form1.nro_resolucion.value.trim() == '') {
+					alert("OJO!, no ha indicado el NÚMERO DE RESOLUCIÓN")
+					document.form1.nro_resolucion.focus()
+					return false;
+				}
+
+				// Validar Organización Principal (obligatorio)
+				var o1 = document.getElementById("organizacion1").value;
+				var o2 = document.getElementById("organizacion2").value;
+				var o3 = document.getElementById("organizacion3").value;
+
+				if (o1 == '' || o1 == 0) {
+					alert("OJO!, DEBE seleccionar la ORGANIZACIÓN PRINCIPAL")
+					document.form1.organizacion1.focus()
+					return false;
+				}
+
+				// Validar que no se repitan las organizaciones
+				if ((o1 == o2 && o2 != '') || (o1 == o3 && o3 != '') || (o2 == o3 && o2 != '' && o3 != '')) {
+					alert("OJO!, NO puede REPETIR las ORGANIZACIONES")
+					document.form1.organizacion1.focus()
+					return false;
+				}
+
+				// Validar Responsable Principal de Organización (obligatorio)
+				if (document.form1.responsable_org1.value == '' || document.form1.responsable_org1.value == 0) {
+					alert("OJO!, DEBE seleccionar el RESPONSABLE PRINCIPAL de la organización")
+					document.form1.responsable_org1.focus()
+					return false;
+				}
+
+				// Validar Resumen (obligatorio)
+				if (document.form1.resumen.value.trim() == '') {
+					alert("OJO!, no ha indicado el RESUMEN")
+					document.form1.resumen.focus()
+					return false;
+				}
+
+				// Validar Objetivo (obligatorio)
+				if (document.form1.objetivo.value.trim() == '') {
+					alert("OJO!, no ha indicado el OBJETIVO")
+					document.form1.objetivo.focus()
+					return false;
+				}
+
+				// Validar Unidad Principal (obligatorio)
+				var u1 = document.getElementById("unidad1").value;
+				var u2 = document.getElementById("unidad2").value;
+				var u3 = document.getElementById("unidad3").value;
+
+				if (u1 == '' || u1 == 0) {
+					alert("OJO!, DEBE seleccionar la UNIDAD EJECUTORA PRINCIPAL")
+					document.form1.unidad1.focus()
+					return false;
+				}
+
+				// Validar que no se repitan las unidades
+				if ((u1 == u2 && u2 != '') || (u1 == u3 && u3 != '') || (u2 == u3 && u2 != '' && u3 != '')) {
+					alert("OJO!, NO puede REPETIR las UNIDADES EJECUTORAS")
+					document.form1.unidad1.focus()
+					return false;
+				}
+
+				// Validar Fechas de Inicio/Fin (obligatorias)
+				var f1 = document.getElementById("fecha_inicio").value;
+				var f2 = document.getElementById("fecha_fin").value;
+
+				if (f1 == '' || f1 == null) {
+					alert("OJO!, DEBE INDICAR la FECHA DE INICIO")
+					document.form1.fecha_inicio.focus()
+					return false;
+				}
+
+				if (f2 == '' || f2 == null) {
+					alert("OJO!, DEBE INDICAR la FECHA DE FIN")
+					document.form1.fecha_fin.focus()
+					return false;
+				}
+
+				if (f1 > f2) {
+					alert("OJO!, la FECHA DE INICIO no puede ser mayor a la FECHA DE FIN")
+					document.form1.fecha_inicio.focus()
+					return false;
+				}
+
+				// Validar Ubicaciones del Archivo (obligatorias)
+				if (document.form1.ubicacion_original.value.trim() == '') {
+					alert("OJO!, DEBE INDICAR la UBICACIÓN DEL ARCHIVO ORIGINAL")
+					document.form1.ubicacion_original.focus()
+					return false;
+				}
+
+				if (document.form1.ubicacion_copia.value.trim() == '') {
+					alert("OJO!, DEBE INDICAR la UBICACIÓN DE LA COPIA")
+					document.form1.ubicacion_copia.focus()
+					return false;
+				}
+
+				// Validar que se haya seleccionado un archivo PDF
+				var fileInput = document.getElementById("ubicacion_digital");
+				if (!fileInput.files || fileInput.files.length === 0) {
+					alert("OJO!, DEBE SELECCIONAR UN ARCHIVO PDF PARA LA UBICACIÓN DIGITAL")
+					fileInput.focus()
+					return false;
+				}
+
+				// Validar tipo de archivo
+				var file = fileInput.files[0];
+				if (file.type !== 'application/pdf') {
+					alert("Error: Solo se permiten archivos PDF.")
+					fileInput.value = '';
+					return false;
+				}
+
+				// Validar tamaño del archivo (10MB máximo)
+				if (file.size > 10 * 1024 * 1024) {
+					alert("Error: El archivo es demasiado grande. El tamaño máximo permitido es 10MB.")
+					fileInput.value = '';
+					return false;
+				}
+
+				// Validar números en montos (si están llenos)
+				var monto_org = document.getElementById("monto_inversion_organizacion").value;
+				if (monto_org != '' && isNaN(monto_org)) {
+					alert("OJO!, El MONTO DE INVERSIÓN DE LA ORGANIZACIÓN debe ser un número válido")
+					document.form1.monto_inversion_organizacion.focus()
+					return false;
+				}
+
+				var monto_unidad = document.getElementById("monto_inversion_unidad").value;
+				if (monto_unidad != '' && isNaN(monto_unidad)) {
+					alert("OJO!, El MONTO DE INVERSIÓN DE LA UNIDAD debe ser un número válido")
+					document.form1.monto_inversion_unidad.focus()
+					return false;
+				}
+
+				// Si todas las validaciones pasan
+				alert("Está todo CONTROLADO, muchas gracias por utilizar BCFEXA!");
+				document.form1.submit();
+				return true;
+			}
+		</script>
+
+		<?php include("head_alta_persona.php"); ?>
+
+		<!-- Select2 CSS -->
+		<link href='./buscador/assets/select2v410/css/select2.min.css' rel='stylesheet' type='text/css'>
+
+		<!-- jQuery (necesario para Select2) - Versión local -->
+		<script src="scripts/jquery-3.2.1.js"></script>
+
+		<!-- Select2 JS -->
+		<script src='./buscador/assets/select2v410/js/select2.min.js'></script>
+		<!-- Librería español -->
+		<script src="./buscador/assets/select2v410/js/i18n/es.js"></script>
+
+	</head>
+
+	<body>
+
+		<div class="container">
+			<div class="row">
+				<div class="span12">
+					<div class="content">
+						<?php
+						// var_dump($_POST);	
+						if (isset($_POST['actividad'])) {
+
+							// Array para almacenar errores de validación
+							$errores = array();
+
+							// Validaciones del lado del servidor
+							if (empty($_POST['actividad']) || $_POST['actividad'] == '0') {
+								$errores[] = "Debe seleccionar un Tipo de Actividad.";
+							}
+							if (empty($_POST['nro_resolucion'])) {
+								$errores[] = "Debe ingresar el Número de Resolución.";
+							}
+							if (empty($_POST['organizacion1']) || $_POST['organizacion1'] == '0') {
+								$errores[] = "Debe seleccionar la Organización Principal.";
+							}
+							if (empty($_POST['responsable_org1']) || $_POST['responsable_org1'] == '0') {
+								$errores[] = "Debe seleccionar el Responsable Principal de la Organización.";
+							}
+							if (empty($_POST['resumen'])) {
+								$errores[] = "Debe ingresar el Resumen de la actividad.";
+							}
+							if (empty($_POST['objetivo'])) {
+								$errores[] = "Debe ingresar el Objetivo de la actividad.";
+							}
+							if (empty($_POST['unidad1']) || $_POST['unidad1'] == '0') {
+								$errores[] = "Debe seleccionar la Unidad Ejecutora Principal.";
+							}
+							if (empty($_POST['fecha_inicio'])) {
+								$errores[] = "Debe ingresar la Fecha de Inicio.";
+							}
+							if (empty($_POST['fecha_fin'])) {
+								$errores[] = "Debe ingresar la Fecha de Fin.";
+							}
+							if (!empty($_POST['fecha_inicio']) && !empty($_POST['fecha_fin']) && $_POST['fecha_inicio'] > $_POST['fecha_fin']) {
+								$errores[] = "La Fecha de Inicio no puede ser mayor a la Fecha de Fin.";
+							}
+							if (empty($_POST['ubicacion_original'])) {
+								$errores[] = "Debe ingresar la Ubicación del Archivo Original.";
+							}
+							if (empty($_POST['ubicacion_copia'])) {
+								$errores[] = "Debe ingresar la Ubicación de la Copia.";
+							}
+							// Validar archivo PDF en lugar de campo de texto
+							if (empty($_FILES['ubicacion_digital']['name'])) {
+								$errores[] = "Debe seleccionar un archivo PDF para la Ubicación Digital.";
+							} else {
+								// Validar tipo de archivo
+								$allowed_type = 'application/pdf';
+								$file_type = $_FILES['ubicacion_digital']['type'];
+								if ($file_type !== $allowed_type) {
+									$errores[] = "El archivo debe ser de tipo PDF.";
+								}
+								// Validar tamaño (10MB máximo)
+								$max_size = 10 * 1024 * 1024; // 10MB en bytes
+								if ($_FILES['ubicacion_digital']['size'] > $max_size) {
+									$errores[] = "El archivo es demasiado grande. El tamaño máximo permitido es 10MB.";
+								}
+							}
+
+							// Si hay errores, mostrarlos
+							if (!empty($errores)) {
+								echo '<div class="alert alert-danger"><ul>';
+								foreach ($errores as $error) {
+									echo '<li>' . $error . '</li>';
+								}
+								echo '</ul></div>';
+							} else {
+								// Si no hay errores, proceder con la inserción
+						
+
+								$actividad = mysqli_real_escape_string($conn, (strip_tags($_POST['actividad'], ENT_QUOTES)));
+								$nro_convenio_marco = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_convenio_marco'], ENT_QUOTES)));
+								$nro_resolucion = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_resolucion'], ENT_QUOTES)));
+								$nro_expediente = mysqli_real_escape_string($conn, (strip_tags($_POST['nro_expediente'], ENT_QUOTES)));
+
+								$organizacion1 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion1'], ENT_QUOTES)));
+								$organizacion2 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion2'], ENT_QUOTES)));
+								$organizacion3 = mysqli_real_escape_string($conn, (strip_tags($_POST['organizacion3'], ENT_QUOTES)));
+
+								$responsable_org1 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org1'], ENT_QUOTES)));
+								$responsable_org2 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org2'], ENT_QUOTES)));
+								$responsable_org3 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_org3'], ENT_QUOTES)));
+
+								$resumen = mysqli_real_escape_string($conn, (strip_tags($_POST['resumen'], ENT_QUOTES)));
+								$objetivo = mysqli_real_escape_string($conn, (strip_tags($_POST['objetivo'], ENT_QUOTES)));
+
+								$unidad1 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad1'], ENT_QUOTES)));
+								$unidad2 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad2'], ENT_QUOTES)));
+								$unidad3 = mysqli_real_escape_string($conn, (strip_tags($_POST['unidad3'], ENT_QUOTES)));
+
+								$responsable_unidad1 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad1'], ENT_QUOTES)));
+								$responsable_unidad2 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad2'], ENT_QUOTES)));
+								$responsable_unidad3 = mysqli_real_escape_string($conn, (strip_tags($_POST['responsable_unidad3'], ENT_QUOTES)));
+
+								$fecha_inicio = mysqli_real_escape_string($conn, (strip_tags($_POST['fecha_inicio'], ENT_QUOTES)));
+								$fecha_fin = mysqli_real_escape_string($conn, (strip_tags($_POST['fecha_fin'], ENT_QUOTES)));
+
+								$plazo_renovacion = mysqli_real_escape_string($conn, (strip_tags($_POST['plazo_renovacion'], ENT_QUOTES)));
+								$renovacion_automatica = mysqli_real_escape_string($conn, (strip_tags($_POST['renovacion_automatica'], ENT_QUOTES)));
+
+								$moneda_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['moneda_organizacion'], ENT_QUOTES)));
+								$monto_inversion_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['monto_inversion_organizacion'], ENT_QUOTES)));
+								$nota_inversion_organizacion = mysqli_real_escape_string($conn, (strip_tags($_POST['nota_inversion_organizacion'], ENT_QUOTES)));
+
+								$moneda_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['moneda_unidad'], ENT_QUOTES)));
+								$monto_inversion_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['monto_inversion_unidad'], ENT_QUOTES)));
+								$nota_inversion_unidad = mysqli_real_escape_string($conn, (strip_tags($_POST['nota_inversion_unidad'], ENT_QUOTES)));
+
+								// Manejar campos de moneda: si están vacíos, buscar o crear una moneda por defecto
+								if (empty($moneda_organizacion) || $moneda_organizacion == '') {
+									// Buscar si existe una moneda "Sin especificar" o similar
+									$query_moneda_default = mysqli_query($conn, "SELECT Id FROM monedadeinversion WHERE Nombre LIKE '%sin especificar%' OR Nombre LIKE '%no aplica%' LIMIT 1");
+									if (mysqli_num_rows($query_moneda_default) > 0) {
+										$row = mysqli_fetch_array($query_moneda_default);
+										$moneda_organizacion = $row['Id'];
+									} else {
+										// Si no existe, crear una entrada por defecto
+										$insert_moneda_default = mysqli_query($conn, "INSERT INTO monedadeinversion (Nombre) VALUES ('Sin especificar')");
+										$moneda_organizacion = mysqli_insert_id($conn);
+									}
+								}
+								if (empty($moneda_unidad) || $moneda_unidad == '') {
+									// Buscar si existe una moneda "Sin especificar" o similar
+									$query_moneda_default = mysqli_query($conn, "SELECT Id FROM monedadeinversion WHERE Nombre LIKE '%sin especificar%' OR Nombre LIKE '%no aplica%' LIMIT 1");
+									if (mysqli_num_rows($query_moneda_default) > 0) {
+										$row = mysqli_fetch_array($query_moneda_default);
+										$moneda_unidad = $row['Id'];
+									} else {
+										// Si no existe, usar la misma que se creó arriba o crear otra
+										if (isset($insert_moneda_default)) {
+											$moneda_unidad = $moneda_organizacion; // Usar la misma que se creó
+										} else {
+											$insert_moneda_default = mysqli_query($conn, "INSERT INTO monedadeinversion (Nombre) VALUES ('Sin especificar')");
+											$moneda_unidad = mysqli_insert_id($conn);
+										}
+									}
+								}
+
+								// Manejar campos de monto: si están vacíos, asignar 0
+								if (empty($monto_inversion_organizacion) || $monto_inversion_organizacion == '') {
+									$monto_inversion_organizacion = 0;
+								}
+								if (empty($monto_inversion_unidad) || $monto_inversion_unidad == '') {
+									$monto_inversion_unidad = 0;
+								}
+
+								$ubicacion_original = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_original'], ENT_QUOTES)));
+								$ubicacion_copia = mysqli_real_escape_string($conn, (strip_tags($_POST['ubicacion_copia'], ENT_QUOTES)));
+
+								// Procesar archivo PDF para ubicacion_digital
+								$ubicacion_digital = '';
+								if (!empty($_FILES['ubicacion_digital']['name'])) {
+									// Crear carpeta para almacenar PDFs si no existe
+									$upload_dir = 'uploads/pdfs/';
+									if (!file_exists($upload_dir)) {
+										mkdir($upload_dir, 0777, true);
+									}
+
+									// Generar nombre único para el archivo
+									$file_extension = pathinfo($_FILES['ubicacion_digital']['name'], PATHINFO_EXTENSION);
+									$new_filename = 'actividad_' . date('Ymd_His') . '_' . uniqid() . '.' . $file_extension;
+									$upload_path = $upload_dir . $new_filename;
+
+									// Mover el archivo subido
+									if (move_uploaded_file($_FILES['ubicacion_digital']['tmp_name'], $upload_path)) {
+										$ubicacion_digital = $upload_path;
+									} else {
+										$errores[] = "Error al subir el archivo PDF.";
+									}
+								}
+
+								// Si los campos de ubicación están vacíos, asignar 'Sin especificar'
+								if (empty($ubicacion_original))
+									$ubicacion_original = 'Sin especificar';
+								if (empty($ubicacion_copia))
+									$ubicacion_copia = 'Sin especificar';
+								if (empty($ubicacion_digital))
+									$ubicacion_digital = 'Sin especificar';
+
+								// Almaceno datos en tabla Actividad
+						
+								// Primero insertar en tabla ubicacionarchivo
+								$insert_ubicacion = mysqli_query($conn, "INSERT INTO ubicacionarchivo (UbicacionOriginal, UbicacionCopia, UbicacionDigital) 
+												VALUES('$ubicacion_original', '$ubicacion_copia', '$ubicacion_digital')")
+									or die(mysqli_error($conn));
+								$ubicacion_id = mysqli_insert_id($conn);
+
+								$insert = mysqli_query($conn, "INSERT INTO actividad (NroResolucion, NroExpediente,NroConvenioMarco,Fecha_inicio,Fecha_final,Resumen,Objetivo,TipoActividad_Id,PlazoRenovacion,
+				   RenovacionAutomatica,UbicacionArchivo_Id,Informe_Id,MonedaOrganizacion_Id,InversionOrganizacion,NotaInversionOrganizacion,MonedaUnidad_Id,InversionUnidad,NotaInversionUnidad) 
+			VALUES('$nro_resolucion','$nro_expediente','$nro_convenio_marco','$fecha_inicio','$fecha_fin','$resumen','$objetivo','$actividad','$plazo_renovacion',
+		        	$renovacion_automatica,$ubicacion_id,1,'$moneda_organizacion','$monto_inversion_organizacion','$nota_inversion_organizacion','$moneda_unidad','$monto_inversion_unidad','$nota_inversion_unidad')")
+									or die(mysqli_error($conn));
+								$ultimo_id = mysqli_insert_id($conn);
+								// var_dump($ultimo_id);				
+						
+								// Detecto el número del último Id generado en tabla Actividad para actualizar tablas relacionadas
+								//	$ultimo_i=  mysqli_query($conn,"SELECT MAX(Id) AS Id FROM actividad limit 1");
+								//	$registro = mysqli_fetch_array($ultimo_i);
+								//	while ($valores = mysqli_fetch_array($registro)) 
+								//	{
+								//		$ultimo_id=$valores['Id'];
+								//		var_dump($ultimo_id);
+								//	}
+						
+
+
+								// Actualizo tabla "detalleactividadorganizacion" 
+								if ($organizacion1 <> "") {
+									mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion1','$ultimo_id')");
+								}
+
+								if ($organizacion2 <> "") {
+									mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion2','$ultimo_id')");
+								}
+
+								if ($organizacion3 <> "") {
+									mysqli_query($conn, "INSERT INTO detalleactividadorganizacion (Organizacion_Id,Actividad_Id) VALUES('$organizacion3','$ultimo_id')");
+								}
+
+								// Actualizo tabla "detalleactividadunidad" 
+								if ($unidad1 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad1','$ultimo_id')");
+								}
+								if ($unidad2 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad2','$ultimo_id')");
+								}
+								if ($unidad3 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detalleactividadunidad (UnidadEjecutora_Id,Actividad_Id) VALUES('$unidad3','$ultimo_id')");
+								}
+
+								// Actualizo tabla "detallepersonactividad" 
+								// El campo Org_o_Uni debe tener 1 si es $responsable_org1
+								// El campo Org_o_Uni debe tener 2 si es $responsable_unidad1
+								// El campos Rol_Id siempre almacena un 2 (al menos en esta primer versión)
+						
+								if ($responsable_unidad1 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+				                                                   VALUES('$ultimo_id','$responsable_unidad1','2','2')");
+								}
+								if ($responsable_unidad2 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+				                                                   VALUES('$ultimo_id','$responsable_unidad2','2','2')");
+								}
+
+								if ($responsable_unidad3 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+			                                               VALUES('$ultimo_id','$responsable_unidad3','2','2')");
+								}
+
+
+								if ($responsable_org1 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+				                                                   VALUES('$ultimo_id','$responsable_org1','1','2')");
+								}
+								if ($responsable_org2 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+				                                                   VALUES('$ultimo_id','$responsable_org2','1','2')");
+								}
+
+								if ($responsable_org3 <> "") {
+
+									mysqli_query($conn, "INSERT INTO detallepersonaactividad (Actividad_Id,Persona_Id,Org_o_Uni,Rol_Id) 
+			                                               VALUES('$ultimo_id','$responsable_org3','1','2')");
+								}
+
+								// Listo!, todo almacenado ahora vovemos a la página ppal	
+								header("Location: index.php");
+							} // Cierre del else (no hay errores)
+						} // Cierre del if (isset($_POST['actividad']))
+						?>
+
+						<blockquote>
+							<h3> Agregar Detalles de Actividades</h3>
+						</blockquote>
+						<form name="form1" id="form1" class="form-horizontal row-fluid d-flex justify-content-center"
+							action="registro.php" method="POST" enctype="multipart/form-data">
+							<!-- Sección 1: Tipo de Actividad -->
+							<div class="section-card">
+								<div class="section-header">
+
+									<h4 class="section-title">Información General</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Tipo de Actividad <span
+												style="color: red;">*</span></label>
+										<select class="form-control" id="actividad" name="actividad" required>
+											<option value="">Seleccione el tipo de actividad:</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!-- Sección 2: Información Documental -->
+							<div class="section-card">
+								<div class="section-header">
+
+									<h4 class="section-title">Información Documental</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Convenio Marco</label>
+										<input type="text" name="nro_convenio_marco" id="nro_convenio_marco"
+											placeholder="Ingrese SOLO el número" class="form-control">
+									</div>
+									<div class="form-col">
+										<label class="control-label">Número de Expediente</label>
+										<input type="text" name="nro_expediente" id="nro_expediente"
+											placeholder="Ingrese el número que inicia el trámite" class="form-control">
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Resolución FCEFN <span
+												style="color: red;">*</span></label>
+										<input type="text" name="nro_resolucion" id="nro_resolucion"
+											placeholder="Ingrese según patrón Rxx/aa" class="form-control" required>
+									</div>
+								</div>
+							</div>
+
+							<!-- Sección 3: Organizaciones y Responsables -->
+							<div class="section-card">
+								<div class="section-header">
+									<h4 class="section-title">Organizaciones Participantes</h4>
+									<button type="button" class="btn-add-quick" onclick="openModalOrganizacion()"
+										title="Agregar nueva organización">
+										+
+									</button>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Organización Principal <span
+												style="color: red;">*</span></label>
+										<select class="form-control" name="organizacion1" id="organizacion1" required>
+											<option value="">Seleccione la organización que figura en la resolución:
+											</option>
+										</select>
+									</div>
+									<div class="form-col">
+										<label class="control-label">Organización Secundaria</label>
+										<select class="form-control" name="organizacion2" id="organizacion2">
+											<option value="">Seleccione otra organización (opcional):</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Organización Adicional</label>
+										<select class="form-control" name="organizacion3" id="organizacion3">
+											<option value="">Seleccione otra organización (opcional):</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="section-header" style="margin-top: 30px;">
+
+									<h4 class="section-title">Responsables de las Organizaciones</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Responsable Principal <span
+												style="color: red;">*</span></label>
+										<select class="form-control" name="responsable_org1" id="responsable_org1"
+											required>
+											<option value="">Seleccione el RRHH que figura en la resolución:</option>
+										</select>
+									</div>
+									<div class="form-col">
+										<label class="control-label">Responsable Secundario</label>
+										<select class="form-control" name="responsable_org2" id="responsable_org2">
+											<option value="">Seleccione otro RRHH (opcional):</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Responsable Adicional</label>
+										<select class="form-control" name="responsable_org3" id="responsable_org3">
+											<option value="">Seleccione otro RRHH (opcional):</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+
+
+
+							<!-- Sección 4: Descripción de la Actividad -->
+							<div class="section-card">
+								<div class="section-header">
+
+									<h4 class="section-title">Descripción de la Actividad</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Resumen <span style="color: red;">*</span></label>
+										<textarea name="resumen" id="resumen" class="form-control"
+											placeholder="Ingrese un resumen detallado de la actividad" required
+											rows="4"></textarea>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Objetivo <span style="color: red;">*</span></label>
+										<textarea name="objetivo" id="objetivo" class="form-control"
+											placeholder="Describa los objetivos de la actividad" rows="3"
+											required></textarea>
+									</div>
+								</div>
+							</div>
+							<!-- Sección 5: Unidades Ejecutoras -->
+							<div class="section-card">
+								<div class="section-header">
+									<h4 class="section-title">Unidades Ejecutoras</h4>
+									<button type="button" class="btn-add-quick" onclick="openModalUnidad()"
+										title="Agregar nueva unidad ejecutora">
+										+
+									</button>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Unidad Principal <span
+												style="color: red;">*</span></label>
+										<select class="form-control" id="unidad1" name="unidad1" required>
+											<option value="">Seleccione la UNIDAD que figura en la resolución:</option>
+										</select>
+									</div>
+									<div class="form-col">
+										<label class="control-label">Unidad Secundaria</label>
+										<select class="form-control" id="unidad2" name="unidad2">
+											<option value="">Seleccione otra Unidad (opcional):</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Unidad Adicional</label>
+										<select class="form-control" id="unidad3" name="unidad3">
+											<option value="">Seleccione otra Unidad (opcional):</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="section-header" style="margin-top: 30px;">
+
+									<h4 class="section-title">Responsables de las Unidades</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Responsable Principal</label>
+										<select class="form-control" id="responsable_unidad1"
+											name="responsable_unidad1">
+											<option value="">Seleccione el responsable:</option>
+										</select>
+									</div>
+									<div class="form-col">
+										<label class="control-label">Responsable Secundario</label>
+										<select class="form-control" id="responsable_unidad2"
+											name="responsable_unidad2">
+											<option value="">Seleccione otro responsable (opcional):</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Responsable Adicional</label>
+										<select class="form-control" id="responsable_unidad3"
+											name="responsable_unidad3">
+											<option value="">Seleccione otro responsable (opcional):</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+
+
+							<!-- Sección 6: Fechas y Configuración Temporal -->
+							<div class="section-card">
+								<div class="section-header">
+
+									<h4 class="section-title">Fechas y Configuración Temporal</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col-half">
+										<label class="control-label">Fecha de Inicio <span
+												style="color: red;">*</span></label>
+										<input name="fecha_inicio" id="fecha_inicio" class="form-control" type="date"
+											required />
+									</div>
+									<div class="form-col-half">
+										<label class="control-label">Fecha de Fin <span
+												style="color: red;">*</span></label>
+										<input name="fecha_fin" id="fecha_fin" class="form-control" type="date"
+											required />
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col-half">
+										<label class="control-label">Plazo de Renovación (meses)</label>
+										<input type="number" name="plazo_renovacion" id="plazo_renovacion"
+											placeholder="Número de meses" class="form-control" min="1" max="60">
+									</div>
+									<div class="form-col-half">
+										<label class="control-label">¿Se renueva automáticamente?</label>
+										<select class="form-control" id="renovacion_automatica"
+											name="renovacion_automatica">
+											<option value="0">NO</option>
+											<option value="1">SÍ</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!-- Sección 7: Inversión de la Organización -->
+							<div class="section-card">
+								<div class="section-header">
+
+									<h4 class="section-title">Inversión de la Organización</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col-half">
+										<label class="control-label">Tipo de Moneda</label>
+										<select class="form-control" id="moneda_organizacion"
+											name="moneda_organizacion">
+											<?php
+											include "conn.php";
+											$query = mysqli_query($conn, "SELECT * FROM monedadeinversion");
+											if (mysqli_num_rows($query) == 0) {
+												echo '<option value="">No hay monedas disponibles</option>';
+											} else {
+												echo '<option value="">Seleccione tipo de moneda</option>';
+												while ($valores = mysqli_fetch_array($query)) {
+													echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
+												}
+											}
+											?>
+										</select>
+									</div>
+									<div class="form-col-half">
+										<label class="control-label">Monto de Inversión</label>
+										<input type="number" name="monto_inversion_organizacion"
+											id="monto_inversion_organizacion" placeholder="Ingrese el monto"
+											class="form-control" min="0" step="0.01">
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Nota Aclaratoria de la Inversión</label>
+										<textarea name="nota_inversion_organizacion" id="nota_inversion_organizacion"
+											class="form-control" placeholder="Detalles adicionales sobre la inversión"
+											rows="3"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<!-- Sección 8: Inversión FCEFN -->
+							<div class="section-card">
+								<div class="section-header">
+
+									<h4 class="section-title">Inversión FCEFN</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col-half">
+										<label class="control-label">Tipo de Moneda</label>
+										<select class="form-control" id="moneda_unidad" name="moneda_unidad">
+											<?php
+											include "conn.php";
+											$query = mysqli_query($conn, "SELECT * FROM monedadeinversion");
+											if (mysqli_num_rows($query) == 0) {
+												echo '<option value="">No hay monedas disponibles</option>';
+											} else {
+												echo '<option value="">Seleccione tipo de moneda</option>';
+												while ($valores = mysqli_fetch_array($query)) {
+													echo '<option value="' . $valores['Id'] . '">' . $valores['Nombre'] . '</option>';
+												}
+											}
+											?>
+										</select>
+									</div>
+									<div class="form-col-half">
+										<label class="control-label">Monto de Inversión</label>
+										<input type="number" name="monto_inversion_unidad" id="monto_inversion_unidad"
+											placeholder="Ingrese el monto" class="form-control" min="0" step="0.01">
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Nota Aclaratoria de la Inversión</label>
+										<textarea name="nota_inversion_unidad" id="nota_inversion_unidad"
+											class="form-control" placeholder="Detalles adicionales sobre la inversión"
+											rows="3"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<!-- Sección 9: Ubicación del Archivo -->
+							<div class="section-card">
+								<div class="section-header">
+
+									<h4 class="section-title">Ubicación del Archivo</h4>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col">
+										<label class="control-label">Ubicación del Original <span
+												style="color: red;">*</span></label>
+										<input type="text" name="ubicacion_original" id="ubicacion_original"
+											placeholder="Especifique la ubicación del archivo original"
+											class="form-control" required>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-col-half">
+										<label class="control-label">Ubicación de la Copia<span
+												style="color: red;">*</span></label>
+										<input type="text" name="ubicacion_copia" id="ubicacion_copia"
+											placeholder="Especifique la ubicación de la copia" class="form-control"
+											required>
+									</div>
+									<div class="form-col-half">
+										<label class="control-label">Ubicación Digital (Archivo PDF)<span
+												style="color: red;">*</span></label>
+
+										<!-- Área de subida de archivos -->
+										<div class="file-upload-area" id="fileUploadArea">
+											<div class="file-upload-icon">
+												<i class="fas fa-file-pdf"></i>
+											</div>
+											<p class="mb-2"><strong>Arrastre y suelte su archivo PDF aquí</strong></p>
+											<p class="text-muted small mb-2">o haga clic para seleccionar un archivo</p>
+											<input type="file" id="ubicacion_digital" name="ubicacion_digital"
+												accept=".pdf" style="display: none;" required>
+											<button type="button" class="btn btn-sm btn-primary" id="selectFileBtn">
+												<i class="fas fa-folder-open me-1"></i>Seleccionar Archivo
+											</button>
+										</div>
+
+										<!-- Información del archivo seleccionado -->
+										<div class="file-info" id="fileInfo" style="display: none;">
+											<div class="d-flex justify-content-between align-items-center">
+												<div>
+													<i class="fas fa-file-pdf me-2 text-danger"></i>
+													<span id="fileName">Nombre del archivo</span>
+													<small class="text-muted d-block" id="fileSize">Tamaño del
+														archivo</small>
+												</div>
+												<button type="button" class="btn btn-sm btn-outline-danger"
+													id="removeFileBtn">
+													<i class="fas fa-times"></i>
+												</button>
+											</div>
+										</div>
+
+										<div class="form-text small mt-2">
+											<i class="fas fa-info-circle me-1"></i>Solo archivos PDF, máximo 10MB.
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Botones de Acción -->
+							<div class="form-actions">
+								<button type="button" name="input" id="input" onclick="valida_envia()"
+									class="btn btn-primary">
+									Registrar Actividad
+								</button>
+								<a href="index.php" class="btn btn-danger">
+									Cancelar
+								</a>
+							</div>
+
+						</form>
+
+						<!--/.content-->
+					</div>
+					<!--/.span9-->
+				</div>
+			</div>
+			<!--/.container-->
+
+			<!--/.wrapper--><br />
+			<div class="footer span-12">
+				<div class="container">
+					<center> <b class="copyright"> DAFEXA - IdeI &copy; <?php echo date("Y") ?> </b></center>
+				</div>
+			</div>
+
+			<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+			<!-- Script para inicializar Select2 en todos los selectores relevantes -->
+			<script>
+				$(document).ready(function () {
+					// Configuración común para Select2
+					var select2Options = {
+						allowClear: true,
+						language: "es",
+						cache: true
+					};
+
+					// Tipo de Actividad
+					$("#actividad").select2($.extend({}, select2Options, {
+						placeholder: "Buscar tipo de actividad...",
+						ajax: {
+							url: "ajax-select2-tipo-actividad.php",
+							type: "post",
+							dataType: 'json',
+							delay: 250,
+							data: function (params) {
+								return {
+									searchTerm: params.term
+								};
+							},
+							processResults: function (response) {
+								return {
+									results: response
+								};
+							}
+						}
+					}));
+
+					// Organizaciones
+					$("#organizacion1, #organizacion2, #organizacion3").select2($.extend({}, select2Options, {
+						placeholder: "Buscar organización...",
+						containerCssClass: "persona-org-select",
+						ajax: {
+							url: "ajax-select2-organizacion.php",
+							type: "post",
+							dataType: 'json',
+							delay: 250,
+							data: function (params) {
+								return {
+									searchTerm: params.term
+								};
+							},
+							processResults: function (response) {
+								return {
+									results: response
+								};
+							}
+						}
+					}));
+
+					// Personas/RRHH - Organización
+					$("#responsable_org1, #responsable_org2, #responsable_org3").select2($.extend({}, select2Options, {
+						placeholder: "Buscar persona...",
+						containerCssClass: "persona-org-select",
+						ajax: {
+							url: "ajax-select2-persona.php",
+							type: "post",
+							dataType: 'json',
+							delay: 250,
+							data: function (params) {
+								return {
+									searchTerm: params.term
+								};
+							},
+							processResults: function (response) {
+								return {
+									results: response
+								};
+							}
+						}
+					}));
+
+					// Unidades Ejecutoras
+					$("#unidad1, #unidad2, #unidad3").select2($.extend({}, select2Options, {
+						placeholder: "Buscar unidad ejecutora...",
+						containerCssClass: "unidad-select",
+						ajax: {
+							url: "ajax-select2-unidad-ejecutora.php",
+							type: "post",
+							dataType: 'json',
+							delay: 250,
+							data: function (params) {
+								return {
+									searchTerm: params.term
+								};
+							},
+							processResults: function (response) {
+								return {
+									results: response
+								};
+							}
+						}
+					}));
+
+					// Personas/RRHH - Unidad
+					$("#responsable_unidad1, #responsable_unidad2, #responsable_unidad3").select2($.extend({}, select2Options, {
+						placeholder: "Buscar persona...",
+						containerCssClass: "persona-unidad-select",
+						ajax: {
+							url: "ajax-select2-unidad-ejecutora.php",
+							type: "post",
+							dataType: 'json',
+							delay: 250,
+							data: function (params) {
+								return {
+									searchTerm: params.term
+								};
+							},
+							processResults: function (response) {
+								return {
+									results: response
+								};
+							}
+						}
+					}));
+
+					// Animaciones y efectos sutiles
+					$('.section-card').hover(
+						function () {
+							$(this).addClass('hover-effect');
+						},
+						function () {
+							$(this).removeClass('hover-effect');
+						}
+					);
+
+					// Validación visual en tiempo real
+					$('input[required], select[required], textarea[required]').on('blur', function () {
+						if ($(this).val() === '') {
+							$(this).addClass('error-input');
+						} else {
+							$(this).removeClass('error-input');
+						}
+					});
+
+					// Progress indicator
+					var totalSections = $('.section-card').length;
+					var completedSections = 0;
+
+					function updateProgress() {
+						completedSections = 0;
+						$('.section-card').each(function () {
+							var hasRequired = $(this).find('input[required], select[required], textarea[required]').length > 0;
+							if (hasRequired) {
+								var allFilled = true;
+								$(this).find('input[required], select[required], textarea[required]').each(function () {
+									if ($(this).val() === '') {
+										allFilled = false;
+										return false;
+									}
+								});
+								if (allFilled) {
+									completedSections++;
+									$(this).addClass('section-completed');
+								} else {
+									$(this).removeClass('section-completed');
+								}
+							} else {
+								completedSections++;
+								$(this).addClass('section-completed');
+							}
+						});
+					}
+
+					$('input, select, textarea').on('change keyup', function () {
+						updateProgress();
+					});
+
+					// Mostrar mensaje de bienvenida
+					setTimeout(function () {
+						if ($('.section-card:first-child').length) {
+							$('.section-card:first-child').prepend('<div class="welcome-tip" style="background: #e7f3ff; border: 1px solid #5bc0de; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; color: #31708f;"><i class="icon-info-sign"></i> Complete los campos marcados con <span style="color: red;">*</span> para poder registrar la actividad.</div>');
+
+							setTimeout(function () {
+								$('.welcome-tip').fadeOut();
+							}, 10000);
+						}
+					}, 1000);
+				});
+			</script>
+
+			<style>
+				/* Estilos adicionales para efectos */
+				.hover-effect {
+
+					box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2) !important;
+				}
+
+				.error-input {
+					border-color: #d9534f !important;
+					box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.2) !important;
+				}
+
+				.section-completed .section-icon {
+					background: #5cb85c !important;
+				}
+
+				.section-completed .section-icon:after {
+					content: "✓";
+					position: absolute;
+					color: white;
+					font-weight: bold;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+				}
+
+				.form-actions {
+					position: sticky;
+					bottom: 0;
+					z-index: 100;
+				}
+
+				/* Estilos para mensajes de error */
+				.alert-danger {
+					background-color: #f2dede;
+					border-color: #ebccd1;
+					color: #a94442;
+					padding: 15px;
+					margin-bottom: 20px;
+					border: 1px solid transparent;
+					border-radius: 4px;
+				}
+
+				.alert-danger ul {
+					margin: 0;
+					padding-left: 20px;
+				}
+
+				.alert-danger li {
+					margin-bottom: 5px;
+				}
+
+				/* Asterisco rojo para campos obligatorios */
+				span[style*="color: red"] {
+					font-weight: bold;
+					font-size: 16px;
+				}
+
+				/* Estilos para área de carga de archivos PDF */
+				.file-upload-area {
+					border: 2px dashed #ccc;
+					border-radius: 10px;
+					padding: 20px;
+					text-align: center;
+					background-color: #f8f9fa;
+					transition: all 0.3s;
+					cursor: pointer;
+					margin-top: 5px;
+				}
+
+				.file-upload-area:hover {
+					border-color: var(--accent-color, #4c9ae8);
+					background-color: #e9f2fb;
+				}
+
+				.file-upload-area.dragover {
+					border-color: var(--primary-color, #1a4b8c);
+					background-color: #e3f2fd;
+				}
+
+				.file-upload-icon {
+					font-size: 2.5rem;
+					color: #dc3545;
+					margin-bottom: 10px;
+				}
+
+				.file-info {
+					background-color: #e9f2fb;
+					border-radius: 6px;
+					padding: 12px;
+					margin-top: 10px;
+				}
+
+				.file-info .btn-sm {
+					padding: 2px 8px;
+					font-size: 12px;
+				}
+			</style>
+
+			<!-- Modal para agregar nueva organización -->
+			<div class="modal-overlay" id="modalOverlay" onclick="closeModalOrganizacion()"></div>
+			<div class="modal-container" id="modalOrganizacion">
+				<div class="modal-header">
+					<h3>Agregar Nueva Organización</h3>
+					<button type="button" class="modal-close" onclick="closeModalOrganizacion()">&times;</button>
+				</div>
+				<div class="modal-body">
+					<div class="modal-message success" id="modalMessageSuccess"></div>
+					<div class="modal-message error" id="modalMessageError"></div>
+
+					<form id="formNuevaOrganizacion" onsubmit="return guardarNuevaOrganizacion(event)">
+						<div class="form-group">
+							<label class="control-label">Nombre de la Organización <span
+									style="color: red;">*</span></label>
+							<input type="text" class="form-control" id="modal_org_nombre" name="nombre" required
+								placeholder="Ej.: Cámara Minera de San Juan">
+							<small style="color: #666; display: block; margin-top: 5px;">Ingrese el nombre completo de
+								la organización participante</small>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">País</label>
+							<input type="text" class="form-control" id="modal_org_pais" name="pais"
+								placeholder="País de origen (opcional)">
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Ciudad</label>
+							<input type="text" class="form-control" id="modal_org_ciudad" name="ciudad"
+								placeholder="Ciudad (opcional)">
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Dirección</label>
+							<input type="text" class="form-control" id="modal_org_direccion" name="direccion"
+								placeholder="Dirección completa (opcional)">
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Teléfono</label>
+							<input type="text" class="form-control" id="modal_org_telefono" name="telefono"
+								placeholder="Teléfono de contacto (opcional)">
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Email</label>
+							<input type="email" class="form-control" id="modal_org_email" name="email"
+								placeholder="correo@ejemplo.com (opcional)">
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Sitio Web</label>
+							<input type="text" class="form-control" id="modal_org_web" name="web"
+								placeholder="https://www.ejemplo.com (opcional)">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" onclick="closeModalOrganizacion()">Cancelar</button>
+					<button type="button" class="btn btn-primary" onclick="guardarNuevaOrganizacion(event)">💾
+						Guardar</button>
+				</div>
+			</div>
+
+			<!-- Modal para agregar nueva unidad ejecutora -->
+			<div class="modal-overlay" id="modalOverlayUnidad" onclick="closeModalUnidad()"></div>
+			<div class="modal-container" id="modalUnidad">
+				<div class="modal-header">
+					<h3>➕ Agregar Nueva Unidad Ejecutora</h3>
+					<button type="button" class="modal-close" onclick="closeModalUnidad()">&times;</button>
+				</div>
+				<div class="modal-body">
+					<div class="modal-message success" id="modalMessageSuccessUnidad"></div>
+					<div class="modal-message error" id="modalMessageErrorUnidad"></div>
+
+					<form id="formNuevaUnidad" onsubmit="return guardarNuevaUnidad(event)">
+						<div class="form-group">
+							<label class="control-label">Nombre de la Unidad Ejecutora <span
+									style="color: red;">*</span></label>
+							<input type="text" class="form-control" id="modal_unidad_nombre" name="unidad" required
+								placeholder="Ej.: Departamento de Ciencias Exactas">
+							<small style="color: #666; display: block; margin-top: 5px;">Ingrese el nombre de la unidad
+								ejecutora de la FCEFN</small>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" onclick="closeModalUnidad()">Cancelar</button>
+					<button type="button" class="btn btn-primary" onclick="guardarNuevaUnidad(event)">💾
+						Guardar</button>
+				</div>
+			</div>
+
+			<script>
+				// Funciones para el modal de organización
+				function openModalOrganizacion() {
+					document.getElementById('modalOverlay').style.display = 'block';
+					document.getElementById('modalOrganizacion').style.display = 'block';
+					document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+				}
+
+				function closeModalOrganizacion() {
+					document.getElementById('modalOverlay').style.display = 'none';
+					document.getElementById('modalOrganizacion').style.display = 'none';
+					document.body.style.overflow = 'auto';
+					// Limpiar formulario
+					document.getElementById('formNuevaOrganizacion').reset();
+					// Ocultar mensajes
+					document.getElementById('modalMessageSuccess').style.display = 'none';
+					document.getElementById('modalMessageError').style.display = 'none';
+				}
+
+				function guardarNuevaOrganizacion(event) {
+					if (event) event.preventDefault();
+
+					// Validar que el nombre no esté vacío
+					var nombre = document.getElementById('modal_org_nombre').value.trim();
+					if (nombre === '') {
+						mostrarMensajeModal('error', 'El nombre de la organización es obligatorio');
+						return false;
+					}
+
+					// Recoger datos del formulario
+					var formData = new FormData();
+					formData.append('nombre', nombre);
+					formData.append('pais', document.getElementById('modal_org_pais').value);
+					formData.append('ciudad', document.getElementById('modal_org_ciudad').value);
+					formData.append('direccion', document.getElementById('modal_org_direccion').value);
+					formData.append('telefono', document.getElementById('modal_org_telefono').value);
+					formData.append('email', document.getElementById('modal_org_email').value);
+					formData.append('web', document.getElementById('modal_org_web').value);
+
+					// Deshabilitar botón mientras se procesa
+					var btnGuardar = event.target;
+					var textoOriginal = btnGuardar.innerHTML;
+					btnGuardar.disabled = true;
+					btnGuardar.innerHTML = '⏳ Guardando...';
+
+					// Enviar por AJAX
+					fetch('ajax-nueva-organizacion.php', {
+						method: 'POST',
+						body: formData
+					})
+						.then(response => response.json())
+						.then(data => {
+							btnGuardar.disabled = false;
+							btnGuardar.innerHTML = textoOriginal;
+
+							if (data.success) {
+								mostrarMensajeModal('success', '✓ Organización "' + data.nombre + '" creada exitosamente');
+
+								// Agregar la nueva opción a los select de organizaciones
+								var nuevaOpcion = new Option(data.nombre, data.id, true, true);
+								$('#organizacion1').append(nuevaOpcion).trigger('change');
+
+								// También agregarla a los otros selects (pero sin seleccionarla)
+								$('#organizacion2').append(new Option(data.nombre, data.id, false, false));
+								$('#organizacion3').append(new Option(data.nombre, data.id, false, false));
+
+								// Cerrar modal después de 1.5 segundos
+								setTimeout(function () {
+									closeModalOrganizacion();
+								}, 1500);
+							} else {
+								mostrarMensajeModal('error', 'Error: ' + (data.message || 'No se pudo guardar la organización'));
+							}
+						})
+						.catch(error => {
+							btnGuardar.disabled = false;
+							btnGuardar.innerHTML = textoOriginal;
+							mostrarMensajeModal('error', 'Error de conexión: ' + error.message);
+						});
+
+					return false;
+				}
+
+				function mostrarMensajeModal(tipo, mensaje) {
+					var successDiv = document.getElementById('modalMessageSuccess');
+					var errorDiv = document.getElementById('modalMessageError');
+
+					// Ocultar ambos mensajes primero
+					successDiv.style.display = 'none';
+					errorDiv.style.display = 'none';
+
+					if (tipo === 'success') {
+						successDiv.textContent = mensaje;
+						successDiv.style.display = 'block';
+					} else {
+						errorDiv.textContent = mensaje;
+						errorDiv.style.display = 'block';
+					}
+				}
+
+				// Cerrar modal con tecla ESC
+				document.addEventListener('keydown', function (event) {
+					if (event.key === 'Escape') {
+						closeModalOrganizacion();
+						closeModalUnidad();
+					}
+				});
+
+				// Funciones para el modal de unidad ejecutora
+				function openModalUnidad() {
+					document.getElementById('modalOverlayUnidad').style.display = 'block';
+					document.getElementById('modalUnidad').style.display = 'block';
+					document.body.style.overflow = 'hidden';
+				}
+
+				function closeModalUnidad() {
+					document.getElementById('modalOverlayUnidad').style.display = 'none';
+					document.getElementById('modalUnidad').style.display = 'none';
+					document.body.style.overflow = 'auto';
+					// Limpiar formulario
+					document.getElementById('formNuevaUnidad').reset();
+					// Ocultar mensajes
+					document.getElementById('modalMessageSuccessUnidad').style.display = 'none';
+					document.getElementById('modalMessageErrorUnidad').style.display = 'none';
+				}
+
+				function guardarNuevaUnidad(event) {
+					if (event) event.preventDefault();
+
+					// Validar que el nombre no esté vacío
+					var unidad = document.getElementById('modal_unidad_nombre').value.trim();
+					if (unidad === '') {
+						mostrarMensajeModalUnidad('error', 'El nombre de la unidad ejecutora es obligatorio');
+						return false;
+					}
+
+					// Recoger datos del formulario
+					var formData = new FormData();
+					formData.append('unidad', unidad);
+
+					// Deshabilitar botón mientras se procesa
+					var btnGuardar = event.target;
+					var textoOriginal = btnGuardar.innerHTML;
+					btnGuardar.disabled = true;
+					btnGuardar.innerHTML = '⏳ Guardando...';
+
+					// Enviar por AJAX
+					fetch('ajax-nueva-unidad.php', {
+						method: 'POST',
+						body: formData
+					})
+						.then(response => response.json())
+						.then(data => {
+							btnGuardar.disabled = false;
+							btnGuardar.innerHTML = textoOriginal;
+
+							if (data.success) {
+								mostrarMensajeModalUnidad('success', '✓ Unidad Ejecutora "' + data.unidad + '" creada exitosamente');
+
+								// Agregar la nueva opción a los select de unidades
+								var nuevaOpcion = new Option(data.unidad, data.id, true, true);
+								$('#unidad1').append(nuevaOpcion).trigger('change');
+
+								// También agregarla a los otros selects (pero sin seleccionarla)
+								$('#unidad2').append(new Option(data.unidad, data.id, false, false));
+								$('#unidad3').append(new Option(data.unidad, data.id, false, false));
+
+								// Cerrar modal después de 1.5 segundos
+								setTimeout(function () {
+									closeModalUnidad();
+								}, 1500);
+							} else {
+								mostrarMensajeModalUnidad('error', 'Error: ' + (data.message || 'No se pudo guardar la unidad ejecutora'));
+							}
+						})
+						.catch(error => {
+							btnGuardar.disabled = false;
+							btnGuardar.innerHTML = textoOriginal;
+							mostrarMensajeModalUnidad('error', 'Error de conexión: ' + error.message);
+						});
+
+					return false;
+				}
+
+				function mostrarMensajeModalUnidad(tipo, mensaje) {
+					var successDiv = document.getElementById('modalMessageSuccessUnidad');
+					var errorDiv = document.getElementById('modalMessageErrorUnidad');
+
+					// Ocultar ambos mensajes primero
+					successDiv.style.display = 'none';
+					errorDiv.style.display = 'none';
+
+					if (tipo === 'success') {
+						successDiv.textContent = mensaje;
+						successDiv.style.display = 'block';
+					} else {
+						errorDiv.textContent = mensaje;
+						errorDiv.style.display = 'block';
+					}
+				}
+			</script>
+
+			<!-- Script para manejo de carga de archivos PDF -->
+			<script>
+				document.addEventListener('DOMContentLoaded', function () {
+					const fileInput = document.getElementById('ubicacion_digital');
+					const fileUploadArea = document.getElementById('fileUploadArea');
+					const selectFileBtn = document.getElementById('selectFileBtn');
+					const fileInfo = document.getElementById('fileInfo');
+					const fileName = document.getElementById('fileName');
+					const fileSize = document.getElementById('fileSize');
+					const removeFileBtn = document.getElementById('removeFileBtn');
+
+					// Abrir selector de archivos al hacer clic en el botón o en el área
+					selectFileBtn.addEventListener('click', function (e) {
+						e.preventDefault();
+						fileInput.click();
+					});
+
+					fileUploadArea.addEventListener('click', function (e) {
+						if (e.target !== selectFileBtn && !e.target.closest('#selectFileBtn')) {
+							fileInput.click();
+						}
+					});
+
+					// Manejar la selección de archivos
+					fileInput.addEventListener('change', function () {
+						if (this.files && this.files[0]) {
+							const file = this.files[0];
+
+							// Validar tipo de archivo
+							if (file.type !== 'application/pdf') {
+								alert('Error: Solo se permiten archivos PDF.');
+								this.value = '';
+								return;
+							}
+
+							// Validar tamaño del archivo (10MB máximo)
+							if (file.size > 10 * 1024 * 1024) {
+								alert('Error: El archivo es demasiado grande. El tamaño máximo permitido es 10MB.');
+								this.value = '';
+								return;
+							}
+
+							// Mostrar información del archivo
+							fileName.textContent = file.name;
+							fileSize.textContent = formatFileSize(file.size);
+							fileInfo.style.display = 'block';
+
+							// Cambiar estilo del área de subida
+							fileUploadArea.style.borderColor = '#28a745';
+							fileUploadArea.style.backgroundColor = '#f0fff4';
+						}
+					});
+
+					// Eliminar archivo seleccionado
+					removeFileBtn.addEventListener('click', function (e) {
+						e.preventDefault();
+						fileInput.value = '';
+						fileInfo.style.display = 'none';
+
+						// Restaurar estilo del área de subida
+						fileUploadArea.style.borderColor = '#ccc';
+						fileUploadArea.style.backgroundColor = '#f8f9fa';
+					});
+
+					// Efectos de arrastrar y soltar
+					['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+						fileUploadArea.addEventListener(eventName, preventDefaults, false);
+					});
+
+					function preventDefaults(e) {
+						e.preventDefault();
+						e.stopPropagation();
+					}
+
+					['dragenter', 'dragover'].forEach(eventName => {
+						fileUploadArea.addEventListener(eventName, highlight, false);
+					});
+
+					['dragleave', 'drop'].forEach(eventName => {
+						fileUploadArea.addEventListener(eventName, unhighlight, false);
+					});
+
+					function highlight() {
+						fileUploadArea.classList.add('dragover');
+					}
+
+					function unhighlight() {
+						fileUploadArea.classList.remove('dragover');
+					}
+
+					fileUploadArea.addEventListener('drop', handleDrop, false);
+
+					function handleDrop(e) {
+						const dt = e.dataTransfer;
+						const files = dt.files;
+
+						if (files.length) {
+							fileInput.files = files;
+							fileInput.dispatchEvent(new Event('change'));
+						}
+					}
+
+					// Función para formatear el tamaño del archivo
+					function formatFileSize(bytes) {
+						if (bytes === 0) return '0 Bytes';
+
+						const k = 1024;
+						const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+						const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+						return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+					}
+				});
+			</script>
+
+
+			<!-- Script de advertencia de cambios sin guardar -->
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+			<script>
+				document.addEventListener('DOMContentLoaded', function () {
+					let formHasChanged = false;
+
+					// Ignorar campos de búsqueda o datatables genéricos si los hay, enfocarse en inputs del form principal
+					const inputs = document.querySelectorAll('form input, form select, form textarea');
+					inputs.forEach(input => {
+						// Evitaremos los hidden porque a veces los plugins los cambian
+						if (input.type !== 'hidden') {
+							input.addEventListener('change', () => { formHasChanged = true; });
+							input.addEventListener('input', () => { formHasChanged = true; });
+						}
+					});
+
+					// En selects de select2
+					if (typeof jQuery !== 'undefined') {
+						jQuery('select').on('select2:select', function (e) {
+							formHasChanged = true;
+						});
+					}
+
+					const forms = document.querySelectorAll('form');
+					forms.forEach(form => {
+						form.addEventListener('submit', () => { formHasChanged = false; });
+					});
+
+					const cancelButtons = document.querySelectorAll('a.btn-danger, a.btn-secondary, a[href="index.php"], a[href="alta_persona.php"], a[href="alta_organizacion.php"], a[href="alta_unidad_ejecutora.php"], a[href="alta_tipo_actividad.php"]');
+					cancelButtons.forEach(btn => {
+						btn.addEventListener('click', function (e) {
+							if (formHasChanged) {
+								e.preventDefault();
+								const targetUrl = this.getAttribute('href');
+								Swal.fire({
+									title: '¿Estás seguro?',
+									text: 'No has guardado los datos. Si sales ahora, perderás todos los cambios realizados.',
+									icon: 'warning',
+									showCancelButton: true,
+									confirmButtonColor: '#dc3545',
+									cancelButtonColor: '#6c757d',
+									confirmButtonText: '<i class="fas fa-sign-out-alt me-2"></i>Sí, salir sin guardar',
+									cancelButtonText: 'No, quedarme'
+								}).then((result) => {
+									if (result.isConfirmed) {
+										formHasChanged = false; // prevenir el beforeunload
+										window.location.href = targetUrl || 'index.php';
+									}
+								});
+							}
+						});
+					});
+
+					window.addEventListener('beforeunload', function (e) {
+						if (formHasChanged) {
+							e.preventDefault();
+							e.returnValue = '';
+						}
+					});
+				});
+			</script>
+	</body>
+
+	</html>
+	=======
+	=======
+	>>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068
+	﻿<?php
+	include "conn.php";
+	include 'session_bcfexa.php';
+	$username = $_SESSION['username'];
+	$userID = $_SESSION['userID'];
+	?>
+
+	<!DOCTYPE html>
+
+	<html lang="en">
+
+	<head>
+
+		<head>
+			<style type="text/css">
+				#campos_adicionales {
+					display: none;
+				}
+			</style>
+			<script>
+				function valida_archivo() {
+					alert("OJO!, entroF");
+					valor = document.getElementById('archivo');
+					if (valor == null || valor.length == 0 || /^\s+$/.test(valor)) {
+						alert("OJO!, falta indicar cual es el PDF");
+						return false;
+					}
+			</script>
+
+
+			<?php include("head.php"); ?>
+
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+			<!-- select2 css -->
+			<link href='./buscador/assets/select2v410/css/select2.min.css' rel='stylesheet' type='text/css'>
+
+			<!-- select2 script -->
+			<script src='./buscador/assets/select2v410/js/select2.min.js'></script>
+			<!-- Libreria español -->
+			<script src="./buscador/assets/select2v410/js/i18n/es.js"></script>
+
+		</head>
+
+	<body>
+		<!--
+	   <div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+						<i class="icon-reorder shaded"></i></a><a class="brand" href="http://obedalvarado.pw/" target="_blank">DAFEXA</a>
+				   
+				   
+				</div>
+			</div>
+			 
+
+		</div><br />
+-->
+		<div class="container">
+			<div class="row">
+				<div class="span12">
+					<div class="content">
+						<?php
+						if (isset($_POST['input'])) {
+
+							$tipo_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['tipo_objeto'], ENT_QUOTES)));
+							$numero_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['numero_objeto'], ENT_QUOTES)));
+							$anio_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['anio_objeto'], ENT_QUOTES)));
+							$extracto = mysqli_real_escape_string($conn, (strip_tags($_POST['extracto'], ENT_QUOTES)));
+							$estado_objeto = mysqli_real_escape_string($conn, (strip_tags($_POST['estado_objeto'], ENT_QUOTES)));
+							$texto_completo = mysqli_real_escape_string($conn, (strip_tags($_POST['texto_completo'], ENT_QUOTES)));
+							$archivo = mysqli_real_escape_string($conn, (strip_tags($_POST['archivo'], ENT_QUOTES)));
+							$expediente = mysqli_real_escape_string($conn, (strip_tags($_POST['expediente'], ENT_QUOTES)));
+							//	$palabras_claves=mysqli_real_escape_string($conn,(strip_tags($_POST['palabras_claves'], ENT_QUOTES)));
+							$palabra_clave1 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave1'], ENT_QUOTES)));
+							$palabra_clave2 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave2'], ENT_QUOTES)));
+							$palabra_clave3 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave3'], ENT_QUOTES)));
+							$palabra_clave4 = mysqli_real_escape_string($conn, (strip_tags($_POST['palabra_clave4'], ENT_QUOTES)));
+							$palabras_claves = $palabra_clave1 . "," . $palabra_clave2 . "," . $palabra_clave3 . "," . $palabra_clave4;
+
+							$modifica_interpreta_a = mysqli_real_escape_string($conn, (strip_tags($_POST['modifica_interpreta_a'], ENT_QUOTES)));
+							$modificada_interpretada_por = mysqli_real_escape_string($conn, (strip_tags($_POST['modificada_interpretada_por'], ENT_QUOTES)));
+							$deroga_a = mysqli_real_escape_string($conn, (strip_tags($_POST['deroga_a'], ENT_QUOTES)));
+							$derogada_por = mysqli_real_escape_string($conn, (strip_tags($_POST['derogada_por'], ENT_QUOTES)));
+							$suspende_a = mysqli_real_escape_string($conn, (strip_tags($_POST['suspende_a'], ENT_QUOTES)));
+							$suspendida_por = mysqli_real_escape_string($conn, (strip_tags($_POST['suspendida_por'], ENT_QUOTES)));
+							$ratifica_a = mysqli_real_escape_string($conn, (strip_tags($_POST['ratifica_a'], ENT_QUOTES)));
+							$ratificada_por = mysqli_real_escape_string($conn, (strip_tags($_POST['ratificada_por'], ENT_QUOTES)));
+							$relacionada_con = mysqli_real_escape_string($conn, (strip_tags($_POST['relacionada_con'], ENT_QUOTES)));
+							$emisor = mysqli_real_escape_string($conn, (strip_tags($_POST['emisor'], ENT_QUOTES)));
+
+
+
+							$insert = mysqli_query($conn, "INSERT INTO digesto(id, tipo_objeto, numero_objeto, anio_objeto, extracto, estado_objeto,texto_completo, archivo, expediente, palabras_claves, modifica_interpreta_a, modificada_interpretada_por, deroga_a, derogada_por, suspende_a, suspendida_por, ratifica_a, ratificada_por, relacionada_con, emisor
+				)		VALUES(NULL,'$tipo_objeto', '$numero_objeto', '$anio_objeto', '$extracto',  '$estado_objeto', '$texto_completo', '$archivo', '$expediente', '$palabras_claves', '$modifica_interpreta_a', '$modificada_interpretada_por', '$deroga_a', '$derogada_por', '$suspende_a', '$suspendida_por', '$ratifica_a', '$ratificada_por', '$relacionada_con', '$emisor')")
+
+								or die(mysqli_error());
+							if ($insert) {
+								echo '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Bien hecho Luis Olguin, los datos han sido agregados correctamente.</div>';
+								header("Location: index.php");
+							} else {
+								echo '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error, no se pudo registrar los datos.</div>';
+							}
+
+						}
+						?>
+
+						<blockquote>
+							<h3>Agregar Normativa al Digesto de Exactas</h3>
+						</blockquote>
+						<form name="form1" id="form1" class="form-horizontal row-fluid" action="registro.php"
+							method="POST">
+							<div class="control-group">
+								<label class="control-label" for="emisor">Emisor</label>
+								<div class="controls">
+
+									<input type="radio" class="form-check-input" name="emisor" value="Consejo Directivo"
+										checked> Consejo Directivo
+
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="tipo_objeto">Normativa</label>
+								<div class="controls">
+
+									<input type="radio" class="form-check-input" onchange='add();' id="tipo_objeto"
+										name="tipo_objeto" value="Ordenanza" checked> Ordenanza
+									<input type="radio" name="tipo_objeto" onchange='add();' value="Resolución">
+									Resolución<br>
+
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="numero_objeto">Número de la Normativa</label>
+								<div class="controls">
+									<input type="text" name="numero_objeto" onchange='add();' id="numero_objeto"
+										placeholder="ingrese SOLO el número" class="form-control span8 tip" required>
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="anio_objeto">Fecha de la Normativa</label>
+								<div class="controls">
+									<input name="anio_objeto" id="anio_objeto" onchange='add();'
+										class="form-control span8 tip" type="date" placeholder="Ingrese SOLO el año"
+										required />
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="extracto">Extracto</label>
+								<div class="controls">
+									<input name="extracto" id="extracto" class=" form-control span8 tip" type="text"
+										placeholder="Extracto que describe el objeto" required />
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="estado_objeto">Estado de la Normativa</label>
+								<div class="controls">
+									<input type="radio" name="estado_objeto" value="Vigente" checked> Vigente
+									<input type="radio" name="estado_objeto" value="No vigente"> No Vigente<br>
+
+								</div>
+							</div>
+							´
+							<div class="control-group">
+								<label class="control-label" for="texto_completo">Texto Completo </label>
+								<div class="controls">
+									<input type="textarea" name="texto_completo" id="texto_completo"
+										class=" form-control span8 tip"
+										placeholder="Copie el text completo del original" rows="3"></textarea>
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="archivo">Archivo PDF asociado</label>
+								<div class="controls">
+									<input type="text" name="archivo" id="archivo" class=" form-control span8 tip"
+										placeholder="">
+								</div>
+								<!--			
+									  <div class="control-group">	
+										<label class="control-label" for="archivo">Archivo PDF </label>
+									 <div class="controls">
+										<input name="archivo" id="archivo" placeholder="Seleccione el PDF asociado" type="file" />
+										</div>
+										</div>
+							-->
+
+
+								<center> <button type="button" class="btn btn-success"
+										id="mostrar_campos_adicionales">Mostrar/ocultar Campos Adicionales.</button>
+								</center>
+								<div id="campos_adicionales">
+									<div class="control-group">
+										<label class="control-label" for="expediente">Expediente / Oficio</label>
+										<div class="controls">
+											<input name="expediente" id="expediente" class=" form-control span8 tip"
+												type="text"
+												placeholder="Ingrese el número de expediente(s) relacionados con el objeto" />
+										</div>
+									</div>
+
+									<div class="control-group">
+
+
+										<label class="control-label" for="extracto">Palabras Claves</label>
+
+
+										<div class="controls">
+
+											<select id='palabra_clave1' name='palabra_clave1' style='width: 300px;'
+												lang="es">
+
+											</select>
+
+											<select id='palabra_clave2' name='palabra_clave2' style='width: 300px;'
+												lang="es">
+												<option value='0'>- Buscar Palabritas -</option>
+											</select>
+											<br>
+											</select>
+											<select id='palabra_clave3' name='palabra_clave3' style='width: 300px;'
+												lang="es">
+												<option value='0'>- Buscar Palabritas -</option>
+											</select>
+											</select>
+											<select id='palabra_clave4' name='palabra_clave4' style='width: 300px;'
+												lang="es">
+												<option value='0'>- Buscar Palabritas -</option>
+											</select>
+
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Modifica o Interpreta a:</label>
+										<div class="controls">
+											<input name="modifica_interpreta_a" id="modifica_interpreta_a"
+												class=" form-control span8 tip" type="text"
+												placeholder="Indique los números de los objetos que modifican o interpretan al que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Modificada o Interpretada
+											por:</label>
+										<div class="controls">
+											<input name="modificada_interpretada_por" id="modificada_interpretada_por"
+												class=" form-control span8 tip" type="text"
+												placeholder="Indique los números de los objetos que modificaron o interpretaron al que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Deroga a:</label>
+										<div class="controls">
+											<input name="deroga_a" id="deroga_a" class=" form-control span8 tip"
+												type="text"
+												placeholder="Indique los números de los objetos que fueron derogados por el que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Derogada por:</label>
+										<div class="controls">
+											<input name="derogada_por" id="derogada_por" class=" form-control span8 tip"
+												type="text"
+												placeholder="Indique los números de los objetos que derogaron al que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Suspende a:</label>
+										<div class="controls">
+											<input name="suspende_a" id="suspende_a" class=" form-control span8 tip"
+												type="text"
+												placeholder="Indique los números de los objetos que suspenden al que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Suspendida por:</label>
+										<div class="controls">
+											<input name="suspendida_por" id="suspendida_por"
+												class=" form-control span8 tip" type="text"
+												placeholder="Indique los números de los objetos que suspendieron al que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Ratifica a:</label>
+										<div class="controls">
+											<input name="ratifica_a" id="ratifica_a" class=" form-control span8 tip"
+												type="text"
+												placeholder="Indique los números de los objetos que ratifican al que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Ratificada por:</label>
+										<div class="controls">
+											<input name="ratificada_por" id="ratificada_por"
+												class=" form-control span8 tip" type="text"
+												placeholder="Indique los números de los objetos que ratificaron al que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="extracto">Relacionada con:</label>
+										<div class="controls">
+											<input name="relacionada_con" id="relacionada_con"
+												class=" form-control span8 tip" type="text"
+												placeholder="Indique los números de los objetos que se relacionan con el que está ingresando (separados por punto) " />
+										</div>
+									</div>
+
+								</div> <!-- fin div muestra oculta-->
+								<div class="control-group">
+									<div class="controls">
+										<button type="submit" name="input" id="input"
+											class="btn btn-sm btn-primary">Registrar</button>
+										<a href="index.php" class="btn btn-sm btn-danger">Cancelar</a>
+									</div>
+								</div>
+
+						</form>
+					</div>
+					<!--/.content-->
+				</div>
+				<!--/.span9-->
+			</div>
+		</div>
+		<!--/.container-->
+
+		<!--/.wrapper--><br />
+		<div class="footer span-12">
+			<div class="container">
+				<center> <b class="copyright"> DAFEXA - IdeI &copy; <?php echo date("Y") ?> </b></center>
+			</div>
+		</div>
+
+		<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+		<!-- Maneja el div para carga de opcionales
+		https://tutobasico.com/activar-boton-o-enlace-con-jquery/
+		-->
+		<script>
+					$("#mostrar_campos_adicionales").click(function () {
+						$("#campos_adicionales").toggle();
+					});
+		</script>
+
+		<!-- Controla que no se omita el archivo PDF
+		 https://es.stackoverflow.com/questions/375508/validar-input-con-javascript
+		-->
+		<script>
+					$(document).ready(function () {
+						$('#form1').on('submit', function (event) {
+							var $searchValue = $('#archivo').val();
+							if ($searchValue === "") {
+								event.preventDefault();
+								alert('ATENCIÓN: Falta nombre archivo PDF');
+							}
+						});
+					});
+		</script>
+
+		<script type="text/javascript">
+					function add() {
+						// pERMITE validar que no se dupliquen registros en la BBDD 
+						let tipo = $('input[name="tipo_objeto"]:checked').val().substr(0, 1);
+						let numero = document.getElementById("numero_objeto").value;
+						if (numero < 10) numero = '0' + numero;
+						let anio = document.getElementById("anio_objeto").value.substr(0, 4);
+
+						let archivo = tipo + numero + '-' + anio + '-CD-FCEFN_OCR.pdf';
+						document.getElementById('archivo').value = archivo;
+
+						// Obtener referencia al botón submit
+						let submitBtn = document.getElementById('input');
+
+						// Verificación por AJAX
+						$.ajax({
+							url: 'validar_objeto_duplicado2.php',
+							type: 'GET',
+							data: {
+								numero: numero,
+								tipo: tipo,
+								anio: anio
+							},
+							success: function (response) {
+								try {
+									// Intenta parsear manualmente para mejor manejo de errores
+									let data = typeof response === 'string' ? JSON.parse(response) : response;
+
+									if (data.error) {
+										alert("Error: " + data.error);
+										// Mostrar botón por si acaso
+										$(submitBtn).show();
+									} else if (data.existe) {
+										alert("Este registro ya existe en la base de datos.");
+										document.getElementById("numero_objeto").focus();
+										// Ocultar botón submit
+										$(submitBtn).hide();
+									} else {
+										// Mostrar botón submit si no está duplicado
+										$(submitBtn).show();
+									}
+								} catch (e) {
+									console.error("Respuesta inválida:", response);
+									alert("Error al procesar la respuesta del servidor");
+									// Mostrar botón por si acaso
+									$(submitBtn).show();
+								}
+							},
+							error: function (xhr, status, error) {
+								console.error("Error AJAX:", xhr.responseText);
+								alert("Error al verificar existencia. Ver consola para detalles.");
+								// Mostrar botón por si acaso
+								$(submitBtn).show();
+							}
+						});
+					}
+		</script>
+
+
+		<script>
+					$(document).ready(function () {
+
+						$("#palabra_clave1,#palabra_clave2,#palabra_clave3,#palabra_clave4").select2({
+							ajax: {
+								url: "buscador/registro_palabras_claves.php",
+								type: "post",
+								dataType: 'json',
+								delay: 250,
+								data: function (params) {
+									return {
+										searchTerm: params.term // search term
+									};
+								},
+								processResults: function (response) {
+									return {
+										results: response
+									};
+								},
+								cache: true
+							},
+
+							minimumInputLength: 3
+						});
+					});
+		</script>
+
+		<script>
+					// VLAIDADOR  de entrada de campos donde se almacena las relaciones con otros docuemntos GRACIAS DEEPSEEK Y CLAUDE!!
+					// Esperar a que todo el DOM esté listo
+					document.addEventListener('DOMContentLoaded', function () {
+						// Función de validación mejorada
+						function validarYFormatear(inputValue, campoId) {
+							const pattern = /\b(O|R)(0*)([1-9][0-9]{0,2})\/(.+)\b/;
+							const items = inputValue.split(",").map(item => item.trim());
+							const formattedItems = [];
+
+							for (let item of items) {
+								if (!item) continue;
+
+								const matches = item.match(pattern);
+								if (matches) {
+									const letra = matches[1];
+									const numero = matches[3]; // Ignoramos los ceros iniciales
+									const numeroFormateado = numero.padStart(numero.length > 2 ? numero.length : 2, "0");
+									const resto = matches[4];
+									formattedItems.push(`${letra}${numeroFormateado}/${resto}`);
+								} else {
+									return {
+										success: false,
+										message: `Entrada inválida: "${item}". Formato: (O|R)(número)/(...)`
+									};
+								}
+							}
+
+							return {
+								success: true,
+								message: "Entrada válida",
+								result: formattedItems.join(",")
+							};
+						}
+
+						// Manejador de eventos robusto
+						function manejarValidacion(event) {
+							event.stopImmediatePropagation();
+							event.preventDefault();
+
+							const inputElement = event.target;
+							const inputValue = inputElement.value.trim();
+
+							// Limpiar estado previo
+							inputElement.classList.remove('error');
+
+							if (!inputValue) return true;
+
+							const resultado = validarYFormatear(inputValue, inputElement.id);
+
+							if (!resultado.success) {
+								inputElement.classList.add('error');
+								alert(resultado.message);
+								setTimeout(() => {
+									inputElement.focus();
+									inputElement.select();
+								}, 0);
+								return false;
+							} else {
+								inputElement.value = resultado.result;
+								return true;
+							}
+						}
+
+						// Asignación de eventos segura
+						const camposValidar = [
+							'ratificada_por', 'relacionada_con', 'ratifica_a',
+							'suspendida_por', 'suspende_a', 'derogada_por',
+							'deroga_a', 'modificada_interpretada_por', 'modifica_interpreta_a'
+						];
+
+						camposValidar.forEach(id => {
+							const element = document.getElementById(id);
+							if (element) {
+								// Eliminar event listeners previos para evitar duplicados
+								element.removeEventListener('blur', manejarValidacion);
+								element.removeEventListener('input', manejarValidacion);
+
+								// Agregar nuestros listeners
+								element.addEventListener('blur', manejarValidacion, true); // Usar captura
+								element.addEventListener('input', function () {
+									this.classList.remove('error');
+								});
+							}
+						});
+					});
+		</script>
+
+
+		<!-- Script de advertencia de cambios sin guardar -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script>
+				document.addEventListener('DOMContentLoaded', function () {
+					let formHasChanged = false;
+
+					// Ignorar campos de búsqueda o datatables genéricos si los hay, enfocarse en inputs del form principal
+					const inputs = document.querySelectorAll('form input, form select, form textarea');
+					inputs.forEach(input => {
+						// Evitaremos los hidden porque a veces los plugins los cambian
+						if (input.type !== 'hidden') {
+							input.addEventListener('change', () => { formHasChanged = true; });
+							input.addEventListener('input', () => { formHasChanged = true; });
+						}
+					});
+
+					// En selects de select2
+					if (typeof jQuery !== 'undefined') {
+						jQuery('select').on('select2:select', function (e) {
+							formHasChanged = true;
+						});
+					}
+
+					const forms = document.querySelectorAll('form');
+					forms.forEach(form => {
+						form.addEventListener('submit', () => { formHasChanged = false; });
+					});
+
+					const cancelButtons = document.querySelectorAll('a.btn-danger, a.btn-secondary, a[href="index.php"], a[href="alta_persona.php"], a[href="alta_organizacion.php"], a[href="alta_unidad_ejecutora.php"], a[href="alta_tipo_actividad.php"]');
+					cancelButtons.forEach(btn => {
+						btn.addEventListener('click', function (e) {
+							if (formHasChanged) {
+								e.preventDefault();
+								const targetUrl = this.getAttribute('href');
+								Swal.fire({
+									title: '¿Estás seguro?',
+									text: 'No has guardado los datos. Si sales ahora, perderás todos los cambios realizados.',
+									icon: 'warning',
+									showCancelButton: true,
+									confirmButtonColor: '#dc3545',
+									cancelButtonColor: '#6c757d',
+									confirmButtonText: '<i class="fas fa-sign-out-alt me-2"></i>Sí, salir sin guardar',
+									cancelButtonText: 'No, quedarme'
+								}).then((result) => {
+									if (result.isConfirmed) {
+										formHasChanged = false; // prevenir el beforeunload
+										window.location.href = targetUrl || 'index.php';
+									}
+								});
+							}
+						});
+					});
+
+					window.addEventListener('beforeunload', function (e) {
+						if (formHasChanged) {
+							e.preventDefault();
+							e.returnValue = '';
+						}
+					});
+				});
+		</script>
+	</body>
+	</body>
+	<<<<<<< HEAD>>>>>>> c75371212b3772fad208f167beaa9ae6c325fc52
+		=======
+		>>>>>>> dd1e3c0fcf4fb1080401f1237ebc009967938068

@@ -618,7 +618,35 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                 </div>
             </div>
         </div>
-    </div>div>
+    </div>
+
+    <!-- Modal Detalle de Actividad -->
+    <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0"
+                    style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border-radius: 10px 10px 0 0;">
+                    <h5 class="modal-title" id="detalleModalLabel"><i class="fas fa-eye me-2"></i>Detalles de Actividad
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <!-- Div donde se cargará el contenido por AJAX -->
+                <div class="modal-body" id="detalleModalBody" style="background-color: #f5f7fa; padding: 20px;">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2" style="color: var(--primary-color);">Cargando detalles...</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0" style="background-color: #f5f7fa;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <!-- Puedes agregar botones adicionales si es necesario (e.g. Editar) -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer-custom">
@@ -742,6 +770,36 @@ $actividades_proceso = mysqli_fetch_assoc($query_proceso)['total'];
                             }
                         });
                         window.location.href = 'index.php?action=delete&id=' + id;
+                    }
+                });
+            };
+            // Función para abrir el modal de detalles
+            window.verDetalleModal = function (id) {
+                // Mostrar spinner
+                $('#detalleModalBody').html(`
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2" style="color: var(--primary-color);">Cargando detalles...</p>
+                    </div>
+                `);
+
+                // Abrir modal
+                var myModal = new bootstrap.Modal(document.getElementById('detalleModal'), {
+                    keyboard: true
+                });
+                myModal.show();
+
+                // Cargar contenido por AJAX
+                $.ajax({
+                    url: 'ver_detalle_modal.php?id=' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        $('#detalleModalBody').html(response);
+                    },
+                    error: function () {
+                        $('#detalleModalBody').html('<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error al cargar los detalles de la actividad.</div>');
                     }
                 });
             };
